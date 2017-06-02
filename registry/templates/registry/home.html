@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="home">
+    <div class="jumbotron">
+        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+    </div>
+    <div class="row row-centered home-cards">
+        <div class="panel card panel-default col-centered col-xs-10 col-sm-10 col-md-10 col-lg-10">
+            <div class="panel-heading">
+                <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
+            </div>
+            <div class="panel-body">
+                <h3>{% trans "Card block" %} <a href="#"></a></h3>  
+                <p>
+                    A little description about this card and what is it for.
+                </p>
+            </div>
+            <div class="panel-footer row-centered">
+                <button class="col-centered col-xs-4 btn btn-danger btn-xs" type="button" name="button">Cancel</button>
+                <button class="col-centered col-xs-4 btn btn-primary btn-xs col-xs-offset-1" type="button" name="button">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

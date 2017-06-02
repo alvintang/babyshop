@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<p><a class="btn btn-default" href="{% url 'registry_registryitem_list' %}">RegistryItem Listing</a></p>
+<table class="table">
+<tr><td>name</td><td>{{ object.name }}</td></tr>
+<tr><td>slug</td><td>{{ object.slug }}</td></tr>
+<tr><td>created</td><td>{{ object.created }}</td></tr>
+<tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>bought_by</td><td>{{ object.bought_by }}</td></tr>
+<tr><td>message</td><td>{{ object.message }}</td></tr>
+<tr><td>bought</td><td>{{ object.bought }}</td></tr>
+<tr><td>price_from_vendor</td><td>{{ object.price_from_vendor }}</td></tr>
+<tr><td>price_display</td><td>{{ object.price_display }}</td></tr>
+<tr><td>vendor</td><td>{{ object.vendor }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit RegistryItem</a>
+
+{% endblock %}

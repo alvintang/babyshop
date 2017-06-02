@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<p><a class="btn btn-default" href="{% url 'registry_registryitem_list' %}">RegistryItem Listing</a></p>
+<table class="table">
+<tr>
+<td>ID</td><td>Link</td>
+    <td>name</td>
+    <td>slug</td>
+    <td>created</td>
+    <td>last_updated</td>
+    <td>bought_by</td>
+    <td>message</td>
+    <td>bought</td>
+    <td>price_from_vendor</td>
+    <td>price_display</td>
+    <td>vendor</td>
+</tr>
+{% for object in object_list %}
+<tr>
+    <td>{{object.pk}}</td>
+    <td><a href="{{object.get_absolute_url}}">{{object}}</a></td>
+    <td>{{ object.name }}</td>
+    <td>{{ object.slug }}</td>
+    <td>{{ object.created }}</td>
+    <td>{{ object.last_updated }}</td>
+    <td>{{ object.bought_by }}</td>
+    <td>{{ object.message }}</td>
+    <td>{{ object.bought }}</td>
+    <td>{{ object.price_from_vendor }}</td>
+    <td>{{ object.price_display }}</td>
+    <td>{{ object.vendor }}</td>
+</tr>
+{% endfor %}
+</table><a class="btn btn-primary" href="{% url 'registry_registryitem_create' %}">Create new RegistryItem</a>
+{% endblock %}
