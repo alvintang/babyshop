@@ -586,11 +586,11 @@ header .background-wrapper img {
 
 /* The animation code */
 @keyframes example {
-    0%   {background-color:red; left:0px; top:100px; opacity: 0.0;}
+    0%   {left:0px; top:100px; opacity: 0.0;}
 /*    25%  {background-color:yellow; left:0px; top:150px;}
     50%  {background-color:blue; left:0px; top:100px;}
     75%  {background-color:green; left:0px; top:50px;}*/
-    100% {background-color:red; left:0px; top:0px; opacity: 1.0;}
+    100% {left:0px; top:0px; opacity: 1.0;}
 }
 
 header .overlay {
@@ -1262,6 +1262,10 @@ prefooter div div {
   line-height: 1.33;
   font-family: 'Raleway', sans-serif;
   text-align: center;
+  /*opacity: 0;*/
+  animation-name: example;
+  animation-duration: 1.25s;
+  /*animation-delay: 1s;*/
 }
 
 .index-wrapper .icon-container.carousel {
