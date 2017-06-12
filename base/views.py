@@ -21,7 +21,7 @@ class IndexView(TemplateView):
     """
     Index view
     """
-    template_name = 'base/index.html'
+    template_name = 'baby/index.html'
     form = LoginForm()
 
     def post(self, request):

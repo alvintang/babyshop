@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load static %}
+{% if request.path == '/' %}
+    <!-- Header -->
+    <header>
+        <div class="container" id="maincontent" tabindex="-1">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text">
+                        <h1 class="name">Create your own registry and <br>add any items from any store.</h1>
+                        <hr class="star-light">
+                        <span class="skills">
+                            <a class="btn btn-lg btn-primary btn-group" href="#">Create my registry</a>
+                            <a class="btn btn-lg btn-info btn-group" href="#">Search for a registry</a>
+                        </span>
+                    </div>
+                    <img class="img-responsive" src="{% static 'images/balloon_transparent.gif' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </header>
+<!-- Breadcrumbs are not visible in the main index page.  -->
+{% endif %}
+{% if not request.path == '/' %}
+<div class="bg-color-white">
+    <div id="id_breadcrumbs" class="breadcrumb hidden-xs">
+             {% if breadcrumbs|length == 1 %}
+                 {% for crumb in breadcrumbs %}
+                     <a class="active" href="{% url crumb.1 %}">{{ crumb.0 }} </a>
+                 {% endfor %}
+             {% else %}
+                 {% for crumb in breadcrumbs %}
+                     {% if not forloop.last or forloop.first %}
+                         <a class="active" href="{% url crumb.1 %}"> {{ crumb.0 }} </a>
+                         >
+                     {% else %}
+                         <a rel=""href="#">{{ crumb.0 }}</a>
+                     {% endif %}
+                 {% endfor %}
+             {% endif %}
+</div>
+</div>
+{% endif %}

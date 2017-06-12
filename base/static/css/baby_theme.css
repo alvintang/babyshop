@@ -1,0 +1,56 @@
+header {
+  font-family: 'Raleway', sans-serif;
+  /*background: #ade4cd;*/
+  background: url("/static/images/clouds-background-mint.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+header img {
+  animation-name: plane;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+/* The animation code */
+@keyframes plane {
+    0%   {padding-top:50px; padding-bottom: 0px;}
+    50%  {padding-top:0px; padding-bottom: 50px;}
+    100% {padding-top:50px; padding-bottom: 0px;}
+}
+
+.text-color-blue{
+  color: #527E9F;
+}
+
+.text-color-pink{
+  color: #DD6A8D;
+}
+
+.text-color-orange{
+  color: #F89C77;
+}
+
+.navbar-brand{
+  font-family: 'Bubbler One', sans-serif;
+}
+
+.navbar-nav{
+  font-family: 'Bubbler One', sans-serif;
+  font-size: 1.5em;
+}
+
+.registry-icon{
+  font-size: 7em;
+  text-align: center;
+}
+
+.registry-item{
+  text-align: center;
+  margin-top: 10px;
+}
+
+.registry-item p{
+  margin: 0px 20px;
+  margin-top: 20px;
+  font-size: 1.5em;
+}
