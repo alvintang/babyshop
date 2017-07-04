@@ -149,7 +149,7 @@ header .intro-text .skills {
 }
 .navbar-custom .navbar-nav li a:focus,
 .navbar-custom .navbar-nav li a:active {
-  color: white;
+  /*color: white;*/
 }
 .navbar-custom .navbar-nav li.active a {
   color: white;

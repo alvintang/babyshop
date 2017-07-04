@@ -38,19 +38,14 @@
                           </div>
                       </li>
                   {% else %}
-                      <li class="hidden-md hidden-sm">
-                          <p class="navbar-text">
-                              <span class="not-account-yet">{% trans "Don't have an account yet?" %}
-                              </span>
-                          </p>
+                      <li>
+                          <a id="id_registration" href="{% url 'registration_register' %}" class="">{% trans "Register" %}</a>
                       </li>
                       <li>
-                          <a id="id_registration" href="{% url 'registration_register' %}" class="btn btn-registro">{% trans "Register" %}</a></li>
-                      <li>
                             {% if not "/login" in request.path %}
-                                <a id="id_login" data-toggle="modal" data-target="#modal-login" {%  if '/accounts' in request.path %}  class="btn btn-ghost" href="#"
+                                <a id="id_login" data-toggle="modal" data-target="#modal-login" {%  if '/accounts' in request.path %}  class="" href="#"
                             {% else %}
-                                class="login-no-register btn btn-ghost" href="#"{% endif %} role="button">{% trans "Login" %}</a></li>
+                                class="login-no-registert" href="#"{% endif %} role="button">{% trans "Login" %}</a></li>
                             {% endif %}
                   {% endif %}
                 </ul>
