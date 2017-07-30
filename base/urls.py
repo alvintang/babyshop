@@ -9,8 +9,8 @@ from . import views
 urlpatterns = [
     url(r'^', include('users.urls')),
     url(r'^', include('registry.urls')),
-    url(r'^$', views.ComingSoonView.as_view(), name='index'),
-    url(r'^proto/$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    #url(r'^proto/$', views.IndexView.as_view(), name='index'),
     url(r'^contact/$', views.ContactView.as_view(), name='contact'),
     url(r'^lists/$', views.ListsView.as_view(), name='lists'),
     url(r'^home/$', views.ListsView.as_view(), name='home'),

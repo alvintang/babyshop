@@ -6,7 +6,6 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 from django.db import migrations, models
 import django.utils.timezone
-import django_countries.fields
 import uuid
 
 
@@ -34,7 +33,6 @@ class Migration(migrations.Migration):
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False)),
                 ('slug', models.CharField(max_length=255, null=True, unique=True)),
-                ('country', django_countries.fields.CountryField(blank=True, max_length=2, verbose_name='Country')),
                 ('email', models.EmailField(blank=True, max_length=254, unique=True, verbose_name='email address')),
                 ('preferred_language', models.CharField(blank=True, choices=[('es', 'Espanol (Espana)'), ('en', 'English')], max_length=100, null=True, verbose_name='Preferred Language')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
