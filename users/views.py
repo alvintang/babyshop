@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from registration.backends.hmac.views import RegistrationView as ActivationRegistrationView
 from registration.backends.simple.views import RegistrationView
 
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, LoginForm
 
 User = get_user_model()
 
@@ -27,6 +27,11 @@ class UserActivationRegisterView(ActivationRegistrationView):
 @method_decorator(anonymous_required(redirect_url='index'), name='dispatch')
 class UserNormalRegisterView(RegistrationView):
     form_class = UserRegisterForm
+
+@method_decorator(anonymous_required(redirect_url='index'), name='dispatch')
+class UserLoginView(RegistrationView):
+    template_name = 'registration/login.html'
+    form_class = LoginForm
 
 
 @method_decorator(login_required(login_url='index'), name='dispatch')

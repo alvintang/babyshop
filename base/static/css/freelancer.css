@@ -311,6 +311,7 @@ form .row:first-child .floating-label-form-group {
 }
 footer {
   color: white;
+  margin-top: 100px;
 }
 footer h3 {
   margin-bottom: 30px;
@@ -555,4 +556,54 @@ fieldset[disabled] .btn-success.active {
 }
 div#maincontent {
   outline: none;
+}
+
+.jumbotron{
+  margin-top: 48px;
+}
+
+.home-cards {
+  margin-top: 100px;
+  position: relative;
+  padding-bottom: 100px;
+}
+
+.home-cards .card {
+  padding: 0;
+  /*width: 500px;*/
+}
+
+.home-cards .card .panel-footer {
+  /*background-color: white !important;*/
+  background-color: #ade4cd;
+}
+
+.home-cards .card .panel-footer button {
+  text-align: center;
+}
+
+.home-cards .card .panel-heading {
+  background-color: #ade4cd;
+  padding: 0;
+}
+
+.home-cards .card .panel-heading img {
+  height: 240px;
+}
+
+.home-cards .card .panel-body {
+  /*height: 143px;*/
+}
+
+.home-cards .card .panel-body h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: normal;
+  font-style: normal;
+}
+
+.home-cards .card .panel-body p {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: normal;
 }

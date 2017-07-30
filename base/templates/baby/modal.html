@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Baby Set Go!</title>
+    <meta name="description" content="meta-description-example">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/badge.jpg'%}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/vendors/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'css/vendors/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link href="https://fonts.googleapis.com/css?family=Bubbler+One|Raleway" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <!-- <link href="{% static 'css/freelancer.css' %}" rel="stylesheet"> -->
+    <link href="{% static 'css/modal_add.css' %}" rel="stylesheet">
+
+    <!--  To use the bootstrap base layout, disable this line -->
+    <!--  -->
+    <!-- <link rel="stylesheet" href="{% static 'css/vendors/cookielaw.css'%}"> -->
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+</head>
+<body id="page-top" class="index">
+    <main class="baby">
+        <h3>BabySetGo!</h3>
+
+        <form action="/external/add/" method="post" class="col-sm-6">
+            {% csrf_token %}
+            {{ form }}
+            <input id="babysetgo_submit" type="submit" value="Submit" />
+        </form>
+
+        <div class="slideshow-container col-sm-4">
+        {% for link in links %}
+            <div class="mySlides">
+                <div class="numbertext">{{ forloop.counter }} / {{ links|length }}</div>
+                <img src={{link}}>
+            </div>
+        {% endfor %} 
+
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        <br>
+
+        </div>
+
+<!--         <ul>
+          {% for link in links %}
+            <li><img class="img-responsive" src={{ link }}></img></li>
+          {% endfor %} 
+        </ul> -->
+        </div>
+
+    </main>
+
+    <script src="{% static 'js/modal_add.js' %}"></script>
+</body>
+</html>

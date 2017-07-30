@@ -8,11 +8,17 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
+                {% if request.path == '/' %}
                 <a class="navbar-brand" href="#page-top">Baby Set Go!</a>
+                {% endif %}
+                {% if not request.path == '/' %}
+                <a class="navbar-brand" href="/">Baby Set Go!</a>
+                {% endif %}
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              {% if request.path == '/' %}
                 <ul class="nav navbar-nav navbar-right">
                     <li class="hidden">
                         <a href="#page-top"></a>
@@ -29,7 +35,7 @@
                   {% if user.is_authenticated %}
                       <li class="logout">
                           <div id="over_user" class="configuration_active"></div>
-                          <a id="id_logout" class="logout_button" href="{% url 'logout' %}" title="Logout">{% trans "Logout" %}</a>
+                          <a id="id_logout" class="logout_button" href="{% url 'logout' %}" title="Logout">Logout</a>
                           <div id="configuration_menu" class="configuration_menu arrow_box hidden">
                               <ul>
                                   <a id="id_personal_menu_1" href="#"><li class="divider">{% trans 'Personal menu #1' %}</li></a>
@@ -39,16 +45,59 @@
                       </li>
                   {% else %}
                       <li>
-                          <a id="id_registration" href="{% url 'registration_register' %}" class="">{% trans "Register" %}</a>
+                          <a id="id_registration" href="{% url 'registration_register' %}" class="">Sign Up</a>
                       </li>
                       <li>
                             {% if not "/login" in request.path %}
                                 <a id="id_login" data-toggle="modal" data-target="#modal-login" {%  if '/accounts' in request.path %}  class="" href="#"
                             {% else %}
-                                class="login-no-registert" href="#"{% endif %} role="button">{% trans "Login" %}</a></li>
+                                class="login-no-registert" href="#"{% endif %} role="button">Login</a></li>
                             {% endif %}
                   {% endif %}
                 </ul>
+              {% endif %}
+              {% if not request.path == '/' %}
+                <ul class="nav navbar-nav navbar-right">
+                      <li class="hidden">
+                          <a href="/"></a>
+                      </li>
+                      <li class="page-scroll">
+                          <a href="#registry">Search Registries</a>
+                      </li>
+                    {% if user.is_authenticated %}
+                      <li class="page-scroll">
+                          <a href="{% url 'home' %}">My Registries</a>
+                      </li>
+                      <li class="page-scroll">
+                          <a href="{% url 'registry_registry_create' %}">New Registry</a>
+                      </li>
+
+                      <li class="logout">
+                        <div id="over_user" class="configuration_active"></div>
+                          <a id="id_logout" class="logout_button" href="{% url 'logout' %}" title="Logout">Logout</a>
+                        <div id="configuration_menu" class="configuration_menu arrow_box hidden">
+                          <ul>
+                            <a id="id_personal_menu_1" href="#"><li class="divider">{% trans 'Personal menu #1' %}</li></a>
+                            <a id="id_personal_menu_2" href="#"><li>{% trans 'Personal menu #2' %}</li></a>
+                          </ul>
+                        </div>
+                      </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'home' %}">What is Baby Set Go?</a>
+                        </li>
+                        <li>
+                            <a id="id_registration" href="{% url 'registration_register' %}" class="">Sign Up</a>
+                        </li>
+                        <li>
+                              {% if not "/login" in request.path %}
+                                  <a id="id_login" data-toggle="modal" data-target="#modal-login" {%  if '/accounts' in request.path %}  class="" href="#"
+                              {% else %}
+                                  class="login-no-registert" href="#"{% endif %} role="button">Login</a></li>
+                              {% endif %}
+                    {% endif %}
+                  </ul>
+                {% endif %}
             </div>
             <!-- /.navbar-collapse -->
         </div>

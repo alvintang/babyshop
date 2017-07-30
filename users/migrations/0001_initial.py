@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False)),
-                ('slug', models.CharField(max_length=256, null=True, unique=True)),
+                ('slug', models.CharField(max_length=255, null=True, unique=True)),
                 ('country', django_countries.fields.CountryField(blank=True, max_length=2, verbose_name='Country')),
                 ('email', models.EmailField(blank=True, max_length=254, unique=True, verbose_name='email address')),
                 ('preferred_language', models.CharField(blank=True, choices=[('es', 'Espanol (Espana)'), ('en', 'English')], max_length=100, null=True, verbose_name='Preferred Language')),

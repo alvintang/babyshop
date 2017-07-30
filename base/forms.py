@@ -12,3 +12,19 @@ class ContactForm(forms.Form):
         required=True,
         widget=forms.Textarea(attrs={'class': "form-control"})
     )
+
+class AddToListForm(forms.Form):
+  item_name = forms.CharField(label=_('Item'), required=True, max_length=50, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_name'}))
+  item_price = forms.CharField(label=_('Price'), required=True,
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_price'}))
+  item_qty = forms.IntegerField(label=_('Quantity'), required=True,
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_qty'}))
+  item_notes = forms.CharField(label=_('Additional Notes'),required=False,  max_length=200, 
+                widget=forms.Textarea(attrs={'class': "form-control"}))
+  item_img = forms.CharField(initial='',required=True,  max_length=200, 
+                widget=forms.HiddenInput(attrs={'id': 'item_img'}))
+  item_url = forms.CharField(initial='',required=True,  max_length=200, 
+                widget=forms.HiddenInput(attrs={'id': 'item_url'}))
+  reg_id = forms.CharField(initial='',required=True,  max_length=200, 
+                widget=forms.HiddenInput(attrs={'id': 'reg_id'}))

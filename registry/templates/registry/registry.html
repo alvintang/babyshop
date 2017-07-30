@@ -1,43 +1,59 @@
-{% extends 'base/base.html' %}
+{% extends 'baby/base.html' %}
 {% load static %}
 {% load i18n %}
 {% block content %}
-<div class="home">
-    <div class="jumbotron">
-        <!-- <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1> -->
-    </div>
+<div class="container">
+    <!-- <div class="jumbotron">
+        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+    </div> -->
     <div class="row row-centered home-cards">
-        <div class="panel card panel-default col-centered col-xs-10 col-sm-10 col-md-10 col-lg-10">
-            <div class="panel-heading">
+        <div class="panel card panel-default">
+<!--             <div class="panel-heading">
                 <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
-            </div>
+            </div> -->
             <div class="panel-body">
-                <h4>{{ object.name }}<a href="#"></a></h4>  
+                <h1>{{ object.name }}<a href="#"></a></h1>  
                 <h3>{{ object.event_date }}</h3>
                 <p>
                     {{ object.event_description }}
                 </p>
+                <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://localhost:8000/static/js/babysetgo-add-items.js?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='https://localhost:8000/static/css/modal.css';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to Bookmark</a></h3>
 
                 <div class="list-group django-list">
-                    {% for item in RegistryItem %}
-                    <a href="/registry/registry/detail/{{ object.slug }}/" class="list-group-item row">
-                        <div class="img-separator col-md-1">
-                            <img width='40' height='45' class="img-circle" src="{% static 'images/header_bg.jpg'%}" alt="" />
+                    {% for item in object.registryitem_set.all %}
+                    <div class="list-group-item row">
+                        <div class="img-separator col-md-3">
+                            <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
                         </div>
-                        <div class="text-separator col-md-11">
-                            <h4 class="list-group-item-heading">{{ item.name }} - {{ item.bought_by }}</h4>
-                            <!-- <h5 class="list-group-item-text">{{ object.event_date }}</h5> -->
-                            <p class="list-group-item-text">{{ item.url }}</p>
+                        <div class="text-separator col-md-9">
+                            <h4 class="list-group-item-heading">{{ item.name }}</h4>
+                            <h5 class="list-group-item-text">Price: {{ item.price_from_vendor }}</h5>
+                            <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
+                            <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
+                            {% if item.bought == 1 %}
+                                <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
+                                <h5 class="list-group-item-text"><br>Purchased by: &nbsp {{ item.bought_by }}</h5>
+                            {% else %}
+                                <h5 class="list-group-item-text"><br>This item has not been purchased yet.</h5>
+                            {% endif %}
+                            <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
+                            <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                            <a href="{% url 'registry_registryitem_delete' object.id %}?item_id={{ item.id }}" class="col-centered btn btn-danger delete-button" type="button">Delete</a>
+                            <a href="{% url 'registry_registryitem_update' item.id %}" class="col-centered btn btn-primary edit-button" type="button">Edit</a>
                         </div>
-                    </a>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="panel-footer row-centered">
-                <button class="col-centered col-xs-4 btn btn-danger btn-xs" type="button" name="button">Cancel</button>
-                <button class="col-centered col-xs-4 btn btn-primary btn-xs col-xs-offset-1" type="button" name="button">Ok</button>
-            </div>
+            <!-- <div class="panel-footer row-centered">
+                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>
+                <button class="col-centered btn btn-primary btn-lg" type="button" name="button">Ok</button>
+            </div> -->
         </div>
     </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/registry_detail.js' %}"></script>
+{% endblock extra_js %}

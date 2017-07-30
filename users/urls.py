@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^accounts/register/$',
         views.UserActivationRegisterView.as_view(),
         name='registration_register', ),
+    url(r'^login/$',
+        views.UserLoginView.as_view(),
+        name='login', ),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
 
     # Url to one step register

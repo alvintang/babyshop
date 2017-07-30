@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^babysetgo/', include('babysetgo.urls')),
     url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     url(r'^privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy-policy'),
+    url(r'^external/add/$', views.ExternalView.as_view(), name='external'),
+    url(r'^external/add/item/$', views.AddToList.as_view(), name='external_item'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

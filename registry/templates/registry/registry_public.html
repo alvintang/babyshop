@@ -1,0 +1,90 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="container">
+    <!-- <div class="jumbotron">
+        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+    </div> -->
+    <div class="row row-centered home-cards">
+        <div class="panel card panel-default">
+<!--             <div class="panel-heading">
+                <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
+            </div> -->
+            <div class="panel-body">
+                <h1>{{ object.name }}<a href="#"></a></h1>  
+                <h3>{{ object.event_date }}</h3>
+                <p>
+                    {{ object.event_description }}
+                </p>
+
+                <div class="list-group django-list">
+                    {% for item in object.registryitem_set.all %}
+                    <div class="list-group-item row">
+                        <div class="img-separator col-md-3">
+                            <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
+                        </div>
+                        <div class="text-separator col-md-9">
+                            <h4 class="list-group-item-heading">{{ item.name }}  [{{ item.id }}]</h4>
+                            <h5 class="list-group-item-text">Price: {{ item.price_from_vendor }}</h5>
+                            <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
+                            <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
+                            {% if item.bought == 1 %}
+                                <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
+                                {% if item.quantity_bought < item.quantity %}
+                                <br>
+                                <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
+                                <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                {% endif %}
+                                <h5 class="list-group-item-text"><br>Purchased by: &nbsp {{ item.bought_by }}</h5>
+                            {% else %}
+                                <h5 class="list-group-item-text"><br>This item has not been purchased yet.</h5><br>
+                                <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
+                                <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="buyModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Buy this gift!</h4>
+                  </div>
+                  <div class="modal-body">
+                  <h4 class="item-name"></h4>
+                  <form action='' method='post' class='form-horizontal'>
+                    {% csrf_token %}
+                    {{ form }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" data-dismiss="modal">
+                  </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+
+<!--             <div class="panel-footer row-centered">
+                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>
+                <button class="col-centered btn btn-primary btn-lg" type="button" name="button">Ok</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/registry_public.js' %}"></script>
+{% endblock extra_js %}

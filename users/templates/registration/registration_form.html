@@ -1,20 +1,31 @@
-{% extends 'base/base.html' %}
+{% extends 'baby/base.html' %}
 {% load static %}
 {% load i18n %}
 {% block extra_js %}
-    <script src="{% static 'js/account_validator.js' %}" charset="utf-8"></script>
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 {%  endblock %}
 {% block content %}
-  <div class="registration-layout">
-    <div class="registration-form-wrapper">
-        <div class="registration jumbotron">
-            <h1>{% trans "Create your account now" %}</h1>
-        </div>
-        <div class="create-account-form">
+<div class="contact-wrapper">
+    <div class="container jumbotron">
+        <h1>Sign Up</h1>
+    </div>
+    <div class="container inner-section">
+      {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+      {% endif %}
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
             <form method="POST" action="{% url 'registration_register' %}" novalidate="novalidate">
-                <div class="image-separator hidden-xs">
+                <!-- <div class="image-separator hidden-xs">
                     <img src="http://placehold.it/150x150" alt="" />
-                </div>
+                </div> -->
                 <div class="registration-form">
                  {% csrf_token %}
                      <div class="fields-separator">
@@ -34,11 +45,13 @@
                          {% for rule in password_rules %}
                              <span>{{ rule }}</span>
                          {% endfor %}
-                         <button id="id_register" type="submit" class="btn-registrate">{% trans "Register now" %}</button>
+                         <br>
+                         <button id="id_register" type="submit" class="btn btn-primary btn-lg">Register now</button>
                      </div>
                 </div>
-           </form>
-        </div>
-      </div>
+            </form>
+         </div>
+         <div class="col-md-2"></div>
     </div>
+</div>
 {% endblock %}

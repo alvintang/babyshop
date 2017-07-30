@@ -52,6 +52,8 @@ INSTALLED_APPS = (
     'django_extensions',
     'registry',
     'crispy_forms',
+    'sslserver',
+    'djangosecure',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,6 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'djangosecure.middleware.SecurityMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -95,19 +98,19 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'skeleton_database',
-    #     'USER': 'project',
-    #     'PASSWORD': 'project',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    #  }
-
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'babysetgo',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '8889',
+     }
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 # Cache: http://django-cachalot.readthedocs.io/en/latest/quickstart.html

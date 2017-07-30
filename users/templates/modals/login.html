@@ -7,15 +7,18 @@
             <form class="test" method="POST" action="{% url 'index' %}" novalidate="novalidate">
                 {% csrf_token %}
                 {% if form %}
-                    {% for error in login_form.non_field_errors %}
-                        <ul class="errorlist">
-                            <li>{{ error }}</li>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        <h4>Login Error</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger">{{ error }}</li>
                         </ul>
+                        {% endfor %}
                     {% endfor %}
-                {{ login_form.email.errors }}
+                {# login_form.email.errors #}
                 <label>{{ login_form.email.label }}</label>
                 {{ login_form.email }}
-                {{ login_form.password.errors}}
+                {# login_form.password.errors#}
                 <label>{{ login_form.password.label }}</label>
                 {{ login_form.password }}
                 <a id="forgot-password" href="{% url 'auth_password_reset' %}">{% trans "Forgot my password" %}</a>
@@ -29,3 +32,11 @@
         </div>
     </div>
 </div>
+
+{% if login_failed == 'true' %}
+<script type="text/javascript">
+    $(window).on('load',function(){
+        $('#modal-login').modal('show');
+    });
+</script>
+{% endif %}

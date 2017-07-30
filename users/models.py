@@ -9,7 +9,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    slug = models.CharField(max_length=256, unique=True, null=True)
+    slug = models.CharField(max_length=255, unique=True, null=True)
     country = CountryField(_('Country'), blank=True, blank_label=_('Country'))
     email = models.EmailField(_('email address'), blank=True, unique=True)
     preferred_language = models.CharField(_('Preferred Language'), null=True, blank=True, max_length=100, choices=settings.LANGUAGES)

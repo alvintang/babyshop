@@ -55,6 +55,30 @@ header img {
   font-size: 1.5em;
 }
 
+.jumbotron {
+  background-color: #ade4cd;
+  text-align: center;
+}
+
+.inner-section {
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+@media (min-width: 768px) {
+  .inner-section {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+}
+
+@media (min-width: 768px) {
+  .inner-section {
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+}
+
 #modal-login {
   width: 247px;
   overflow: visible !important;

@@ -22,6 +22,13 @@
 <!-- Breadcrumbs are not visible in the main index page.  -->
 {% endif %}
 {% if not request.path == '/' %}
+
+    <!-- Header -->
+    <header>
+        {% block page_header %}
+        {% endblock page_header %}
+    </header>
+
 <div class="bg-color-white">
     <div id="id_breadcrumbs" class="breadcrumb hidden-xs">
              {% if breadcrumbs|length == 1 %}
