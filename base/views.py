@@ -23,6 +23,33 @@ import urllib, re
 User = get_user_model()
 
 
+class ComingSoonView(TemplateView):
+    """
+    Index view
+    """
+    template_name = 'base/index.html'
+    form = LoginForm()
+
+    def post(self, request):
+        context = {}
+        self.form = LoginForm(request.POST or None)
+
+        if request.POST and self.form.is_valid():
+            user_email = request.POST['email']
+            user_password = request.POST['password']
+            username = User.objects.get(email=user_email).username
+            user = authenticate(username=username, password=user_password)
+            auth_login(request, user)
+            context['authenticated'] = request.user.is_authenticated()
+            if context['authenticated']:
+                context['username'] = request.user.username
+                return redirect('home')
+
+        context.update({'login_form': self.form,
+                        'login_failed': 'true'})
+
+        return render(request, self.template_name, context)
+
 class IndexView(TemplateView):
     """
     Index view
@@ -61,7 +88,6 @@ class IndexView(TemplateView):
                         'login_failed': 'true'})
 
         return render(request, self.template_name, context)
-
 
 class ContactView(FormView):
     template_name = 'base/contact.html'

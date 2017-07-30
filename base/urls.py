@@ -9,7 +9,8 @@ from . import views
 urlpatterns = [
     url(r'^', include('users.urls')),
     url(r'^', include('registry.urls')),
-    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^$', views.ComingSoonView.as_view(), name='index'),
+    url(r'^proto/$', views.IndexView.as_view(), name='index'),
     url(r'^contact/$', views.ContactView.as_view(), name='contact'),
     url(r'^lists/$', views.ListsView.as_view(), name='lists'),
     url(r'^home/$', views.ListsView.as_view(), name='home'),
@@ -22,7 +23,7 @@ urlpatterns = [
     url(r'^privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy-policy'),
     url(r'^external/add/$', views.ExternalView.as_view(), name='external'),
     url(r'^external/add/item/$', views.AddToList.as_view(), name='external_item'),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
