@@ -4,6 +4,8 @@ Django settings
 """
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, sys
+#import django
+#django.setup()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -18,14 +20,14 @@ SECRET_KEY = 'vqje&(s$kn!osyitq#y%y1)g7-63#ia#+45(d&c%7x7u)d!pn3'
 # PYTHON version
 PYTHON_VERSION = sys.version_info
 
-TESTING = sys.argv[1:2] == ['test']
-if TESTING:
-    DEBUG = False
-else:
-    DEBUG = True
+#TESTING = sys.argv[1:2] == ['test']
+#if TESTING:
+DEBUG = False
+#else:
+#    DEBUG = True
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
-DEBUG = DEBUG_PROPAGATE_EXCEPTIONS
+#DEBUG = DEBUG_PROPAGATE_EXCEPTIONS
 
 ALLOWED_HOSTS = ['*']
 
@@ -47,7 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_countries',
+    #'django_countries',
     'cookielaw',
     'django_extensions',
     'registry',
@@ -184,8 +186,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = 'http://babysetgo.ph/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'base/static/')
+STATIC_ROOT = '/home/alvintang/webapps/static/' 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'

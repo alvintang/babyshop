@@ -3,7 +3,7 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django_countries.fields import CountryField
+#from django_countries.fields import CountryField
 from django.contrib.auth.models import AbstractUser
 
 
