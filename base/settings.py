@@ -186,7 +186,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = 'http://babysetgo.ph/static/'
+STATIC_URL = '//babysetgo.ph/static/'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'base/static/')
 STATIC_ROOT = '/home/alvintang/webapps/static/' 
 
@@ -199,7 +199,7 @@ LOGIN_URL = '/'
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 FIXTURE_DIRS = ('babysetgo/fixtures',)
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Django registration
 
@@ -219,10 +219,13 @@ REGISTRATION_SALT = 'registration'
 # https://django-registration.readthedocs.io/en/2.1.1/settings.html#django.conf.settings.REGISTRATION_SALT
 
 # Email config
-EMAIL_FROM = 'info@babysetgo.ph'
+DEFAULT_FROM_EMAIL = 'info@babysetgo.ph'
 EMAIL_TO = 'info@babysetgo.ph'
+
+ADMINS = (('Alvin', 'alvin@babysetgo.ph'), ('Issa','issa@babysetgo.ph'))
 
 EMAIL_HOST = 'smtp.webfaction.com'
 EMAIL_HOST_USER = 'babysetgo_issa'
 EMAIL_HOST_PASSWORD = 'dirklucas'
 SERVER_EMAIL = 'info@babysetgo.ph'
+EMAIL_PORT = 587
