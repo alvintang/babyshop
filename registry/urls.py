@@ -14,7 +14,16 @@ urlpatterns = (
     # url(r'^api/v1/', include(router.urls)),
     # url(r'^home/$', views.HomeView.as_view(), name='home'),
     url(r'^registry/add/$', views.RegistryCreateView.as_view(), name='registry_create'),
-    url(r'^public/registry/detail/(?P<pk>\S+)/$', views.RegistryDetailPublicView.as_view(), name='registry_registry_detail'),
+    url(r'^public/registry/detail/(?P<pk>\S+)/$', views.RegistryDetailPublicView.as_view(), name='registry_public_detail'),
+    url(r'^public/registry/search/', views.RegistrySearchView.as_view(), name='registry_search'),
+    url(r'^public/registry/search/(?P<query>\S+)/$', views.RegistrySearchView.as_view(), name='registry_search'),
+)
+
+urlpatterns += (
+    url(r'^add-cart/$', views.add, name='add-cart'),
+    url(r'^show-cart/$', views.show, name='show-cart'),
+    url(r'^checkout/$', views.checkout, name='checkout-cart'),
+    url(r'^payment/done/$', views.payment, name='payment-done'),
 )
 
 urlpatterns += (

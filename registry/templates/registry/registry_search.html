@@ -1,0 +1,46 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="container inner-section">
+    <!-- <div class="jumbotron">
+        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+    </div> -->
+    <div class="row row-centered home-cards">
+        <div class="panel card panel-default">
+<!--             <div class="panel-heading">
+                <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
+            </div> -->
+            <div class="panel-body">
+                <h1>Search Registries<a href="#"></a></h1>
+                <div class="form-group">
+                {% csrf_token %}
+                <input id="search-text" type="text" class="input-lg form-control form-group" placeholder="Type the name of Baby or Mommy or Daddy here and press Enter.">
+                </div>
+
+                <h2>Search Results</h2>
+                <div class="list-group django-list ">
+                    <div class="search-results">
+                    </div>
+                    <div class="search-loading">
+                        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="text-separator col-md-9 search-none">
+                        <h4>Sorry, no registries found.</h4>
+                    </div>
+                </div>
+            </div>
+
+<!--             <div class="panel-footer row-centered">
+                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>
+                <button class="col-centered btn btn-primary btn-lg" type="button" name="button">Ok</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/search_ajax.js' %}"></script>
+{% endblock extra_js %}

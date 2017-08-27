@@ -14,9 +14,12 @@
             <div class="panel-body">
                 <h1>{{ object.name }}<a href="#"></a></h1>  
                 <h3>{{ object.event_date }}</h3>
+                <h3>{{ object.event_venue }}</h3>
                 <p>
                     {{ object.event_description }}
                 </p>
+
+                <h3><button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">INSTRUCTIONS</button></h3>
 
                 <div class="list-group django-list">
                     {% for item in object.registryitem_set.all %}
@@ -42,12 +45,14 @@
                                 <h5 class="list-group-item-text"><br>This item has not been purchased yet.</h5><br>
                                 <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
                                 <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
                                 <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
                             {% endif %}
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+                <h3><a class="col-centered btn btn-primary" type="button" name="button" href="{% url 'show-cart' %}">View Gift Basket</a></h3>
             </div>
 
             <!-- Modal -->
@@ -62,13 +67,14 @@
                   </div>
                   <div class="modal-body">
                   <h4 class="item-name"></h4>
-                  <form action='' method='post' class='form-horizontal'>
+                  <form action='/add-cart/' method='get' class='form-horizontal'>
                     {% csrf_token %}
                     {{ form }}
+                    <input type="hidden" name="next" value="{{ request.path }}">
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" data-dismiss="modal">
+                    <input type="submit" class="btn btn-primary" value="Add to Gifts">
                   </div>
                   </form>
                 </div>
@@ -77,9 +83,48 @@
             </div>
 
 <!--             <div class="panel-footer row-centered">
-                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>
-                <button class="col-centered btn btn-primary btn-lg" type="button" name="button">Ok</button>
-            </div> -->
+                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>-->
+            <!-- </div>  -->
+        </div>
+    </div>
+</div>
+
+<div id="modal-instructions" class="modal fade modal-sm" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Instructions</h3>
+        </div>
+        <div class="modal-body">
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                <strong class="fa-stack-1x text-color-white">1</strong>
+            </span>
+            Select the items you want to give by adding them to your cart.
+            
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                <strong class="fa-stack-1x text-color-white">2</strong>
+            </span>
+            Purchase the items by continuing to checkout. 
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                <strong class="fa-stack-1x text-color-white">3</strong>
+            </span>
+            Write a message for Mommy and Baby!
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                <strong class="fa-stack-1x text-color-white">4</strong>
+            </span>
+            Sit back and relax! We will ship the gifts to Mommy and Baby for you!
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>

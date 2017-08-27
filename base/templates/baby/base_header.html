@@ -9,9 +9,10 @@
                     <div class="intro-text">
                         <h1 class="name">Create your own registry and <br>add any items from any store.</h1>
                         <hr class="star-light">
-                        <span class="skills">
-                            <a class="btn btn-lg btn-primary btn-group" href="#">Create my registry</a>
-                            <a class="btn btn-lg btn-info btn-group" href="#">Search for a registry</a>
+                        <span class="skills page-scroll">
+                            <a class="btn btn-lg btn-primary btn-group" href="{% url 'registration_register' %}">Create my registry</a>
+                            <a class="btn btn-lg btn-warning btn-group" href="{% url 'login' %}">Manage my registry</a>
+                            <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a>
                         </span>
                     </div>
                     <img class="img-responsive" src="{% static 'images/balloon_transparent.gif' %}" alt="">

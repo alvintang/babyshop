@@ -4,57 +4,129 @@
 
 {% block content %}
 
-<!-- Portfolio Grid Section -->
-    <section id="registry">
+<!-- About Section -->
+    <section id="about">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>Registry</h2>
+                    <h2>About</h2>
                     <hr class="star-primary">
                 </div>
             </div>
             <div class="row">
-                <div class="registry-item col-lg-4">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8 registry-text">
+                    <p>Ready Mommy?</p>
+                    <p>
+                    Baby Set Go is an online baby registry service allowing you to include items from any Philippine online store. Add items anytime, anywhere. We'll deliver your gift your home or event venue.
+                    </p>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+            <div class="row">
+                <div class="registry-item col-lg-1"></div>
+                <div class="registry-item col-lg-2">
                     <i class="fa fa-pencil-square-o registry-icon text-color-pink"></i>
                     <p>Create a registry and fill out the details of your event.</p>
                 </div>
-                <div class="registry-item col-lg-4">
+                <div class="registry-item col-lg-2">
                     <i class="fa fa-shopping-cart registry-icon text-color-blue"></i>
                     <p>Add items from any store online by using the quick link we will provide.</p>
                 </div>
-                <div class="registry-item col-lg-4">
+                <div class="registry-item col-lg-2">
                     <i class="fa fa-share-alt registry-icon text-color-orange"></i>
-                    <p>Publish and share your registry to your friends!</p>
+                    <p>Publish and share your registry to your family and friends.</p>
                 </div>
-
+                <div class="registry-item col-lg-2">
+                    <i class="fa fa-shopping-bag registry-icon text-color-green"></i>
+                    <p>Loved ones can purchase gifts through Baby Set Go.</p>
+                </div>
+                <div class="registry-item col-lg-2">
+                    <i class="fa fa-truck registry-icon text-color-gray"></i>
+                    <p>Baby Set Go will deliver the gifts to you!</p>
+                </div>
+                <div class="registry-item col-lg-1"></div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="success" id="about">
+    <!-- Articles Section -->
+    <section class="success" id="articles">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>Start Now!</h2>
+                    <h2>Articles</h2>
                     <hr class="star-light">
                 </div>
             </div>
             <div class="row text-center">
                 <br>
-                <div class="col-lg-4 col-lg-offset-2">
-                    <p>Use Baby Set Go for your next event! Just click the button below to start creating your own registry.</p><br>
-                    <a class="btn btn-lg btn-primary btn-group" href="#">Create my registry</a>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <p>Learn about trusted products, product reviews, baby and mommy tips, and more.</p><br>
+                    <a class="btn btn-lg btn-info btn-group" href="#">Learn More</a>
+                </div>
+                <div class="col-lg-2"></div>
+                <!-- <div class="col-lg-4">
+                    <p>Use Baby Set Go for your next event! Start creating your own registry.</p><br>
+                    <a class="btn btn-lg btn-primary btn-group" href="{% url 'registration_register' %}">Create my registry</a>
                 </div>
                 <div class="col-lg-4">
-                    <p>Attending an event? Search for your friend's registry and buy the gift right here!</p><br>
-                    <a class="btn btn-lg btn-info btn-group" href="#">Search for a registry</a>
+                    <p>Already have a registry? Login to manage your registry.</p><br>
+                    <a class="btn btn-lg btn-warning btn-group" data-toggle="modal" data-target="#modal-login" href="#" role="button">Manage my registry</a>
                 </div>
+                <div class="col-lg-4">
+                    <p>Attending an event? Search for a registry and buy the gift right here!</p><br>
+                    <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a>
+                </div> -->
                 <!-- <div class="col-lg-8 col-lg-offset-2 text-center">
                     <a href="#" class="btn btn-lg btn-outline">
                         <i class="fa fa-download"></i> Download Theme
                     </a>
                 </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Registry Section -->
+    <section class="" id="sample">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Sample Registries</h2>
+                    <hr class="star-primary">
+                </div>
+            </div>
+            <div class="row text-center">
+                <br>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <p>Don't know where to start?</p>
+                    <p>Check out our sample registries.</p><br>
+                    <a class="btn btn-lg btn-primary btn-group" href="#">See Sample Registries</a>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="success" id="partners">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Partners</h2>
+                    <hr class="star-light">
+                </div>
+            </div>
+            <div class="row text-center">
+                <br>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <p>Here's a list of brands and stores we trust to help you in this new and wonderful chapter of your life!</p><br>
+                    
+                </div>
+                <div class="col-lg-2"></div>
             </div>
         </div>
     </section>

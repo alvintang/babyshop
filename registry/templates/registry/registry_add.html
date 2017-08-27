@@ -1,7 +1,7 @@
 {% extends 'baby/base.html' %}
 {% load static i18n %}
-{% block content %}
 
+{% block extra_js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -20,9 +20,12 @@
     });
 </script>
 
+{%  endblock %}
+
+{% block content %}
 <div class="contact-wrapper">
-    <div class="container jumbotron">
-        <h1>{% trans 'Create Registry' %}</h1>
+    <div class=" jumbotron">
+        <h1>Create Registry</h1>
     </div>
     <div class="container inner-section">
         <form action="" method="post">

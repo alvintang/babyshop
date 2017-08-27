@@ -1,0 +1,48 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load carton_tags %}
+
+{% block content %}
+
+<div class="container">
+    <div class="cart-container">
+        <div class="panel card panel-default">
+            <div class="panel-heading background-color-green">
+                <h1>Checkout</h1>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-6">
+                    <form action="/checkout/" method="POST">
+                        {{ form }}
+                        <br>
+                        <input class="btn btn-danger form-control" type=submit value="PROCEED TO PAYMENT">
+                    </form>
+                </div>
+                {% get_cart as cart %}
+                <div class="col-md-6">
+                    <div class="table">
+                        <div class="row header blue">
+                            <div class="cell">Product</div>
+                            <div class="cell">Quantity</div>
+                            <div class="cell">Price</div>
+                        </div>
+                        {% for item in cart.items %}
+                        <div class="row">
+                            <div class="cell">{{ item.product.name }}</div>
+                            <div class="cell">{{ item.quantity }}</div>
+                            <div class="cell">{{ item.subtotal }}</div>
+                        </div>
+                        {% endfor %}
+                        <div class="row header blue total">
+                            <div class="cell">Total</div>
+                            <div class="cell"></div>
+                            <div class="cell">{{ cart.total }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

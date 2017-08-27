@@ -13,11 +13,14 @@
             </div> -->
             <div class="panel-body">
                 <h1>{{ object.name }}<a href="#"></a></h1>  
-                <h3>{{ object.event_date }}</h3>
+                <h3>Event Date: {{ object.event_date }}</h3>
                 <p>
                     {{ object.event_description }}
                 </p>
-                <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://localhost:8000/static/js/babysetgo-add-items.js?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='https://localhost:8000/static/css/modal.css';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to Bookmark</a></h3>
+                <!--h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://localhost:8000/static/js/babysetgo-add-items.js?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='https://localhost:8000/static/css/modal.css';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to Bookmark</a></h3-->
+                <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{{request.get_host}}{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{{request.get_host}}{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to BSG</a>
+                <button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">Instructions</button>
+                </h3>
 
                 <div class="list-group django-list">
                     {% for item in object.registryitem_set.all %}
@@ -49,6 +52,65 @@
                 <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>
                 <button class="col-centered btn btn-primary btn-lg" type="button" name="button">Ok</button>
             </div> -->
+        </div>
+    </div>
+</div>
+
+<div id="modal-instructions" class="modal fade modal-sm" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Instructions</h3>
+        </div>
+        <div class="modal-body">
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                <strong class="fa-stack-1x text-color-white">1</strong>
+            </span>
+            Drag this button to your toolbar.
+            <a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{{request.get_host}}{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{{request.get_host}}{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="btn btn-primary" style="font-family: 'Bubbler One', 'Helvetica Neue', Helvetica, Arial, sans-serif; text-transform: uppercase; font-weight: 700;">Add to BSG</a>
+            
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                <strong class="fa-stack-1x text-color-white">2</strong>
+            </span>
+            Select an item from online stores.
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                <strong class="fa-stack-1x text-color-white">3</strong>
+            </span>
+            Press the "Add to BSG" you added to your toolbar to include item to your registry.
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                <strong class="fa-stack-1x text-color-white">4</strong>
+            </span>
+            View and organize your registry through this page.
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-gray"></i>
+                <strong class="fa-stack-1x text-color-white">5</strong>
+            </span>
+            Share your registry to family and friends through this link
+            <input type=text disabled=true class="form-control" value="{{ request.get_host }}/public/registry/{{ pk }}" style="margin-left:10%; width: 80%;">
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                <strong class="fa-stack-1x text-color-white">6</strong>
+            </span>
+            Have fun and enjoy the motherhood journey!
+
+            <br><br>
+            More questions? Need advice on which items to register?<br>
+            Contact us now! We're here for you Mommy!
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>

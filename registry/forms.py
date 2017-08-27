@@ -43,10 +43,31 @@ class RegistryItemForm(forms.ModelForm):
 
 class RegistryItemBuyForm(forms.Form):
   name = forms.CharField(label=_('Your Name'), required=True, max_length=50, 
-                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'name'}))
+                widget=forms.HiddenInput(attrs={'class': "form-control", 'id': 'name'}))
   item_qty = forms.IntegerField(label=_('Quantity'), required=True,
                 widget=forms.NumberInput(attrs={'class': "form-control", 'id': 'item_qty'}))
-  message = forms.CharField(label=_('Your Message'),required=False,  max_length=500, 
-                widget=forms.Textarea(attrs={'class': "form-control", 'id':'message'}))
+  # message = forms.CharField(label=_('Your Message'),required=False,  max_length=500, 
+  #               widget=forms.Textarea(attrs={'class': "form-control", 'id':'message'}))
   item_id = forms.CharField(initial='',required=True,  max_length=200, 
                 widget=forms.HiddenInput(attrs={'id': 'item_id'}))
+  item_price = forms.CharField(initial='',required=True,  max_length=200, 
+                widget=forms.HiddenInput(attrs={'id': 'item_price'}))
+
+class CheckoutForm(forms.Form):
+  first_name = forms.CharField(label=_('First Name'), required=True, max_length=50, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'fname'}))
+  middle_name = forms.CharField(label=_('Middle Name'), required=False, max_length=50, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'mname'}))
+  last_name = forms.CharField(label=_('Last Name'), required=True, max_length=50, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'lname'}))
+  email_add = forms.CharField(label=_('Email Address'), required=True, max_length=50,widget=forms.EmailInput(attrs={'class': "form-control", 'id': 'email_add'}))
+  mobile = forms.CharField(label=_('Mobile Number'), required=False, max_length=15, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'mobile'}))
+  phone = forms.CharField(label=_('Phone Number'), required=False, max_length=12, 
+                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'phone'}))
+  address1 = forms.CharField(label=_('Address 1'), required=True, max_length=300, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'addr1'}))
+  address2 = forms.CharField(label=_('Address 2'), required=True, max_length=300, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'addr2'}))
+  city = forms.CharField(label=_('City'), required=True, max_length=100, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'city'}))
+  state = forms.CharField(label=_('Province/Region'), required=True, max_length=100, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'state'}))
+  country = forms.CharField(label=_('Country'), required=True, max_length=100, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'country'}))
+  zipcode = forms.CharField(label=_('Zip Code'), required=True, max_length=8, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'zipcode'}))

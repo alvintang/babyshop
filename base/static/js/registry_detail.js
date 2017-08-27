@@ -10,4 +10,9 @@ $(document).ready(function() {
     $('#item_id').val(item_id);
   });
 
+  var url = window.location.href;
+  if(url.indexOf('?initial=1') != -1 || url.IndexOf('/initial1') != -1) {
+      $('#modal-instructions').modal('show');
+  }
+
 });

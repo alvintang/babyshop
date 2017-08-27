@@ -46,9 +46,9 @@ class UserRegisterForm(RegistrationForm):
 
 class LoginForm(forms.Form):
     email = forms.CharField(label=_("Email"), required=True,
-                            widget=forms.TextInput(attrs={'placeholder': _('Your email')}))
+                            widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': _('Your email')}))
     password = forms.CharField(label=_("Password"), max_length=32,
-                               widget=forms.PasswordInput(attrs={'placeholder': _('Your password')}),
+                               widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder': _('Your password')}),
                                required=True, validators=[
                                     RegexValidator(
                                         regex=is_password_secure,

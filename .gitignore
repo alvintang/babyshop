@@ -1,1 +1,6 @@
-*.pyc
+babysetgo/__pycache__/*
+base/__pycache__/*
+registry/__pycache__/*
+users/__pycache__/*
+users/migrations/__pycache__/*
+registry/migrations/__pycache__/*

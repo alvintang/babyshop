@@ -1,5 +1,8 @@
 {% load i18n %}
 {% load static %}
+{% load carton_tags %}
+
+{% get_cart as cart %}
           <!-- Navigation -->
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
         <div class="container">
@@ -24,10 +27,16 @@
                         <a href="#page-top"></a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#registry">Registry</a>
+                        <a href="#about">About</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#about">Start Now</a>
+                        <a href="#articles">Articles</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#sample">Sample Registries</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#partners">Partners</a>
                     </li>
                     <li class="page-scroll">
                         <a href="#contact">Contact</a>
@@ -62,7 +71,7 @@
                           <a href="/"></a>
                       </li>
                       <li class="page-scroll">
-                          <a href="#registry">Search Registries</a>
+                          <a href="{% url 'registry_search' %}">Search Registries</a>
                       </li>
                     {% if user.is_authenticated %}
                       <li class="page-scroll">
@@ -96,6 +105,13 @@
                                   class="login-no-registert" href="#"{% endif %} role="button">Login</a></li>
                               {% endif %}
                     {% endif %}
+                    <li class="">
+                      <a href="{% url 'show-cart' %}">
+                      <i class="fa fa-lg fa-shopping-basket text-color-blue fa-flip-horizontal"></i>
+                      {{ cart.count }}
+                      </a>
+                    </li>
+
                   </ul>
                 {% endif %}
             </div>

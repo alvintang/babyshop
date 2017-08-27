@@ -1,0 +1,40 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load carton_tags %}
+
+{% block content %}
+
+<div class="container">
+    <div class="cart-container">
+        <div class="panel card panel-default">
+            <div class="panel-heading background-color-green">
+                <h1>Confirm Billing Details</h1>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3"></div>
+                {% get_cart as cart %}
+                <div class="col-md-6">
+                    <div class="table">
+                        <div class="row header blue">
+                            <div class="cell">Details</div>
+                            <div class="cell"></div>
+                        </div>
+                        {% for key,item in post_params.items %}
+                        <div class="row">
+                            <div class="cell">{{ key }}</div>
+                            <div class="cell">{{ item }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <form action="https://testpti.payserv.net/webpaymentv2/default.aspx" method="POST">
+                        <input type="text" name="paymentrequest" id="paymentrequest" value="{{ b64_str }}" style="display:none;">
+                        <input class="btn btn-danger form-control" type=submit value="PROCEED TO PAYMENT">
+                    </form>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
