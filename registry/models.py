@@ -29,7 +29,7 @@ class Registry(models.Model):
     address = models.CharField(max_length=255, blank=False)
     delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=False)
     due_date = models.DateField(blank=True, null=True)
-    baby_birthdate = models.DateField(blank=True)
+    baby_birthdate = models.DateField(blank=True, null=True)
 
     # Relationship Fields
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, )

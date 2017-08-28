@@ -91,7 +91,10 @@ class RegistryCreateView(CreateView):
     model = Registry
     form_class = RegistryForm
     template_name = 'registry/registry_add.html'
-    success_url = '/home'
+    # success_url = '/home'
+
+    def get_success_url(self):
+        return reverse('registry_registry_detail',args=(self.object.id,))+"?initial=1"
 
     def form_valid(self, form):
         if form.is_valid():
