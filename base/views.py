@@ -158,7 +158,7 @@ class ExternalView(ListView):
 
         item_name = request.POST.get('item_name')
         item_qty = int(request.POST.get('item_qty'))
-        item_price = float(request.POST.get('item_price'))
+        item_price = float(request.POST.get('item_price').replace(',',''))
         item_url = request.POST.get('item_url')
         item_img = request.POST.get('item_img')
         item_notes = request.POST.get('item_notes')
