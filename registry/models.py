@@ -13,6 +13,7 @@ from django_extensions.db import fields as extension_fields
 class Registry(models.Model):
 
     delivery_options = (('venue','Venue'),('address','Home Address'))
+    due_date_options = (('due_date','Due Date'),('baby_birthdate','Baby Birthdate'))
 
     # Fields
     name = models.CharField(max_length=255)
@@ -28,8 +29,8 @@ class Registry(models.Model):
     name_father = models.CharField(max_length=255, blank=False)
     address = models.CharField(max_length=255, blank=False)
     delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=False)
-    due_date = models.DateField(blank=True, null=True)
-    baby_birthdate = models.DateField(blank=True, null=True)
+    bool_due_date = models.CharField(choices=due_date_options,max_length=30, blank=False)
+    birth_or_due_date = models.DateField(blank=True, null=True)
 
     # Relationship Fields
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, )

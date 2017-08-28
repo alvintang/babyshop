@@ -22,35 +22,41 @@
                 <h3><button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">INSTRUCTIONS</button></h3>
 
                 <div class="list-group django-list">
-                    {% for item in object.registryitem_set.all %}
-                    <div class="list-group-item row">
-                        <div class="img-separator col-md-3">
-                            <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
-                        </div>
-                        <div class="text-separator col-md-9">
-                            <h4 class="list-group-item-heading">{{ item.name }}  [{{ item.id }}]</h4>
-                            <h5 class="list-group-item-text">Price: {{ item.price_from_vendor }}</h5>
-                            <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
-                            <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
-                            {% if item.bought == 1 %}
-                                <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
-                                {% if item.quantity_bought < item.quantity %}
-                                <br>
-                                <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
-                                <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
-                                <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                    {% if object.registryitem_set.all|length > 0%}
+                        {% for item in object.registryitem_set.all %}
+                        <div class="list-group-item row">
+                            <div class="img-separator col-md-3">
+                                <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
+                            </div>
+                            <div class="text-separator col-md-9">
+                                <h4 class="list-group-item-heading">{{ item.name }}  [{{ item.id }}]</h4>
+                                <h5 class="list-group-item-text">Price: {{ item.price_from_vendor }}</h5>
+                                <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
+                                <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
+                                {% if item.bought == 1 %}
+                                    <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
+                                    {% if item.quantity_bought < item.quantity %}
+                                    <br>
+                                    <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
+                                    <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                    {% endif %}
+                                    <h5 class="list-group-item-text"><br>Purchased by: &nbsp {{ item.bought_by }}</h5>
+                                {% else %}
+                                    <h5 class="list-group-item-text"><br>This item has not been purchased yet.</h5><br>
+                                    <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
+                                    <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                    <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
+                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
                                 {% endif %}
-                                <h5 class="list-group-item-text"><br>Purchased by: &nbsp {{ item.bought_by }}</h5>
-                            {% else %}
-                                <h5 class="list-group-item-text"><br>This item has not been purchased yet.</h5><br>
-                                <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a>
-                                <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
-                                <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
-                                <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item row">
+                            <h3>There are no items yet in this registry!</h3>
+                        </div>
+                    {% endif %}
                 </div>
                 <h3><a class="col-centered btn btn-primary" type="button" name="button" href="{% url 'show-cart' %}">View Gift Basket</a></h3>
             </div>

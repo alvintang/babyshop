@@ -114,6 +114,17 @@ class ListsView(ListView):
     template_name = 'registry/list.html'
     model = Registry
 
+    def get(self,request):
+        context = {}
+        try:
+            registry = Registry.objects.get(created_by_id=request.user)
+        except Registry.DoesNotExist:
+            registry = None
+
+        context = {'object_list': registry}
+
+        return render(request, self.template_name, context)
+
 @method_decorator(xframe_options_exempt, name='dispatch')
 @method_decorator(login_required(login_url='index'), name='dispatch')
 class ExternalView(ListView):

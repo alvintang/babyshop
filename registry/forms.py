@@ -6,7 +6,11 @@ from django.utils.translation import ugettext as _
 class RegistryForm(forms.ModelForm):
     class Meta:
         model = Registry
-        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address', 'delivered_where', 'due_date', 'baby_birthdate']
+        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address', 'delivered_where', 'bool_due_date', 'birth_or_due_date']
+        labels = {
+          'bool_due_date': _('Date type'),
+          'birth_or_due_date': _('Due Date/Baby Birthdate'),
+        }
         # exclude = ['created_by', 'id']
         widgets = {
             'name' : forms.TextInput(attrs={'class': "form-control"}),
@@ -17,8 +21,7 @@ class RegistryForm(forms.ModelForm):
             'name_mother' : forms.TextInput(attrs={'class': "form-control"}),
             'name_father' : forms.TextInput(attrs={'class': "form-control"}),
             'address' : forms.TextInput( attrs={'class': "form-control"}),
-            'due_date' : forms.DateInput(attrs={'class':'datepicker form-control'}),
-            'baby_birthdate' : forms.DateInput(attrs={'class':'datepicker form-control'}),
+            'birth_or_due_date' : forms.DateInput(attrs={'class':'datepicker form-control', 'id': 'birth_or_due_date'}),
         }
 
 
