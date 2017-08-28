@@ -117,7 +117,7 @@ class ListsView(ListView):
     def get(self,request):
         context = {}
         try:
-            registry = Registry.objects.get(created_by_id=request.user)
+            registry = Registry.objects.filter(created_by_id=request.user)
         except Registry.DoesNotExist:
             registry = None
 

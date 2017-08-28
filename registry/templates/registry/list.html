@@ -55,7 +55,7 @@
 
         <div class="container">
             <div class="list-group django-list">
-                {% if object_list is None %}
+                {% if object_list|length <= 0 %}
                 <div class="list-group-item row">
                     <h3>Start creating your own registry!</h3>
                     <span class="fa-stack fa-2x">
