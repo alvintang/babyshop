@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 
-is_password_secure = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$%&/()=?])[A-Za-z\d\-!·$%&/()=?]{8,32}$'
+is_password_secure = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$@@%&\/()=?])[A-Za-z\d\-!·$@%&\/()=?]{8,32}$'
 
 
 class CustomPasswordValidator(object):
