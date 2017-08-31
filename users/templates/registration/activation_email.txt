@@ -1,5 +1,10 @@
 {% load i18n %}
+Hi Mommy!
 
-{% trans 'This is the activation account email for your account' %} {{ user.username }}.
+Just one last step to activate your Baby Set Go account, {{ user.username }}, then you're good to go!
 
-{% trans 'Your activation code is' %} {{ site }}{% url 'registration_activate' activation_key %} {% trans 'and is available for' %} {{ expiration_days }} {% trans 'days' %}.
+Pls click on the link to activate your account: {{ site }}{% url 'registration_activate' activation_key %} This link is available for {{ expiration_days }} days.
+
+Helping you on your motherhood journey, 
+
+The Baby Set Go Team :)

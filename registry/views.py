@@ -427,6 +427,13 @@ def payment(request):
         for productItem in cart.items:
             # create new RegistryItemPaid for each product
             try:
+                # update quantity
+                if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
+                    productItem.product.quantity_bought += productItem.quantity
+                    productItem.product.save()
+                else:
+                    raise ValueError("Product quantity to be bought is greater than available quantity")
+
                 registryItemPaid = RegistryItemPaid.objects.create(
                     name=name,
                     message=message,
@@ -439,10 +446,6 @@ def payment(request):
                     registry_item=productItem.product,
                     transaction = transaction)
 
-                # update quantity
-                productItem.product.quantity_bought += productItem.quantity
-                productItem.product.save()
-
             except IntegrityError as e:
                 print(e.__cause__)
                 if e.args[0] == 1062:
@@ -451,6 +454,13 @@ def payment(request):
                 else:
                     error_msg = "There was an error processing your transaction. Please contact us for assistance."
                 
+                context = { 'error_msg' : error_msg }
+
+                return render(request, 'registry/payment.html', context)
+
+            except ValueError as e:
+                print(e.__cause__)
+                error_msg = e.__cause__
                 context = { 'error_msg' : error_msg }
                 
                 return render(request, 'registry/payment.html', context)
@@ -461,7 +471,13 @@ def payment(request):
         try:
             send_mail(
                 'Baby Set Go Purchase',
-                'Your transaction number is '+transaction_reference+'. ',
+                'Hi ' + name +'!\n' + 
+                'You have recently purchased an item from Baby Set Go! Your transaction reference is '+transaction_reference+'.\n'+
+                'Please be reminded of payment procedure for bank deposits:\n'+
+                '1. Deposit payment to BPI account XXXX-XXXX-XX\n'+
+                '2. Send a picture or scanned copy of the deposit slip to any of the following: email to info@babysetgo.ph or viber to +639178034772\n'+
+                'Thank you!\n\nBest regards,\nBaby Set Go Team :)\n\n'+
+                '<This email is auto-generated>',
                 'info@babysetgo.ph',
                 [email,],
                 fail_silently=False,

@@ -6,8 +6,45 @@
 {% block content %}
   <div class="index-wrapper">
       <div class="information-panel jumbotron">
-          <h1>{% trans 'Congratulations, you account is now active!' %}</h1>
-          <a type="button" href="{% url 'index' %}" class="btn btn-primary btn-lg" name="button">{% trans "Go back" %}</a>
+          <h1>Congratulations!</h1>
       </div>
+
+      <div class="container">
+            <div class="list-group django-list">
+                <div class="list-group-item row">
+                    <h3>Your Baby Set Go account has been activated! <br>You may now start to create your registry by following these simple instructions:</h3>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                        <strong class="fa-stack-1x text-color-white">1</strong>
+                    </span>
+                    Create a registry and fill out the details of your event.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                        <strong class="fa-stack-1x text-color-white">2</strong>
+                    </span>
+                    Add items from any store online by using the quick link we will provide.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                        <strong class="fa-stack-1x text-color-white">3</strong>
+                    </span>
+                    Publish and share your registry to your family and friends.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                        <strong class="fa-stack-1x text-color-white">4</strong>
+                    </span>
+                    Manage your registries in this page.
+                    <br>
+
+                    <a class="btn btn-lg btn-warning btn-group" data-toggle="modal" data-target="#modal-login" href="#" role="button">Manage my registry</a>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 {% endblock %}
