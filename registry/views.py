@@ -428,11 +428,11 @@ def payment(request):
             # create new RegistryItemPaid for each product
             try:
                 # update quantity
-                if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
-                    productItem.product.quantity_bought += productItem.quantity
-                    productItem.product.save()
-                else:
-                    raise ValueError("Product quantity to be bought is greater than available quantity")
+                #if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
+                productItem.product.quantity_bought += productItem.quantity
+                productItem.product.save()
+                #else:
+                #    raise ValueError("Product quantity to be bought is greater than available quantity")
 
                 registryItemPaid = RegistryItemPaid.objects.create(
                     name=name,
