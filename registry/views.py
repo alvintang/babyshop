@@ -484,6 +484,10 @@ def payment(request):
             )
         except SMTPException as e:
             print(e.__cause__)
+            error_msg = "E-mail sending error."
+            context = { 'error_msg' : error_msg }
+                
+            return render(request, 'registry/payment.html', context)
 
 
         # temporarily bank transfer only
