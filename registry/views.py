@@ -460,7 +460,7 @@ def payment(request):
 
             except ValueError as e:
                 print(e.__cause__)
-                error_msg = e.__cause__
+                error_msg = "ValueError"
                 context = { 'error_msg' : error_msg }
                 
                 return render(request, 'registry/payment.html', context)
