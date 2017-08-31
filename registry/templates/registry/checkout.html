@@ -12,35 +12,66 @@
                 <h1>Checkout</h1>
             </div>
             <div class="panel-body">
-                <div class="col-md-6">
-                    <form action="/checkout/" method="POST">
-                        {{ form }}
-                        <br>
-                        <input class="btn btn-danger form-control" type=submit value="PROCEED TO PAYMENT">
-                    </form>
+                <br>
+                <div class='row'>
+                    <ul class="progressbar">
+                        <li class="active">Information</li>
+                        <li>Choose Payment</li>
+                        <li>Transaction Done</li>
+                    </ul>
                 </div>
-                {% get_cart as cart %}
-                <div class="col-md-6">
-                    <div class="table">
-                        <div class="row header blue">
-                            <div class="cell">Product</div>
-                            <div class="cell">Quantity</div>
-                            <div class="cell">Price</div>
-                        </div>
-                        {% for item in cart.items %}
-                        <div class="row">
-                            <div class="cell">{{ item.product.name }}</div>
-                            <div class="cell">{{ item.quantity }}</div>
-                            <div class="cell">{{ item.subtotal }}</div>
-                        </div>
-                        {% endfor %}
-                        <div class="row header blue total">
-                            <div class="cell">Total</div>
-                            <div class="cell"></div>
-                            <div class="cell">{{ cart.total }}</div>
+                <br>
+                {% if error_msg %}
+                <p class="text-color-pink">{{ error_msg }}</p>
+                <br>
+                {% endif %}
+                {% if empty_cart is False %}
+                <div class="row">
+                    <div class="col-md-6">
+                        
+                        <form action="/checkout/" method="POST">
+                            {{ form }}
+                            <br>
+                            <h3><input class="btn btn-info form-control" type=submit value="CONTINUE"></h3>
+                        </form>
+                    </div>
+                    {% get_cart as cart %}
+                    <div class="col-md-6">
+                        <div class="table">
+                            <div class="row header blue">
+                                <div class="cell">Product</div>
+                                <div class="cell">Quantity</div>
+                                <div class="cell">Price</div>
+                            </div>
+                            {% for item in cart.items %}
+                            <div class="row">
+                                <div class="cell">{{ item.product.name }}</div>
+                                <div class="cell">{{ item.quantity }}</div>
+                                <div class="cell">{{ item.subtotal }}</div>
+                            </div>
+                            {% endfor %}
+                            {% if not cart.is_empty %}
+                            <div class="row">
+                                <div class="cell">Delivery Fee</div>
+                                <div class="cell">12%</div>
+                                <div class="cell">{{ delivery_fee }}</div>
+                            </div>
+                            {% else %}
+                            <div class="row">
+                                <div class="cell">You have no items yet.</div>
+                                <div class="cell"></div>
+                                <div class="cell"></div>
+                            </div>
+                            {% endif %}
+                            <div class="row header blue total">
+                                <div class="cell">Total</div>
+                                <div class="cell"></div>
+                                <div class="cell">{{ cart_total }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

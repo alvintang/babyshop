@@ -1,7 +1,7 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, TemplateView
 from django.views.generic.edit import FormView
-from .models import Registry, Item, RegistryItem
-from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm
+from .models import Registry, Item, RegistryItem, RegistryItemPaid, Transaction
+from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm, RegistryItemPaidForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -25,6 +25,10 @@ import xml.etree.ElementTree as ET
 import hashlib
 import base64
 from collections import OrderedDict
+from django.db import IntegrityError
+from decimal import Decimal
+from django.core.mail import send_mail
+from smtplib import SMTPException
 
 def datetime_handler(x):
     if hasattr(x, 'isoformat'):
@@ -257,6 +261,14 @@ def add(request):
 
     registryItem = RegistryItem.objects.get(pk=pk)
     cart.add(registryItem, price=registryItem.price_from_vendor, quantity=request.GET.get('item_qty'))
+
+    #reserve item
+    # 1. increment qty_bought to reserve
+    #registryItem.quantity_bought+=1
+    #registryItem.save()
+    # 2. set reserved status
+    # 3. 
+
     view_name = 'registry_registry_detail'
         # No need for reverse_lazy here, because it's called inside the method
     return redirect(request.GET.get('next'))
@@ -275,11 +287,211 @@ def show(request):
                 ctr = 0
                 while ctr < delete_qty:
                     cart.remove_single(registryItem)
+                    registryItem.quantity_bought-=1
+                    registryItem.save()
                     ctr += 1
         return render(request, 'registry/show_cart.html')
 
 @csrf_exempt
 def checkout(request):
+    if request.method == "GET":
+        form = RegistryItemPaidForm()
+        cart = Cart(request.session)
+        delivery_fee = cart.total * Decimal('0.12').quantize(Decimal('0.01'))
+        cart_total = cart.total + delivery_fee
+
+        # get Cart products
+        cart = Cart(request.session)
+
+        if cart.is_empty:
+            error_msg = "You have no items in your gift basket!"
+        else:
+            error_msg = ""
+
+                
+        context = { 'form' : form,
+                    'delivery_fee' : delivery_fee,
+                    'empty_cart' : cart.is_empty,
+                    'cart_total' : cart_total,
+                    'error_msg' : error_msg
+                }
+
+        return render(request, 'registry/checkout.html', context)
+
+    elif request.method == "POST":
+        form = RegistryItemPaidForm()
+        context = {}
+
+        # get POST params
+        name = request.POST.get('name')
+        message = request.POST.get('message')
+        email = request.POST.get('email')
+        tel_no = request.POST.get('tel_no')
+        mobile = request.POST.get('mobile')
+
+        giver_info = {
+            'name' : name,
+            'message' : message,
+            'email' : email,
+            'tel_no' : tel_no,
+            'mobile' : mobile,
+        }
+
+        context = {'giver_info': giver_info}
+        request.session['giver_name'] = name
+        request.session['giver_message'] = message
+        request.session['giver_email'] = email
+        request.session['giver_mobile'] = mobile
+        request.session['giver_tel_no'] = tel_no
+
+        return redirect('payment')
+
+@csrf_exempt
+def payment(request):
+    if request.method == "GET":
+        context = {}
+        given_info = None
+
+        if request.session.get('giver_name', None) is None:
+            return redirect('show-cart')
+
+        # get Cart products
+        cart = Cart(request.session)
+
+        if cart.is_empty:
+            error_msg = "You have no items in your gift basket!"
+            context = { 'error_msg' : error_msg }
+                
+            return redirect('show-cart')
+
+        # get user info from session
+        name = request.session['giver_name']
+        message = request.session['giver_message']
+        email = request.session['giver_email']
+        tel_no = request.session['giver_tel_no']
+        mobile = request.session['giver_mobile']
+
+        giver_info = {
+            'name' : name,
+            'message' : message,
+            'email' : email,
+            'tel_no' : tel_no,
+            'mobile' : mobile,
+        }
+
+        context = {'giver_info': giver_info}
+
+        return render(request, 'registry/payment.html', context)
+
+    if request.method == "POST":
+        context = {}
+
+        if request.session.get('giver_name', None) is None:
+            return redirect('show-cart')
+
+        # get POST params
+        name = request.POST.get('name')
+        message = request.POST.get('message')
+        email = request.POST.get('email')
+        tel_no = request.POST.get('tel_no')
+        mobile = request.POST.get('mobile')
+        payment_option = request.POST.get('payment_option')
+
+        if payment_option == '1':
+            amount_paid = 0
+            date_paid = None
+        else:
+            amount_paid = 0
+            date_paid = None
+
+        # get Cart products
+        cart = Cart(request.session)
+
+        delivery_fee = cart.total * Decimal('0.12').quantize(Decimal('0.01'))
+        cart_total = cart.total + delivery_fee
+
+        # create transaction object
+        transaction = Transaction.objects.create(
+                name=name,
+                message=message,
+                email=email,
+                tel_no=tel_no,
+                mobile=mobile,
+                total_amount = cart_total,
+                total_amount_paid = amount_paid,
+                date_paid = date_paid,
+            )
+
+        transaction_reference = str(transaction.id)
+
+        for productItem in cart.items:
+            # create new RegistryItemPaid for each product
+            try:
+                registryItemPaid = RegistryItemPaid.objects.create(
+                    name=name,
+                    message=message,
+                    email=email,
+                    tel_no=tel_no,
+                    mobile=mobile,
+                    reserved=True,
+                    paid=False,
+                    quantity=productItem.quantity,
+                    registry_item=productItem.product,
+                    transaction = transaction)
+
+                # update quantity
+                productItem.product.quantity_bought += productItem.quantity
+                productItem.product.save()
+
+            except IntegrityError as e:
+                print(e.__cause__)
+                if e.args[0] == 1062:
+                    # duplicate entry
+                    error_msg = "It seems you have already bought " + productItem.product.name + " using the e-mail you have provided. You should have received an e-mail notification of the said transaction. If not, please contact us for assistance."
+                else:
+                    error_msg = "There was an error processing your transaction. Please contact us for assistance."
+                
+                context = { 'error_msg' : error_msg }
+                
+                return render(request, 'registry/payment.html', context)
+
+        # assume transaction is complete if code is here
+
+        # send email
+        try:
+            send_mail(
+                'Baby Set Go Purchase',
+                'Your transaction number is '+transaction_reference+'. ',
+                'info@babysetgo.ph',
+                [email,],
+                fail_silently=False,
+            )
+        except SMTPException as e:
+            print(e.__cause__)
+
+
+        # temporarily bank transfer only
+        context = {'payment_option' : 1}
+
+        # delete from session if transaction is complete
+        if request.session['giver_name']:
+            del request.session['giver_name']
+        if request.session['giver_message']:
+            del request.session['giver_message']
+        if request.session['giver_email']:
+            del request.session['giver_email']
+        if request.session['giver_tel_no']:
+            del request.session['giver_tel_no']
+        if request.session['giver_mobile']:
+            del request.session['giver_mobile']
+
+        # clear cart if transaction is complete
+        cart.clear()
+
+        return render(request, 'registry/payment-done.html', context)
+
+@csrf_exempt
+def checkout_paynamics(request):
     if request.method == "GET":
         form = CheckoutForm()
         context = { 'form' : form }
@@ -446,8 +658,3 @@ def checkout(request):
         context = { 'b64_str' : b64_str,
                     'post_params' : post_params}
         return render(request, 'registry/confirm-payment.html', context)
-
-@csrf_exempt
-def payment(request):
-
-    return HttpResponse("ok!");

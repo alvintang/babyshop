@@ -11,4 +11,7 @@ class User(AbstractUser):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     slug = models.CharField(max_length=255, unique=True, null=True)
     email = models.EmailField(_('email address'), blank=True, unique=True)
-    preferred_language = models.CharField(_('Preferred Language'), null=True, blank=True, max_length=100, choices=settings.LANGUAGES)
+    tel_no = models.CharField(max_length=10, blank=False)
+    mobile = models.CharField(max_length=15, blank=False)
+    facebook = models.CharField(max_length=255, blank=False)
+    instagram = models.CharField(max_length=255, blank=False)

@@ -36,6 +36,13 @@
                             </div>
                         </div>
                         {% endfor %}
+                        {% if cart.is_empty %}
+                        <div class="row">
+                            <div class="cell">You have no items yet.</div>
+                            <div class="cell"></div>
+                            <div class="cell"></div>
+                        </div>
+                        {% endif %}
                         <div class="row header blue total">
                             <div class="cell">Total</div>
                             <div class="cell"></div>
@@ -43,7 +50,7 @@
                         </div>
                     </div>
                     <form action="/checkout/" method="GET">
-                        <input class="btn" type=submit value="PROCEED TO CHECKOUT">
+                        <h3><input class="btn btn-info" type=submit value="PROCEED TO CHECKOUT"></h3>
                     </form>
                 </div>
 

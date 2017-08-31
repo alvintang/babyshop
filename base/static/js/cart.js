@@ -4,6 +4,10 @@ $(document).ready(function() {
         item_qty = $(this).parent().prev().prev().text();
         delete_qty = $(this).siblings('.delete_qty').val();
 
+        if(delete_qty == ''){
+            return 1;
+        }
+
         var data = {
             'delete_id': $(this).siblings('.item_id').val(),
             'delete_qty': delete_qty

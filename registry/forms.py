@@ -1,14 +1,16 @@
 from django import forms
-from .models import Registry, Item, RegistryItem
+from .models import Registry, Item, RegistryItem, RegistryItemPaid
 from django.forms import Textarea
 from django.utils.translation import ugettext as _
 
 class RegistryForm(forms.ModelForm):
     class Meta:
         model = Registry
-        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address', 'delivered_where', 'bool_due_date', 'birth_or_due_date']
+        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address', 'delivered_where', 'birth_or_due_date']
         labels = {
-          'bool_due_date': _('Date type'),
+          'name_baby': _('Name of Baby'),
+          'name_mother': _('Name of Mother'),
+          'name_father': _('Name of Father'),
           'birth_or_due_date': _('Due Date/Baby Birthdate'),
         }
         # exclude = ['created_by', 'id']
@@ -55,6 +57,22 @@ class RegistryItemBuyForm(forms.Form):
                 widget=forms.HiddenInput(attrs={'id': 'item_id'}))
   item_price = forms.CharField(initial='',required=True,  max_length=200, 
                 widget=forms.HiddenInput(attrs={'id': 'item_price'}))
+
+class RegistryItemPaidForm(forms.ModelForm):
+    class Meta:
+        model = RegistryItemPaid
+        fields = ['name', 'message', 'email', 'tel_no', 'mobile']
+        labels = {
+          'name' : 'Your Name',
+          'message' : 'Message to Baby or Mommy',
+        }
+        widgets = {
+            'name' : forms.TextInput(attrs={'class': "form-control"}),
+            'message' : forms.Textarea(attrs={'class': "form-control"}),
+            'email' : forms.EmailInput(attrs={'class': "form-control"}),
+            'tel_no' : forms.TextInput(attrs={'class': "form-control"}),
+            'mobile' : forms.TextInput(attrs={'class': "form-control"}),
+        }
 
 class CheckoutForm(forms.Form):
   first_name = forms.CharField(label=_('First Name'), required=True, max_length=50, 

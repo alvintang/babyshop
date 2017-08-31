@@ -23,6 +23,7 @@ urlpatterns += (
     url(r'^add-cart/$', views.add, name='add-cart'),
     url(r'^show-cart/$', views.show, name='show-cart'),
     url(r'^checkout/$', views.checkout, name='checkout-cart'),
+    url(r'^payment/$', views.payment, name='payment'),
     url(r'^payment/done/$', views.payment, name='payment-done'),
 )
 

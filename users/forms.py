@@ -39,9 +39,33 @@ class UserRegisterForm(RegistrationForm):
         widget=forms.EmailInput(attrs={'class': "form-control"}),
         )
 
+    tel_no = forms.CharField(
+        label=_("Telephone Number"),
+        strip=False,
+        widget=forms.TextInput(attrs={'class': "form-control"}),
+        )
+
+    mobile = forms.CharField(
+        label=_("Mobile Number"),
+        strip=False,
+        widget=forms.TextInput(attrs={'class': "form-control"}),
+        )
+
+    facebook = forms.CharField(
+        label=_("Facebook Username"),
+        strip=False,
+        widget=forms.TextInput(attrs={'class': "form-control"}),
+        )
+
+    instagram = forms.CharField(
+        label=_("Instagram Username"),
+        strip=False,
+        widget=forms.TextInput(attrs={'class': "form-control"}),
+        )
+
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'tel_no', 'mobile', 'facebook', 'instagram')
 
 
 class LoginForm(forms.Form):

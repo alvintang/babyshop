@@ -1,0 +1,104 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load carton_tags %}
+
+{% block extra_js %}
+    <script src="{% static 'js/payment.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+
+<div class="container">
+    <div class="cart-container">
+        <div class="panel card panel-default">
+            <div class="panel-heading background-color-green">
+                <h1>Choose Payment</h1>
+            </div>
+            <div class="panel-body">
+                <br>
+                <div class='row'>
+                    <ul class="progressbar">
+                        <li>Information</li>
+                        <li class="active">Choose Payment</li>
+                        <li>Transaction Done</li>
+                    </ul>
+                </div>
+                <br>
+                {% if error_msg %}
+                <p class="text-color-pink">{{ error_msg }}</p>
+                <br>
+                {% endif %}
+                <div class="col-md-6">
+                    <form action="/payment/" method="POST">
+                        
+                        {% if giver_info %}
+                        <input type=hidden name="name" value="{{ giver_info.name }}">
+                        <input type=hidden name="email" value="{{ giver_info.email }}">
+                        <input type=hidden name="mobile" value="{{ giver_info.mobile }}">
+                        <input type=hidden name="tel_no" value="{{ giver_info.tel_no }}">
+                        <input type=hidden name="message" value="{{ giver_info.message }}">
+                        {% endif %}
+
+                        <h4>Payment Options</h4>
+                        <div class="radio">
+                          <label><input type="radio" name="payment_option" checked=true value=1>Bank Deposit</label>
+                        </div>
+                        <!-- <div class="radio">
+                          <label><input type="radio" name="payment_option" value=2>Credit Card/PayPal</label>
+                        </div> -->
+                        <br>
+                        <div class="payment-info payment-info-bank">
+                            <h4>Payment Information - Bank Deposit</h4>
+                            <ol>
+                                <li>Deposit payment to:</li>
+                                <li>The item will be reserved to you for 48 hours (2 days).</li>
+                                <li>Send a picture or scanned copy of the deposit slip to any of the following: 
+                                    <ul>
+                                        <li>Email to info@babysetgo.ph</li>
+                                        <li>Viber to +63917XXXXXXX</li>
+                                        <li>FB Messenger to Baby Set Go FB page</li>
+                                    </ul>
+                                </li>
+                                <li>Baby Set Go will deliver the gifts to your recipient!</li>
+                            </ol>
+                        </div>
+
+                        <div class="payment-info payment-info-paypal" style="display: none;">
+                            <h4>Payment Information - PayPal</h4>
+                            <ol>
+                                <li>Click button below to pay via PayPal</li>
+                                <li>Baby Set Go will deliver the gifts to your recipient!</li>
+                            </ol>
+                        </div>
+
+                        <h3><input class="btn btn-info form-control" type=submit value="CONTINUE"></h3>
+                    </form>
+                </div>
+                {% get_cart as cart %}
+                <div class="col-md-6">
+                    <div class="table">
+                        <div class="row header blue">
+                            <div class="cell">Product</div>
+                            <div class="cell">Quantity</div>
+                            <div class="cell">Price</div>
+                        </div>
+                        {% for item in cart.items %}
+                        <div class="row">
+                            <div class="cell">{{ item.product.name }}</div>
+                            <div class="cell">{{ item.quantity }}</div>
+                            <div class="cell">{{ item.subtotal }}</div>
+                        </div>
+                        {% endfor %}
+                        <div class="row header blue total">
+                            <div class="cell">Total</div>
+                            <div class="cell"></div>
+                            <div class="cell">{{ cart.total }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

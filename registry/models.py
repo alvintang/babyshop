@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import models as auth_models
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
+import uuid
 
 
 class Registry(models.Model):
@@ -17,7 +18,8 @@ class Registry(models.Model):
 
     # Fields
     name = models.CharField(max_length=255)
-    slug = extension_fields.AutoSlugField(populate_from='id', blank=True)
+    #slug = extension_fields.AutoSlugField(populate_from='id', blank=True)
+    slug = models.SlugField(unique=True, editable=False, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     id = models.AutoField(primary_key=True)
@@ -29,8 +31,8 @@ class Registry(models.Model):
     name_father = models.CharField(max_length=255, blank=False)
     address = models.CharField(max_length=255, blank=False)
     delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=False)
-    bool_due_date = models.CharField(choices=due_date_options,max_length=30, blank=False)
-    birth_or_due_date = models.DateField(blank=True, null=True)
+    #bool_due_date = models.CharField(choices=due_date_options,max_length=30, blank=False)
+    birth_or_due_date = models.DateField(blank=False)
 
     # Relationship Fields
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, )
@@ -47,6 +49,18 @@ class Registry(models.Model):
 
     def get_update_url(self):
         return reverse('registry_registry_update', args=(self.slug,))
+
+    def save(self, *args, **kwargs):
+        while not self.slug:
+            ret = []
+            ret.extend(random.sample(string.letters, 3))
+            ret.extend(random.sample(string.digits, 4))
+
+            newslug = ''.join(ret)
+            if self.objects.filter(pk=newslug).count():
+                self.slug = newslug
+
+        super(SluggedModel, self).save(*args, **kwargs)
 
 
 class Item(models.Model):
@@ -114,4 +128,58 @@ class RegistryItem(models.Model):
     def get_update_url(self):
         return reverse('registry_registryitem_update', args=(self.slug,))
 
+class RegistryItemPaid(models.Model):
 
+    # Fields
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    slug = extension_fields.AutoSlugField(populate_from='id', blank=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    #name_giver = models.TextField(max_length=1000, null=True, blank=True)
+    message = models.TextField(max_length=10000, null=True, blank=True)
+    email = models.EmailField(blank=False)
+    tel_no = models.CharField(max_length=10, blank=False)
+    mobile = models.CharField(max_length=15, blank=False)
+    reserved = models.BooleanField()
+    paid = models.BooleanField()
+    quantity = models.IntegerField()
+
+    # Relationship Fields
+    registry_item = models.ForeignKey('registry.RegistryItem', )
+    transaction = models.ForeignKey('registry.Transaction', default=uuid.uuid4, )
+    # item = models.ForeignKey('registry.Item', )
+
+    class Meta:
+        ordering = ('-created',)
+        unique_together = (('registry_item','email'),)
+
+    def __unicode__(self):
+        return u'%s' % self.slug
+
+
+class Transaction(models.Model):
+
+    # Fields
+    # id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    slug = extension_fields.AutoSlugField(populate_from='id', blank=True)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    message = models.TextField(max_length=10000, null=True, blank=True)
+    email = models.EmailField(blank=False)
+    tel_no = models.CharField(max_length=10, blank=False)
+    mobile = models.CharField(max_length=15, blank=False)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2) 
+    total_amount_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    date_paid = models.DateTimeField(null=True, blank=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # Relationship Fields
+    # registry_item = models.ForeignKey('registry.RegistryItem', )
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'%s' % self.slug
