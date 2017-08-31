@@ -41,20 +41,20 @@
                             <div class="row header blue">
                                 <div class="cell">Product</div>
                                 <div class="cell">Quantity</div>
-                                <div class="cell">Price</div>
+                                <div class="cell number-col">Price</div>
                             </div>
                             {% for item in cart.items %}
                             <div class="row">
                                 <div class="cell">{{ item.product.name }}</div>
                                 <div class="cell">{{ item.quantity }}</div>
-                                <div class="cell">{{ item.subtotal }}</div>
+                                <div class="cell number-col">{{ item.subtotal }}</div>
                             </div>
                             {% endfor %}
                             {% if not cart.is_empty %}
                             <div class="row">
                                 <div class="cell">Delivery Fee</div>
                                 <div class="cell">12%</div>
-                                <div class="cell">{{ delivery_fee }}</div>
+                                <div class="cell number-col">{{ delivery_fee }}</div>
                             </div>
                             {% else %}
                             <div class="row">
@@ -66,7 +66,7 @@
                             <div class="row header blue total">
                                 <div class="cell">Total</div>
                                 <div class="cell"></div>
-                                <div class="cell">{{ cart_total }}</div>
+                                <div class="cell number-col">{{ cart_total }}</div>
                             </div>
                         </div>
                     </div>

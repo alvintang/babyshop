@@ -15,8 +15,8 @@ class AutoClearCart:
           print("product:"+productItem.product.name)
           print("quantity:"+str(productItem.quantity))
           print("price:"+str(productItem.price))
-          productItem.product.quantity_bought -= productItem.quantity
-          productItem.product.save()
+          # productItem.product.quantity_bought -= productItem.quantity
+          # productItem.product.save()
 
         cart.clear()
 

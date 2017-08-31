@@ -260,7 +260,11 @@ def add(request):
     pk = int(request.GET.get('item_id'))
 
     registryItem = RegistryItem.objects.get(pk=pk)
-    cart.add(registryItem, price=registryItem.price_from_vendor, quantity=request.GET.get('item_qty'))
+    # check if item already in Cart before adding. If yes, replace quantity rather than add
+    if registryItem in cart.products:
+        cart._items_dict[pk].quantity = request.GET.get('item_qty')
+    else:
+        cart.add(registryItem, price=registryItem.price_from_vendor, quantity=request.GET.get('item_qty'))
 
     #reserve item
     # 1. increment qty_bought to reserve
@@ -287,8 +291,8 @@ def show(request):
                 ctr = 0
                 while ctr < delete_qty:
                     cart.remove_single(registryItem)
-                    registryItem.quantity_bought-=1
-                    registryItem.save()
+                    # registryItem.quantity_bought-=1
+                    # registryItem.save()
                     ctr += 1
         return render(request, 'registry/show_cart.html')
 
@@ -297,7 +301,7 @@ def checkout(request):
     if request.method == "GET":
         form = RegistryItemPaidForm()
         cart = Cart(request.session)
-        delivery_fee = cart.total * Decimal('0.12').quantize(Decimal('0.01'))
+        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
         cart_total = cart.total + delivery_fee
 
         # get Cart products

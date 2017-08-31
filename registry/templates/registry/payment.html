@@ -87,13 +87,13 @@
                         <div class="row">
                             <div class="cell">{{ item.product.name }}</div>
                             <div class="cell">{{ item.quantity }}</div>
-                            <div class="cell">{{ item.subtotal }}</div>
+                            <div class="cell number-col">{{ item.subtotal }}</div>
                         </div>
                         {% endfor %}
                         <div class="row header blue total">
                             <div class="cell">Total</div>
                             <div class="cell"></div>
-                            <div class="cell">{{ cart.total }}</div>
+                            <div class="cell number-col">{{ cart.total }}</div>
                         </div>
                     </div>
                 </div>
