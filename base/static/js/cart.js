@@ -13,9 +13,9 @@ $(document).ready(function() {s
             'delete_qty': delete_qty
         };
 
-        if(delete_qty > item_qty){
-            alert("Quantity to be removed is less than quantity in cart!")
-        }else{
+        // if(delete_qty > item_qty){
+        //     alert("Quantity to be removed is less than quantity in cart!")
+        // }else{
             $.ajax({
                 "type": "POST",
                 "url": "/show-cart/",
@@ -26,7 +26,7 @@ $(document).ready(function() {s
                     location.reload();
                 },
             });
-        }
+        // }
     });
 });
 
