@@ -287,14 +287,15 @@ def show(request):
         if request.POST.get('delete_id') is not None:
             delete_id = int(request.POST.get('delete_id'))
             registryItem = RegistryItem.objects.get(pk=delete_id)
-            if request.POST.get('delete_qty') is not None:
-                delete_qty = int(request.POST.get('delete_qty'))
-                ctr = 0
-                while ctr < delete_qty:
-                    cart.remove_single(registryItem)
-                    # registryItem.quantity_bought-=1
-                    # registryItem.save()
-                    ctr += 1
+            cart.remove(registryItem)
+            # if request.POST.get('delete_qty') is not None:
+            #     delete_qty = int(request.POST.get('delete_qty'))
+            #     ctr = 0
+            #     while ctr < delete_qty:
+            #         cart.remove_single(registryItem)
+            #         # registryItem.quantity_bought-=1
+            #         # registryItem.save()
+            #         ctr += 1
         return render(request, 'registry/show_cart.html')
 
 @csrf_exempt

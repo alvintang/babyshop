@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-md-1"></div>
                     <div class="col-md-11">
-                        <a href="/registry/registry/detail/{{ object.id }}/" class="col-centered btn btn-info delete-button">View</a>
+                        <a href="/registry/registry/detail/{{ object.id }}/" class="col-centered btn btn-info">View</a>
                         <a href="{% url 'registry_registry_delete' object.id %}" class="col-centered btn btn-danger delete-button" type="button">Delete</a>
                         <a href="{% url 'registry_registry_update' object.id %}" class="col-centered btn btn-primary edit-button" type="button">Edit</a>
                     </div>
@@ -126,3 +126,7 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static 'js/registry_list.js' %}"></script>
+{% endblock extra_js %}

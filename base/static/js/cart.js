@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function() {s
     $(".checkout-remove").click(function(e) {
         e.preventDefault();
         item_qty = $(this).parent().prev().prev().text();

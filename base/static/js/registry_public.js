@@ -20,7 +20,7 @@ $(document).ready(function() {
     $('#modal-notes').html("Notes: "+item_notes);
     $('#modal-img').attr('src',item_img);
 
-    // $('#item_qty').attr('max',item_qty_left);
+    $('#item_qty').attr('max',item_qty_left);
   });
 
     // $('#modal-instructions').modal('show');

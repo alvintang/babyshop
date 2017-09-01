@@ -11,8 +11,15 @@ $(document).ready(function() {
   });
 
   var url = window.location.href;
-  if(url.indexOf('?initial=1') != -1 || url.IndexOf('/initial1') != -1) {
+  if(url.indexOf('?initial=1') != -1 || url.indexOf('/initial1') != -1) {
       $('#modal-instructions').modal('show');
   }
 
+  $('.delete-button').click(function(e){
+    e.preventDefault();
+
+    if(confirm('Are you sure you want to delete this item?')){
+      window.location.href = $(this).attr('href');
+    }
+  });
 });
