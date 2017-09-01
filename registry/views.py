@@ -247,6 +247,7 @@ class RegistryDeleteView(UpdateView):
         pk = kwargs["pk"]
         item_id = request.GET.get('item_id');
         registry = Registry.objects.get(pk=pk)
+        registry.delete()
         # registryItem = RegistryItem.objects.get(pk=item_id)
 
         # registryItem.delete()

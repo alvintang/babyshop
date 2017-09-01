@@ -9,7 +9,8 @@ from django.contrib.auth import models as auth_models
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
 import uuid
-
+import random
+import string
 
 class Registry(models.Model):
 
@@ -18,8 +19,8 @@ class Registry(models.Model):
 
     # Fields
     name = models.CharField(max_length=255)
-    #slug = extension_fields.AutoSlugField(populate_from='id', blank=True)
-    slug = models.SlugField(unique=True, editable=False, blank=True)
+    slug = extension_fields.AutoSlugField(populate_from='created', blank=True)
+    # slug = models.SlugField(unique=True, editable=False, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     id = models.AutoField(primary_key=True)
@@ -50,17 +51,17 @@ class Registry(models.Model):
     def get_update_url(self):
         return reverse('registry_registry_update', args=(self.slug,))
 
-    def save(self, *args, **kwargs):
-        while not self.slug:
-            ret = []
-            ret.extend(random.sample(string.letters, 3))
-            ret.extend(random.sample(string.digits, 4))
+    # def save(self, *args, **kwargs):
+    #     while not self.slug:
+    #         ret = []
+    #         # ret.extend(random.sample(string.ascii_letters, 3))
+    #         ret.extend(random.sample(string.digits, 8))
 
-            newslug = ''.join(ret)
-            if self.objects.filter(pk=newslug).count():
-                self.slug = newslug
+    #         newslug = ''.join(ret)
+    #         if Registry.objects.filter(pk=newslug).count():
+    #             self.slug = newslug
 
-        super(SluggedModel, self).save(*args, **kwargs)
+    #     super(SluggedModel, self).save(*args, **kwargs)
 
 
 class Item(models.Model):
