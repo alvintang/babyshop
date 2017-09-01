@@ -43,6 +43,7 @@
                                     <input class="item-img" type=hidden name="item-img" value="{{ item.img_url }}"></input>
                                     <input class="item-notes" type=hidden name="item-notes" value="{{ item.notes }}"></input>
                                     <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                    <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
                                 {% endif %}
                             </div>
                         </div>

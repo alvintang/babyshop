@@ -7,7 +7,7 @@ $(document).ready(function() {
     console.log(item_price);
     item_name = $(this).siblings('.list-group-item-heading').html()
     console.log(item_name);
-    item_qty_left = $(this).siblings('.item_qty_left').val()
+    item_qty_left = $(this).siblings('.item_qty_left').val() - $(this).siblings('.item-qty-bought').val()
     console.log(item_qty_left);
     item_img = $(this).siblings('.item-img').val()
     console.log(item_img);
