@@ -22,4 +22,8 @@ $(document).ready(function() {
       window.location.href = $(this).attr('href');
     }
   });
+
+  $('.bookmarklet').click(function(e){
+    e.preventDefault();
+  });
 });
