@@ -1,4 +1,6 @@
-def getImageList(soup, img_list):
+import re
+
+def getImageList(soup, img_list, source):
   # First get the meta description tag
   meta_image = soup.findAll('meta', attrs={'name':'og:image'}) or soup.findAll('meta', attrs={'property':'og:image'})
 

@@ -148,7 +148,7 @@ class ExternalView(ListView):
         # run BeautifulSoup on source
         soup = BeautifulSoup(source)
         
-        getImageList(soup, img_list)
+        getImageList(soup, img_list, source)
 
         title = getTitle(soup)
 
