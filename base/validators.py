@@ -15,11 +15,11 @@ class CustomPasswordValidator(object):
         pattern = re.compile(is_password_secure)
         if not pattern.match(password):
             raise ValidationError(
-                _("Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters."),
+                _("Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."),
                 code='Invalid password',
             )
 
     def get_help_text(self):
         return _(
-            "Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters."
+            "Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."
         )

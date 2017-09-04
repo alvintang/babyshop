@@ -45,6 +45,8 @@
                                     <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
                                     <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
                                 {% endif %}
+                                <br>
+                                
                             </div>
                         </div>
                         {% endfor %}
@@ -80,6 +82,7 @@
                             {% csrf_token %}
                             {{ form }}
                             <input type="hidden" name="next" value="{{ request.path }}">
+                          *Item subject to 12% delivery charge.
                         </div>
                     </div>
                   </div>

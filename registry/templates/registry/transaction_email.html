@@ -1,0 +1,43 @@
+Hi {{ username }}!
+<br><br>
+You have recently purchased the following item/s from Baby Set Go:
+<ul>
+{% for item in cart_items %}
+<li>
+  {{ item.product.name }} x {{ item.quantity }} - PhP {{ item.subtotal }}
+</li>
+{% endfor %}
+
+  <li>Delivery charge: PhP {{ delivery_fee }} (12%)</li>
+
+  <li>Total: PhP {{ cart_total }}</li>
+</ul>
+
+<br>
+Your transaction reference is {{ transaction_reference }}.
+<br><br>
+Please be reminded of payment procedure for bank deposits:
+<ol>
+  <li>Deposit payment to:
+        <ul>
+        <li>BPI Savings Account #2579-0751-15</li>
+        <li>Account Name: Issa Rufina L. Senga</li>
+        </ul>
+  </li>
+  <li>
+  Send a picture or scanned copy of the deposit slip to any of the following: 
+        <ul>
+        <li>email to info@babysetgo.ph</li>
+        <li>viber to +639178034772</li>
+        </ul>
+  </li>
+  <li>
+  Your item/s will be reserved for 48 hours.
+  </li>
+</ol>
+Thank you!
+<br><br>
+Best regards,<br>
+Baby Set Go Team :)
+<br><br>
+-- This email is auto-generated --

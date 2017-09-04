@@ -19,6 +19,7 @@ from registry.models import Registry, RegistryItem
 
 from bs4 import BeautifulSoup
 import urllib, re
+from django.http import HttpResponse
 
 User = get_user_model()
 
@@ -210,3 +211,13 @@ class PrivacyPolicyView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context
+
+def ErrorView(request):
+    template_name = 'baby/500.html'
+    print('hello!!')
+    return render(request, template_name)
+
+def test_500_view(request):
+    # Return an "Internal Server Error" 500 response code.
+    return HttpResponse(status=500)
+

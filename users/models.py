@@ -13,5 +13,5 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), blank=True, unique=True)
     tel_no = models.CharField(max_length=10, blank=False)
     mobile = models.CharField(max_length=15, blank=False)
-    facebook = models.CharField(max_length=255, blank=False)
-    instagram = models.CharField(max_length=255, blank=False)
+    facebook = models.CharField(max_length=255, blank=True)
+    instagram = models.CharField(max_length=255, blank=True)

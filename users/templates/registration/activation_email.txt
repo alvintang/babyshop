@@ -1,5 +1,5 @@
 {% load i18n %}
-Hi Mommy!
+Hi {{ user.username }}!
 
 Just one last step to activate your Baby Set Go account, {{ user.username }}, then you're good to go!
 
