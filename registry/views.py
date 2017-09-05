@@ -1,3 +1,10 @@
+import json
+import datetime
+import operator
+import xml.etree.ElementTree as ET
+import hashlib
+import base64
+
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from .models import Registry, Item, RegistryItem, RegistryItemPaid, Transaction
@@ -8,12 +15,6 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 
-from registry.forms import RegistryForm
-
-import json
-import datetime
-import operator
-
 from django.db.models import Q
 from functools import reduce
 
@@ -21,13 +22,13 @@ from carton.cart import Cart
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.crypto import get_random_string
 
-import xml.etree.ElementTree as ET
-import hashlib
-import base64
 from collections import OrderedDict
 from django.db import IntegrityError
 from decimal import Decimal
-from django.core.mail import send_mail
+
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.template import Context
 from smtplib import SMTPException
 
 def datetime_handler(x):
@@ -413,7 +414,7 @@ def payment(request):
         # get Cart products
         cart = Cart(request.session)
 
-        delivery_fee = cart.total * Decimal('0.12').quantize(Decimal('0.01'))
+        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
         cart_total = cart.total + delivery_fee
 
         # create transaction object
@@ -475,18 +476,25 @@ def payment(request):
 
         # send email
         try:
+            email_params = { 
+                'username': name, 
+                'transaction_reference': transaction_reference,
+                'cart_items': cart.items,
+                'delivery_fee': delivery_fee,
+                'cart_total': cart_total }
+
+            plaintext = render_to_string('registry/transaction_email.txt', email_params)
+            htmly     = render_to_string('registry/transaction_email.html', email_params)
+
+            subject, from_email, to = 'Baby Set Go Purchase', 'info@babysetgo.ph', email
+
             send_mail(
-                'Baby Set Go Purchase',
-                'Hi ' + name +'!\n' + 
-                'You have recently purchased an item from Baby Set Go! Your transaction reference is '+transaction_reference+'.\n'+
-                'Please be reminded of payment procedure for bank deposits:\n'+
-                '1. Deposit payment to BPI account XXXX-XXXX-XX\n'+
-                '2. Send a picture or scanned copy of the deposit slip to any of the following: email to info@babysetgo.ph or viber to +639178034772\n'+
-                'Thank you!\n\nBest regards,\nBaby Set Go Team :)\n\n'+
-                '<This email is auto-generated>',
-                'info@babysetgo.ph',
+                subject,
+                plaintext,
+                from_email,
                 [email,],
                 fail_silently=False,
+                html_message=htmly
             )
         except SMTPException as e:
             print(e.__cause__)

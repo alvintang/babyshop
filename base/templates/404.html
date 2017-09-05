@@ -1,4 +1,4 @@
-{% extends 'base/base_without_header.html' %}
+{% extends 'baby/base_error.html' %}
 {% load static %}
 {% load i18n %}
 {% block title-description %}
@@ -10,8 +10,8 @@
 {% block content %}
   <div class="index-wrapper">
       <div class="action-main jumbotron">
-          <h1>{% trans 'PAGE NOT FOUND!' %}</h1>
-          <a type="button" href="{% url 'index' %}" class="btn btn-primary btn-lg" name="button">{% trans "Go back" %}</a>
+          <h2>PAGE NOT FOUND!</h2>
+          <a type="button" href="{% url 'index' %}" class="btn btn-primary btn-lg" name="button">Return to Home</a>
       </div>
   </div>
 {% endblock %}

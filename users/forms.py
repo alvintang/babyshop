@@ -55,12 +55,14 @@ class UserRegisterForm(RegistrationForm):
         label=_("Facebook Username"),
         strip=False,
         widget=forms.TextInput(attrs={'class': "form-control"}),
+        required=False,
         )
 
     instagram = forms.CharField(
         label=_("Instagram Username"),
         strip=False,
         widget=forms.TextInput(attrs={'class': "form-control"}),
+        required=False,
         )
 
     class Meta:
