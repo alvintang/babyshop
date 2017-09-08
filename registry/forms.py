@@ -16,7 +16,7 @@ class RegistryForm(forms.ModelForm):
         # exclude = ['created_by', 'id']
         widgets = {
             'name' : forms.TextInput(attrs={'class': "form-control"}),
-            'event_date' : forms.DateInput(attrs={'class':'datepicker form-control'}),
+            'event_date' : forms.DateTimeInput(attrs={'class':'form-control'}),
             'event_description' :  Textarea(attrs={'cols': 80, 'rows': 10, 'class':"form-control"}),
             'event_venue' : forms.TextInput(attrs={'class': "form-control"}),
             'name_baby' : forms.TextInput(attrs={'class': "form-control"}),

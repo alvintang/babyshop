@@ -12,7 +12,7 @@ from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, reverse
 
 from django.db.models import Q
@@ -43,10 +43,14 @@ def must_be_yours(func):
         # print("user_id:"+user.id)
         # print(kwargs)
         pk = kwargs["pk"]
-        registry = Registry.objects.get(pk=pk)
+        # registry = Registry.objects.get(pk=pk)
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise Http404
+
         if not (registry.created_by.id == request.user.id): 
-            return HttpResponse("It is not yours ! You are not permitted !",
-                        content_type="application/json", status=403)
+            raise Http404
         return func(request, *args, **kwargs)
     return check_and_call
 
@@ -116,7 +120,10 @@ class RegistryDetailView(DetailView):
     def get(self,request,**kwargs):
         pk = kwargs["pk"]
         context = {}
-        registry = Registry.objects.get(pk=pk)
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except registry.models.DoesNotExist:
+            raise Http404
         
         context = { 'pk': pk,
                     'object': registry}
@@ -131,7 +138,11 @@ class RegistryDetailPublicView(DetailView):
         pk = kwargs["pk"]
         context = {}
         form = RegistryItemBuyForm()
-        registry = Registry.objects.get(pk=pk)
+        # registry = Registry.objects.get(pk=pk)
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise Http404
         
         context = { 'form': form,
                     'object': registry}

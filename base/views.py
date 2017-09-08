@@ -19,7 +19,7 @@ from registry.models import Registry, RegistryItem
 
 from bs4 import BeautifulSoup
 import urllib, re
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 
 User = get_user_model()
 
@@ -63,7 +63,7 @@ class IndexView(TemplateView):
         self.form = LoginForm(request.POST or None)
 
         if request.user.is_authenticated():
-            return redirect('home')
+            return render(request, self.template_name, context)
         
         context.update({'login_form': self.form,
                         'login_failed': 'false'})
@@ -213,11 +213,12 @@ class PrivacyPolicyView(TemplateView):
         return context
 
 def ErrorView(request):
-    template_name = 'baby/500.html'
+    template_name = '500.html'
     print('hello!!')
     return render(request, template_name)
 
 def test_500_view(request):
     # Return an "Internal Server Error" 500 response code.
-    return HttpResponse(status=500)
+    # raise Exception("hello")
+    return HttpResponseServerError()
 

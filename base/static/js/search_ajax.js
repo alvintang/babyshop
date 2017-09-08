@@ -1,10 +1,10 @@
 $(document).ready(function() {
     $('.search-loading').hide();
 
-    $("#search-text").keypress(function(e) {
-        if(e.which == 13){
-            e.preventDefault();
-
+    // $("#search-text").keypress(function(e) {
+    //     if(e.which == 13){
+    //         e.preventDefault();
+    $('#search-button').click(function(e){
             var data = {
                 'query': $("#search-text").val()
             };
@@ -30,7 +30,7 @@ $(document).ready(function() {
                     }
                 },
             });
-        }
+        // }
     });
 });
 

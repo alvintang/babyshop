@@ -5,12 +5,14 @@ from django.contrib import admin
 from django.views.i18n import JavaScriptCatalog
 
 from . import views
+from django.views.defaults import server_error as server_error_view
 
 urlpatterns = [
     url(r'^', include('users.urls')),
     url(r'^', include('registry.urls')),
     url(r'^$', views.IndexView.as_view(), name='index'),
     #url(r'^proto/$', views.IndexView.as_view(), name='index'),
+    url(r'^500/$', server_error_view, name='error500'),
     url(r'^contact/$', views.ContactView.as_view(), name='contact'),
     url(r'^lists/$', views.ListsView.as_view(), name='lists'),
     url(r'^home/$', views.ListsView.as_view(), name='home'),

@@ -42,7 +42,7 @@ class RegistryItemAdminForm(forms.ModelForm):
 class RegistryItemAdmin(admin.ModelAdmin):
     form = RegistryItemAdminForm
     list_display = ['name', 'slug', 'created', 'last_updated', 'bought_by', 'message', 'bought', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought']
-    readonly_fields = ['name', 'slug', 'created', 'last_updated', 'bought_by', 'message', 'bought', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought']
+    readonly_fields = ['name', 'slug', 'created', 'last_updated', 'bought_by', 'message', 'price_display', 'item_url', 'img_url', 'item_notes']
 
 admin.site.register(RegistryItem, RegistryItemAdmin)
 

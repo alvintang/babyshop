@@ -42,6 +42,9 @@
                         <a href="#contact">Contact</a>
                     </li>
                   {% if user.is_authenticated %}
+                      <li class="home">
+                          <a id="home" class="logout_button" href="{% url 'home' %}" title="Home">Home</a>
+                      </li>
                       <li class="logout">
                           <div id="over_user" class="configuration_active"></div>
                           <a id="id_logout" class="logout_button" href="{% url 'logout' %}" title="Logout">Logout</a>

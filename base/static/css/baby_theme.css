@@ -108,8 +108,8 @@ header img {
 }
 
 .inner-section {
-  padding-left: 150px;
-  padding-right: 150px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 @media (min-width: 768px) {
