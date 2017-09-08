@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django import forms
-from .models import Registry, Item, RegistryItem, Transaction
+from .models import Registry, Item, RegistryItem, Transaction, RegistryItemPaid
+
+class CustomModelChoiceField(forms.ModelChoiceField):
+     def label_from_instance(self, obj):
+         return "%s - %s" % (obj.id, obj.name)
 
 class RegistryAdminForm(forms.ModelForm):
 
@@ -33,16 +37,15 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class RegistryItemAdminForm(forms.ModelForm):
-
+    registry = CustomModelChoiceField(queryset=Registry.objects.all()) 
     class Meta:
         model = RegistryItem
         fields = '__all__'
 
-
 class RegistryItemAdmin(admin.ModelAdmin):
     form = RegistryItemAdminForm
-    list_display = ['name', 'slug', 'created', 'last_updated', 'bought_by', 'message', 'bought', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought']
-    readonly_fields = ['name', 'slug', 'created', 'last_updated', 'bought_by', 'message', 'price_display', 'item_url', 'img_url', 'item_notes']
+    list_display = ['name', 'created', 'last_updated', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought', 'registry', 'registry_name', 'registry_id']
+    readonly_fields = ['name', 'created', 'last_updated', 'price_display', 'item_url', 'img_url', 'item_notes', 'registry_name', 'registry_id']
 
 admin.site.register(RegistryItem, RegistryItemAdmin)
 
@@ -52,12 +55,25 @@ class TransactionAdminForm(forms.ModelForm):
         model = Transaction
         fields = '__all__'
 
-
 class TransactionAdmin(admin.ModelAdmin):
     form = TransactionAdminForm
     list_display = ['name', 'slug', 'created', 'last_updated', 'message', 'email', 'tel_no', 'mobile', 'total_amount', 'total_amount_paid', 'date_paid', 'id']
     readonly_fields = ['name', 'slug', 'created', 'last_updated', 'message', 'email', 'tel_no', 'mobile', 'total_amount', 'id']
 
 admin.site.register(Transaction, TransactionAdmin)
+
+class RegistryItemPaidAdminForm(forms.ModelForm):
+    registry_item = CustomModelChoiceField(queryset=RegistryItem.objects.all()) 
+    transaction = CustomModelChoiceField(queryset=Transaction.objects.all()) 
+    class Meta:
+        model = RegistryItemPaid
+        fields = '__all__'
+
+class RegistryItemPaidAdmin(admin.ModelAdmin):
+    form = RegistryItemPaidAdminForm
+    list_display = ['name', 'created', 'last_updated', 'reserved', 'paid', 'quantity', 'registry_item', 'transaction_id']
+    readonly_fields = ['name', 'created', 'last_updated']
+
+admin.site.register(RegistryItemPaid, RegistryItemPaidAdmin)
 
 

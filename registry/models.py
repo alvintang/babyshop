@@ -129,6 +129,15 @@ class RegistryItem(models.Model):
     def get_update_url(self):
         return reverse('registry_registryitem_update', args=(self.slug,))
 
+    def registry_name(self):
+        return self.registry.name
+    registry_name.short_description = 'Registry Name'
+
+    def registry_id(self):
+        return self.registry.id
+    registry_id.short_description = 'Registry ID'
+
+
 class RegistryItemPaid(models.Model):
 
     # Fields
@@ -157,6 +166,10 @@ class RegistryItemPaid(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.slug
+
+    def transaction_id(self):
+        return self.transaction.id
+    transaction_id.short_description = 'Transaction ID'
 
 
 class Transaction(models.Model):
