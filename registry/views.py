@@ -369,18 +369,21 @@ def payment(request):
     if request.method == "GET":
         context = {}
         given_info = None
+        # get Cart products
+        cart = Cart(request.session)
+        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        cart_total = cart.total + delivery_fee
 
         if request.session.get('giver_name', None) is None:
             return redirect('show-cart')
 
-        # get Cart products
-        cart = Cart(request.session)
-
         if cart.is_empty:
             error_msg = "You have no items in your gift basket!"
             context = { 'error_msg' : error_msg }
-                
             return redirect('show-cart')
+        else:
+            error_msg = ""
+
 
         # get user info from session
         name = request.session['giver_name']
@@ -397,7 +400,13 @@ def payment(request):
             'mobile' : mobile,
         }
 
-        context = {'giver_info': giver_info}
+        context = {
+            'giver_info': giver_info,
+            'delivery_fee' : delivery_fee,
+            'empty_cart' : cart.is_empty,
+            'cart_total' : cart_total,
+            'error_msg' : error_msg
+            }
 
         return render(request, 'registry/payment.html', context)
 
@@ -466,6 +475,8 @@ def payment(request):
 
             except IntegrityError as e:
                 print(e.__cause__)
+                transaction.delete()
+                
                 if e.args[0] == 1062:
                     # duplicate entry
                     error_msg = "It seems you have already bought " + productItem.product.name + " using the e-mail you have provided. You should have received an e-mail notification of the said transaction. If not, please contact us for assistance."
