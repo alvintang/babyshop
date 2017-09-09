@@ -18,7 +18,7 @@
                     {{ object.event_description }}
                 </p>
                 <!--h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://localhost:8000/static/js/babysetgo-add-items.js?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='https://localhost:8000/static/css/modal.css';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to Bookmark</a></h3-->
-                <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{{request.get_host}}{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{{request.get_host}}{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to BSG</a>
+                <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary bookmarklet">Add to BSG</a>
                 <button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">Instructions</button>
                 </h3>
                 <h4>*Gifts purchased three (3) days before the event will be delivered to your address a week after your event.</h4>
@@ -74,9 +74,10 @@
                 <strong class="fa-stack-1x text-color-white">1</strong>
             </span>
             Drag this button to your toolbar.
-            <a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{{request.get_host}}{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{{request.get_host}}{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="btn btn-primary bookmarklet" style="font-family: 'Bubbler One', 'Helvetica Neue', Helvetica, Arial, sans-serif; text-transform: uppercase; font-weight: 700;">Add to BSG</a>
-            <img src="{% static 'images/add-toolbar.gif' %}" class="img-responsive">
 
+            <a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="btn btn-primary bookmarklet" style="font-family: 'Bubbler One', 'Helvetica Neue', Helvetica, Arial, sans-serif; text-transform: uppercase; font-weight: 700;">Add to BSG</a>
+            <img src="{% static 'images/add-toolbar.gif' %}" class="img-responsive">
+            
             <br>
             <span class="fa-stack fa-2x">
                 <i class="fa fa-star fa-stack-2x text-color-pink"></i>
