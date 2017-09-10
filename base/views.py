@@ -19,7 +19,7 @@ from registry.models import Registry, RegistryItem
 
 from bs4 import BeautifulSoup
 import urllib, re
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError, Http404
 
 User = get_user_model()
 
@@ -175,7 +175,11 @@ class ExternalView(ListView):
         item_img = request.POST.get('item_img')
         item_notes = request.POST.get('item_notes')
         reg_id = request.POST.get('reg_id')
-        registry = Registry.objects.get(pk=reg_id)
+        # registry = Registry.objects.get(pk=reg_id)
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise HttpResponseServerError
 
         reg_item = RegistryItem.objects.create(name=item_name, quantity=item_qty, bought_by='', message='', price_from_vendor=item_price, price_display=item_price*1.12, item_url=item_url, registry=registry, img_url=item_img, item_notes=item_notes, bought=False, quantity_bought=0)
         reg_item.save()
