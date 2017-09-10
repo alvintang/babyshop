@@ -177,7 +177,7 @@ class ExternalView(ListView):
         reg_id = request.POST.get('reg_id')
         # registry = Registry.objects.get(pk=reg_id)
         try:
-            registry = Registry.objects.get(pk=pk)
+            registry = Registry.objects.get(pk=reg_id)
         except Registry.DoesNotExist:
             raise HttpResponseServerError
 
