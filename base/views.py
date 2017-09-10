@@ -140,8 +140,11 @@ class ExternalView(ListView):
 
         # get images from url
         # source,headers = urllib.request.urlretrieve(url)
-        with urllib.request.urlopen(url) as response:
-            source = response.read().decode('utf-8')
+        try:
+            with urllib.request.urlopen(url) as response:
+                source = response.read().decode('utf-8')
+        except HttpError:
+            raise HttpResponseServerError
 
         # list to store URLs
         img_list = []
