@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from .models import Registry, Item, RegistryItem, Transaction, RegistryItemPaid
+from django.core import urlresolvers
 
 class CustomModelChoiceField(forms.ModelChoiceField):
      def label_from_instance(self, obj):
@@ -44,8 +45,13 @@ class RegistryItemAdminForm(forms.ModelForm):
 
 class RegistryItemAdmin(admin.ModelAdmin):
     form = RegistryItemAdminForm
-    list_display = ['name', 'created', 'last_updated', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought', 'registry', 'registry_name', 'registry_id']
+    list_display = ['name', 'created', 'last_updated', 'get_registry', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought', 'registry', 'registry_name', 'registry_id']
     readonly_fields = ['name', 'created', 'last_updated', 'price_display', 'item_url', 'img_url', 'item_notes', 'registry_name', 'registry_id']
+
+    def get_registry(self,obj):
+        link=urlresolvers.reverse("admin:registry_registry_change", args=[obj.registry.id]) #model name has to be lowercase
+        return u'<a href="%s">%s</a>' % (link,obj.registry.name)
+    get_registry.allow_tags=True
 
 admin.site.register(RegistryItem, RegistryItemAdmin)
 
@@ -71,8 +77,18 @@ class RegistryItemPaidAdminForm(forms.ModelForm):
 
 class RegistryItemPaidAdmin(admin.ModelAdmin):
     form = RegistryItemPaidAdminForm
-    list_display = ['name', 'created', 'last_updated', 'reserved', 'paid', 'quantity', 'registry_item', 'transaction_id']
+    list_display = ['name', 'created', 'last_updated', 'reserved', 'paid', 'quantity', 'get_registry_item', 'get_transaction']
     readonly_fields = ['name', 'created', 'last_updated']
+
+    def get_registry_item(self,obj):
+        link=urlresolvers.reverse("admin:registry_registryitem_change", args=[obj.registry_item.id]) #model name has to be lowercase
+        return u'<a href="%s">%s</a>' % (link,obj.registry_item.name)
+    get_registry_item.allow_tags=True
+    def get_transaction(self, obj):
+        link=urlresolvers.reverse("admin:registry_transaction_change", args=[obj.transaction.id]) #model name has to be lowercase
+        return u'<a href="%s">%s</a>' % (link,obj.transaction.name)
+    get_transaction.allow_tags=True
+
 
 admin.site.register(RegistryItemPaid, RegistryItemPaidAdmin)
 

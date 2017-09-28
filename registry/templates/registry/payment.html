@@ -5,6 +5,7 @@
 
 {% block extra_js %}
     <script src="{% static 'js/payment.js' %}"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 {% endblock extra_js %}
 
 {% block content %}
@@ -30,7 +31,7 @@
                 <br>
                 {% endif %}
                 <div class="col-md-6">
-                    <form action="/payment/" method="POST">
+                    <form id="payment-form" action="/payment/" method="POST">
                         
                         {% if giver_info %}
                         <input type=hidden name="name" value="{{ giver_info.name }}">
@@ -44,9 +45,9 @@
                         <div class="radio">
                           <label><input type="radio" name="payment_option" checked=true value=1>Bank Deposit</label>
                         </div>
-                        <!-- <div class="radio">
+                        <div class="radio">
                           <label><input type="radio" name="payment_option" value=2>Credit Card/PayPal</label>
-                        </div> -->
+                        </div>
                         <br>
                         <div class="payment-info payment-info-bank">
                             <h4>Payment Information - Bank Deposit</h4>
@@ -73,6 +74,8 @@
                                 <li>Click button below to pay via Credit Card/PayPal</li>
                                 <li>Baby Set Go will deliver the gifts to your recipient!</li>
                             </ol>
+
+                            <div id="paypal-button-container"></div>
                         </div>
 
                         <h3><input class="btn btn-info form-control" type=submit value="CONTINUE"></h3>
@@ -117,4 +120,48 @@
         </div>
     </div>
 </div>
+
+<script>
+        paypal.Button.render({
+
+            env: 'sandbox', // sandbox | production
+
+            // PayPal Client IDs - replace with your own
+            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+            client: {
+                sandbox:    'AVQBEK3N0E5HGcXhWjDRIMOq2VUfDEzPZ3gTahKk90vp5bN5UIRpRGjgD5vaPkS7kem7-NcHO2lgWvkW',
+                production: '<insert production client id>'
+            },
+
+            // Show the buyer a 'Pay Now' button in the checkout flow
+            commit: true,
+
+            // payment() is called when the button is clicked
+            payment: function(data, actions) {
+
+                // Make a call to the REST api to create the payment
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: '0.01', currency: 'USD' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+            // onAuthorize() is called when the buyer approves the payment
+            onAuthorize: function(data, actions) {
+
+                // Make a call to the REST api to execute the payment
+                return actions.payment.execute().then(function() {
+                    window.alert('Payment Complete!');
+                    document.getElementById("payment-form").submit();
+                });
+            }
+
+        }, '#paypal-button-container');
+
+</script>
 {% endblock %}
