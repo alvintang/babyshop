@@ -30,28 +30,32 @@
                 <br>
                 {% endif %}
                 <div class="col-md-8">
-                    {% if payment_option == 1 %}
-                    <h4>Thank you for using Baby Set Go!</h4>
-                    Please be reminded of the bank deposit process:
-                    <ol>
-                        <li>Deposit payment to:<br>
-                            BPI Savings Account#: 2579-0751-15<br>
-                            Account name: Issa Rufina L. Senga
-                        </li>
-                        <li>The item will be reserved to you for 48 hours (2 days).</li>
-                        <li>Send a picture or scanned copy of the deposit slip to any of the following: 
-                            <ul>
-                                <li>Email to info@babysetgo.ph</li>
-                                <li>Viber to +639178034772</li>
-                                <!-- <li>FB Messenger to Baby Set Go FB page</li> -->
-                            </ul>
-                        </li>
-                    </ol>
+                    {% if payment_option == "1" %}
+                        <h4>Thank you for using Baby Set Go!</h4>
+                        Please be reminded of the bank deposit process:
+                        <ol>
+                            <li>Deposit payment to:<br>
+                                BPI Savings Account#: 2579-0751-15<br>
+                                Account name: Issa Rufina L. Senga
+                            </li>
+                            <li>The item will be reserved to you for 48 hours (2 days).</li>
+                            <li>Send a picture or scanned copy of the deposit slip to any of the following: 
+                                <ul>
+                                    <li>Email to info@babysetgo.ph</li>
+                                    <li>Viber to +639178034772</li>
+                                    <!-- <li>FB Messenger to Baby Set Go FB page</li> -->
+                                </ul>
+                            </li>
+                        </ol>
 
-                    We have also sent an email to you to track this transaction.
-                    <br>
-                    <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
-                    {% elif payment_option == 2%}
+                        We have also sent an email to you to track this transaction.
+                        <br>
+                        <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
+                    {% elif payment_option == "2" %}
+                        <h4>Thank you for using Baby Set Go!</h4>
+                        We have sent an email to you to track this transaction.
+                        <br>
+                        <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
                     {% endif %}
                 </div>
                 {% get_cart as cart %}
