@@ -338,7 +338,18 @@ def checkout(request):
 
     elif request.method == "POST":
         form = RegistryItemPaidForm()
+        cart = Cart(request.session)
+        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        cart_total = cart.total + delivery_fee
         context = {}
+
+        # get Cart products
+        cart = Cart(request.session)
+
+        if cart.is_empty:
+            error_msg = "You have no items in your gift basket!"
+        else:
+            error_msg = ""
 
         # get POST params
         name = request.POST.get('name')
@@ -361,6 +372,33 @@ def checkout(request):
         request.session['giver_email'] = email
         request.session['giver_mobile'] = mobile
         request.session['giver_tel_no'] = tel_no
+
+        for productItem in cart.items:
+            # create new RegistryItemPaid for each product
+            
+            # update quantity
+            #if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
+            productItem.product.quantity_bought += productItem.quantity
+            productItem.product.save()
+            #else:
+            #    raise ValueError("Product quantity to be bought is greater than available quantity")
+
+            registryItemPaid = RegistryItemPaid.objects.filter(
+                email=email,
+                registry_item=productItem.product).first()
+
+            if(registryItemPaid is not None):
+                # duplicate entry
+                error_msg = "It seems you have already bought " + productItem.product.name + " using the e-mail you have provided. You should have received an e-mail notification of the said transaction. If not, please contact us for assistance."
+                    
+                context = { 'form' : form,
+                            'delivery_fee' : delivery_fee,
+                            'empty_cart' : cart.is_empty,
+                            'cart_total' : cart_total,
+                            'error_msg' : error_msg
+                            }
+
+                return render(request, 'registry/checkout.html', context)
 
         return redirect('payment')
 
@@ -423,13 +461,14 @@ def payment(request):
         tel_no = request.POST.get('tel_no')
         mobile = request.POST.get('mobile')
         payment_option = request.POST.get('payment_option')
+        amount = request.POST.get('amount')
 
         if payment_option == '1':
             amount_paid = 0
             date_paid = None
-        else:
-            amount_paid = 0
-            date_paid = None
+        elif payment_option == '2':
+            amount_paid = amount
+            date_paid = datetime.datetime.now()
 
         # get Cart products
         cart = Cart(request.session)
@@ -483,7 +522,9 @@ def payment(request):
                 else:
                     error_msg = "There was an error processing your transaction. Please contact us for assistance."
                 
-                context = { 'error_msg' : error_msg }
+                context = { 'error_msg' : error_msg,
+                            'delivery_fee' : delivery_fee,
+                            'cart_total' : cart_total }
 
                 return render(request, 'registry/payment.html', context)
 
@@ -514,7 +555,7 @@ def payment(request):
                 subject,
                 plaintext,
                 from_email,
-                [email,],
+                [email,'info@babysetgo.ph'],
                 fail_silently=False,
                 html_message=htmly
             )
@@ -527,7 +568,7 @@ def payment(request):
 
 
         # temporarily bank transfer only
-        context = {'payment_option' : 1}
+        context = {'payment_option' : payment_option }
 
         # delete from session if transaction is complete
         if request.session['giver_name']:
