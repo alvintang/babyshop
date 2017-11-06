@@ -1,0 +1,21 @@
+Hi {{ username }}!
+
+You have recently purchased the following item/s from Baby Set Go:
+
+{% for item in cart.items %}
+  Product: {{ item.product.name }}
+  Quantity: {{ item.quantity }}
+  Subtotal: {{ item.subtotal }}
+{% endfor %}
+
+  Delivery charge: {{ delivery_fee }} (12%)
+
+  Total: {{ cart_total }}
+
+Your transaction reference is {{ transaction_reference }}.
+
+Thank you!
+
+Best regards,
+Baby Set Go Team :)
+<This email is auto-generated>

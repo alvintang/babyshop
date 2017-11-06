@@ -546,8 +546,12 @@ def payment(request):
                 'delivery_fee': delivery_fee,
                 'cart_total': cart_total }
 
-            plaintext = render_to_string('registry/transaction_email.txt', email_params)
-            htmly     = render_to_string('registry/transaction_email.html', email_params)
+            if payment_option == '1':
+                plaintext = render_to_string('registry/transaction_email.txt', email_params)
+                htmly     = render_to_string('registry/transaction_email.html', email_params)
+            elif payment_option == '2':
+                plaintext = render_to_string('registry/transaction_email_card.txt', email_params)
+                htmly     = render_to_string('registry/transaction_email_card.html', email_params)
 
             subject, from_email, to = 'Baby Set Go Purchase', 'info@babysetgo.ph', email
 
