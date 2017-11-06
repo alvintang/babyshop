@@ -47,6 +47,9 @@
                 </div>
                 <div class="registry-item col-lg-1"></div>
             </div>
+            <div class="row text-center">
+                <a class="btn btn-lg btn-info btn-group" href="{% url 'faqs' %}">FAQs</a>
+            </div>
         </div>
     </section>
 
@@ -64,7 +67,7 @@
                 <div class="col-lg-2"></div>
                 <div class="col-lg-8">
                     <p>Learn about trusted products, product reviews, baby and mommy tips, and more.</p><br>
-                    <a class="btn btn-lg btn-info btn-group" href="#">Learn More</a>
+                    <a class="btn btn-lg btn-info btn-group" href="{% url 'articles' %}">Learn More</a>
                 </div>
                 <div class="col-lg-2"></div>
                 <!-- <div class="col-lg-4">
@@ -88,8 +91,41 @@
         </div>
     </section>
 
+    <!-- Partners Section -->
+    <section class="" id="partners">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Partners</h2>
+                    <hr class="star-light">
+                </div>
+            </div>
+            <div class="row text-center">
+                <br>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <p>Here's a list of brands and stores we trust to help you in this new and wonderful chapter of your life!</p><br>
+                    <div class="partner-stores-container">
+                        <div class="partner-stores-row">
+                            <div class="col-md-3 partner-stores">
+                                <a href="https://funnest.ph/"><img src="{% static 'images/logos/funnest_logo.jpg' %}" class="img-responsive"></a>
+                            </div>
+                            <div class="col-md-3 partner-stores">
+                                <a href="http://www.mightybaby.ph/"><img src="{% static 'images/logos/mighty_baby.jpg' %}" class="img-responsive"></a>
+                            </div>
+                            <div class="col-md-3 partner-stores">
+                                <a href="http://www.stpatrickbaby.com/"><img src="{% static 'images/logos/stpatrick.png' %}" class="img-responsive"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Sample Registry Section -->
-    <section class="" id="sample">
+    <section class="success" id="sample">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -103,28 +139,7 @@
                 <div class="col-lg-8">
                     <p>Don't know where to start?</p>
                     <p>Check out our sample registries.</p><br>
-                    <a class="btn btn-lg btn-primary btn-group" href="#">See Sample Registries</a>
-                </div>
-                <div class="col-lg-2"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Partners Section -->
-    <section class="success" id="partners">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Partners</h2>
-                    <hr class="star-light">
-                </div>
-            </div>
-            <div class="row text-center">
-                <br>
-                <div class="col-lg-2"></div>
-                <div class="col-lg-8">
-                    <p>Here's a list of brands and stores we trust to help you in this new and wonderful chapter of your life!</p><br>
-                    
+                    <a class="btn btn-lg btn-primary btn-group" href="{% url 'samples' %}">See Sample Registries</a>
                 </div>
                 <div class="col-lg-2"></div>
             </div>
