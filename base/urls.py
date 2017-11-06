@@ -25,6 +25,9 @@ urlpatterns = [
     url(r'^privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy-policy'),
     url(r'^external/add/$', views.ExternalView.as_view(), name='external'),
     url(r'^external/add/item/$', views.AddToList.as_view(), name='external_item'),
+    url(r'^articles/$', views.ComingSoonView.as_view(), name='articles'),
+    url(r'^faqs/$', views.ComingSoonView.as_view(), name='faqs'),
+    url(r'^samples/$', views.ComingSoonView.as_view(), name='samples'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
