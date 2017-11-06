@@ -377,3 +377,19 @@ header img {
 .number-col {
   text-align: right;
 }
+
+.partner-stores{
+  /*height: auto;*/
+  vertical-align: middle;
+  display: table-cell;
+  float: none;
+}
+
+.partner-stores-container{
+  display: table;
+}
+
+.partner-stores-row{
+  display: table-row;
+  height: 100%;
+}
