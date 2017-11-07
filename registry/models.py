@@ -111,6 +111,7 @@ class RegistryItem(models.Model):
     item_notes = models.TextField(max_length=300)
     quantity = models.IntegerField()
     quantity_bought = models.IntegerField()
+    from_partner_store = models.BooleanField();
 
     # Relationship Fields
     registry = models.ForeignKey('registry.Registry', )

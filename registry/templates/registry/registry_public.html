@@ -35,6 +35,9 @@
                                 <input type=hidden class="item_qty_left" value="{{ item.quantity }}">
                                 <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
                                 <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
+                                {% if item.from_partner_store %}
+                                <h5 class="list-group-item-text"><i class="fa fa-star text-color-pink" aria-hidden="true"></i>&nbspPartner Store</h5>
+                                {% endif %}
                                 {% if item.quantity_bought < item.quantity %}
                                     <br>
                                     <!-- <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a> -->
