@@ -100,8 +100,13 @@
                         {% if not cart.is_empty %}
                             <div class="row">
                                 <div class="cell">Delivery Fee</div>
-                                <div class="cell">12%</div>
+                                <div class="cell"></div>
                                 <div class="cell number-col">{{ delivery_fee }}</div>
+                            </div>
+                            <div class="row" id="convenience_fee" style="display:none;">
+                                <div class="cell">Convenience Fee</div>
+                                <div class="cell"></div>
+                                <div class="cell number-col">{{ convenience_fee }}</div>
                             </div>
                         {% else %}
                             <div class="row">
@@ -113,7 +118,8 @@
                         <div class="row header blue total">
                             <div class="cell">Total</div>
                             <div class="cell"></div>
-                            <div class="cell number-col">{{ cart_total }}</div>
+                            <div class="cell number-col" id="total1">{{ cart_total }}</div>
+                            <div class="cell number-col" id="total2" style="display:none;">{{ cart_total_2 }}</div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +137,7 @@
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
                 sandbox:    'AVQBEK3N0E5HGcXhWjDRIMOq2VUfDEzPZ3gTahKk90vp5bN5UIRpRGjgD5vaPkS7kem7-NcHO2lgWvkW',
-                production: '<insert production client id>'
+                production: 'AVQS5txgjgbXC3TKtgequTRAlyz0M_9RXwyr6E4q8gcYlXbio0tn4xTphtdV7w3Stv0ABBkQmFzgj5MC'
             },
 
             // Show the buyer a 'Pay Now' button in the checkout flow
@@ -145,7 +151,7 @@
                     payment: {
                         transactions: [
                             {
-                                amount: { total: '{{ cart_total }}', currency: 'PHP' }
+                                amount: { total: '{{ cart_total_2 }}', currency: 'PHP' }
                             }
                         ]
                     }

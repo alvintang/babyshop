@@ -31,6 +31,10 @@ from django.template.loader import render_to_string
 from django.template import Context
 from smtplib import SMTPException
 
+from urllib.parse import urlparse
+
+from django.conf import settings
+
 def datetime_handler(x):
     if hasattr(x, 'isoformat'):
         return x.isoformat()
@@ -62,6 +66,22 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+# check if partner stor
+def is_partner_store(item_url):
+    partner_stores = settings.PARTNER_STORES
+    parsed_uri = urlparse( item_url )
+    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+    print(domain)
+
+    if any(domain in store for store in partner_stores):
+        print("true!")
+        return True
+    else:
+        print("false")
+        return False
+
+
 
 User = get_user_model()
 
@@ -315,8 +335,8 @@ def checkout(request):
     if request.method == "GET":
         form = RegistryItemPaidForm()
         cart = Cart(request.session)
-        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
-        cart_total = cart.total + delivery_fee
+        #delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        delivery_fee = 0
 
         # get Cart products
         cart = Cart(request.session)
@@ -325,7 +345,13 @@ def checkout(request):
             error_msg = "You have no items in your gift basket!"
         else:
             error_msg = ""
+            for productItem in cart.items:
+                if(is_partner_store(productItem.product.item_url)):
+                    delivery_fee += 100
+                else:
+                    delivery_fee += 200
 
+        cart_total = cart.total + delivery_fee
                 
         context = { 'form' : form,
                     'delivery_fee' : delivery_fee,
@@ -339,8 +365,7 @@ def checkout(request):
     elif request.method == "POST":
         form = RegistryItemPaidForm()
         cart = Cart(request.session)
-        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
-        cart_total = cart.total + delivery_fee
+        delivery_fee = 0
         context = {}
 
         # get Cart products
@@ -350,6 +375,12 @@ def checkout(request):
             error_msg = "You have no items in your gift basket!"
         else:
             error_msg = ""
+            for productItem in cart.items:
+                if(is_partner_store(productItem.product.item_url)):
+                    delivery_fee += 100
+                else:
+                    delivery_fee += 200
+        cart_total = cart.total + delivery_fee
 
         # get POST params
         name = request.POST.get('name')
@@ -378,8 +409,8 @@ def checkout(request):
             
             # update quantity
             #if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
-            productItem.product.quantity_bought += productItem.quantity
-            productItem.product.save()
+            # productItem.product.quantity_bought += productItem.quantity
+            # productItem.product.save()
             #else:
             #    raise ValueError("Product quantity to be bought is greater than available quantity")
 
@@ -409,8 +440,9 @@ def payment(request):
         given_info = None
         # get Cart products
         cart = Cart(request.session)
-        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
-        cart_total = cart.total + delivery_fee
+        # delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        convenience_fee = (cart.total * Decimal('0.044')).quantize(Decimal('0.01'))+Decimal(15.00)
+        delivery_fee = 0
 
         if request.session.get('giver_name', None) is None:
             return redirect('show-cart')
@@ -421,7 +453,13 @@ def payment(request):
             return redirect('show-cart')
         else:
             error_msg = ""
-
+            for productItem in cart.items:
+                if(is_partner_store(productItem.product.item_url)):
+                    delivery_fee += 100
+                else:
+                    delivery_fee += 200
+        cart_total = cart.total + delivery_fee
+        cart_total_2 = cart.total + delivery_fee + convenience_fee
 
         # get user info from session
         name = request.session['giver_name']
@@ -443,7 +481,9 @@ def payment(request):
             'delivery_fee' : delivery_fee,
             'empty_cart' : cart.is_empty,
             'cart_total' : cart_total,
-            'error_msg' : error_msg
+            'cart_total_2' : cart_total_2,
+            'error_msg' : error_msg,
+            'convenience_fee' : convenience_fee
             }
 
         return render(request, 'registry/payment.html', context)
@@ -463,18 +503,27 @@ def payment(request):
         payment_option = request.POST.get('payment_option')
         amount = request.POST.get('amount')
 
-        if payment_option == '1':
-            amount_paid = 0
-            date_paid = None
-        elif payment_option == '2':
-            amount_paid = amount
-            date_paid = datetime.datetime.now()
-
+        convenience_fee = (cart.total * Decimal('0.044')).quantize(Decimal('0.01'))+Decimal(15.00)
         # get Cart products
         cart = Cart(request.session)
 
-        delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
-        cart_total = cart.total + delivery_fee
+        # delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        delivery_fee = 0
+        for productItem in cart.items:
+            if(is_partner_store(productItem.product.item_url)):
+                delivery_fee += 100
+            else:
+                delivery_fee += 200
+        
+        if payment_option == '1':
+            amount_paid = 0
+            date_paid = None
+            cart_total = cart.total + delivery_fee
+        elif payment_option == '2':
+            amount_paid = amount
+            date_paid = datetime.datetime.now()
+            cart_total = cart.total + delivery_fee + convenience_fee
+
 
         # create transaction object
         transaction = Transaction.objects.create(
