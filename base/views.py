@@ -226,6 +226,12 @@ class PrivacyPolicyView(TemplateView):
         context = super(PrivacyPolicyView, self).get_context_data(**kwargs)
         return context
 
+class FaqsView(TemplateView):
+    """
+    Main blog detail view
+    """
+    template_name = 'registry/faqs.html'
+
 def ErrorView(request):
     template_name = '500.html'
     print('hello!!')
