@@ -4,13 +4,16 @@ import operator
 import xml.etree.ElementTree as ET
 import hashlib
 import base64
+import os
+import uuid
 
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from .models import Registry, Item, RegistryItem, RegistryItemPaid, Transaction
-from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm, RegistryItemPaidForm
+from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm, RegistryItemPaidForm, ShopAddForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, reverse
@@ -34,6 +37,8 @@ from smtplib import SMTPException
 from urllib.parse import urlparse
 
 from django.conf import settings
+
+SHOP_PK=3
 
 def datetime_handler(x):
     if hasattr(x, 'isoformat'):
@@ -112,10 +117,11 @@ class RegistryView(FormView):
         ctx['RegistryItem'] = RegistryItem.objects.all().filter(User=self.request.user)
         return ctx
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryListView(ListView):
     model = Registry
 
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryCreateView(CreateView):
     model = Registry
     form_class = RegistryForm
@@ -140,6 +146,10 @@ class RegistryDetailView(DetailView):
     def get(self,request,**kwargs):
         pk = kwargs["pk"]
         context = {}
+
+        if pk == "0":
+            raise Http404
+
         try:
             registry = Registry.objects.get(pk=pk)
         except registry.models.DoesNotExist:
@@ -157,6 +167,10 @@ class RegistryDetailPublicView(DetailView):
     def get(self,request,**kwargs):
         pk = kwargs["pk"]
         context = {}
+
+        if pk == "0":
+            raise Http404
+
         form = RegistryItemBuyForm()
         # registry = Registry.objects.get(pk=pk)
         try:
@@ -203,44 +217,47 @@ class RegistrySearchView(DetailView):
 
         return HttpResponse(json.dumps(list(result),default=datetime_handler), content_type="application/json")
 
-
+@method_decorator(must_be_yours, name='dispatch')
 class RegistryUpdateView(UpdateView):
     template_name = 'registry/registry_update.html'
     model = Registry
     form_class = RegistryForm
 
+    def get_success_url(self):
+        return reverse('registry_registry_detail',args=(self.object.id,))
 
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class ItemListView(ListView):
     model = Item
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class ItemCreateView(CreateView):
     model = Item
     form_class = ItemForm
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class ItemDetailView(DetailView):
     model = Item
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class ItemUpdateView(UpdateView):
     model = Item
     form_class = ItemForm
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryItemListView(ListView):
     model = RegistryItem
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryItemCreateView(CreateView):
     model = RegistryItem
     form_class = RegistryItemForm
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryItemDetailView(DetailView):
     model = RegistryItem
 
-
+@method_decorator(login_required(login_url='index'), name='dispatch')
 class RegistryItemUpdateView(UpdateView):
     model = RegistryItem
     form_class = RegistryItemForm
@@ -639,6 +656,67 @@ def payment(request):
         cart.clear()
 
         return render(request, 'registry/payment-done.html', context)
+
+class ShopView(DetailView):
+    template_name = 'registry/shop.html'
+    model = Registry
+
+    def get(self,request,**kwargs):
+        context = {}
+        form = RegistryItemBuyForm()
+        # registry = Registry.objects.get(pk=pk)
+        try:
+            registry = Registry.objects.get(pk=SHOP_PK)
+        except Registry.DoesNotExist:
+            raise Http404
+        
+        context = { 'form': form,
+                    'object': registry}
+
+        return render(request, self.template_name, context)
+
+
+def get_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('uploads/logos', filename)
+
+@method_decorator(staff_member_required, name='dispatch')
+class ShopItemCreateView(CreateView):
+    model = RegistryItem
+    form_class = ShopAddForm
+    template_name = 'registry/shop_add.html'
+
+    def post(self,request,**kwargs):
+        if request.FILES is None or request.POST is None:
+            raise Http404
+
+        file_uploaded = request.FILES['item_img']
+        ext = file_uploaded.name.split('.')[-1]
+        filename = "%s.%s" % (uuid.uuid4(), ext)
+        file_upload_path = settings.MEDIA_ROOT + os.path.join('uploads/shop', filename)
+
+        with open(file_upload_path, 'wb+') as destination:
+            for chunk in file_uploaded.chunks():
+                destination.write(chunk)
+
+        shop_registry = Registry.objects.get(pk=SHOP_PK)
+
+        registryItem = RegistryItem.objects.create(
+                name=request.POST.get('name'),
+                price_from_vendor=request.POST.get('price_from_vendor'),
+                price_display=request.POST.get('price_from_vendor'),
+                item_url="None",
+                img_url=settings.MEDIA_URL + os.path.join('uploads/shop', filename),
+                bought=0,
+                quantity=request.POST.get('quantity'),
+                registry_id=shop_registry.id,
+                quantity_bought=0,
+                item_notes="None",
+                message=request.POST.get('message'),
+                from_partner_store=1,
+            )
+        return redirect('shop_add')
 
 @csrf_exempt
 def checkout_paynamics(request):

@@ -23,7 +23,7 @@ class Registry(models.Model):
     # slug = models.SlugField(unique=True, editable=False, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True,default=None)
     event_description = models.CharField(max_length=1000, null=True)
     event_date = models.DateTimeField(null=True, blank=False)
     event_venue = models.CharField(max_length=255, blank=False)
@@ -114,7 +114,7 @@ class RegistryItem(models.Model):
     from_partner_store = models.BooleanField();
 
     # Relationship Fields
-    registry = models.ForeignKey('registry.Registry', )
+    registry = models.ForeignKey('registry.Registry', default=None)
     # item = models.ForeignKey('registry.Item', )
 
     class Meta:

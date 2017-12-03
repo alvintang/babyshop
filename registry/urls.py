@@ -2,6 +2,8 @@ from django.conf.urls import url, include
 # from rest_framework import routers
 # import api
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # router = routers.DefaultRouter()
 # router.register(r'registry', api.RegistryViewSet)
@@ -25,6 +27,8 @@ urlpatterns += (
     url(r'^checkout/$', views.checkout, name='checkout-cart'),
     url(r'^payment/$', views.payment, name='payment'),
     url(r'^payment/done/$', views.payment, name='payment-done'),
+    url(r'^shop/$', views.ShopView.as_view(), name='shop'),
+    url(r'^shop/add/$', views.ShopItemCreateView.as_view(), name='shop_add'),
 )
 
 urlpatterns += (

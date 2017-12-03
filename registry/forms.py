@@ -2,6 +2,8 @@ from django import forms
 from .models import Registry, Item, RegistryItem, RegistryItemPaid
 from django.forms import Textarea
 from django.utils.translation import ugettext as _
+import uuid
+import os
 
 class RegistryForm(forms.ModelForm):
     class Meta:
@@ -36,15 +38,32 @@ class ItemForm(forms.ModelForm):
 class RegistryItemForm(forms.ModelForm):
     class Meta:
         model = RegistryItem
-        fields = ['name', 'price_from_vendor', 'price_display', 'item_url', 'img_url']
+        labels = {
+          "price_from_vendor" : "Price",
+          "message" : "Description"
+          }
+        fields = ['name', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'quantity']
         widgets = {
             'name' : forms.TextInput(attrs={'class': "form-control"}),
             'price_display' : forms.NumberInput(attrs={'class': "form-control"}),
-            'price_from_vendor' : forms.TextInput(attrs={'class': "form-control"}),
+            'price_from_vendor' : forms.NumberInput(attrs={'class': "form-control"}),
             'item_url' : forms.TextInput( attrs={'class': "form-control"}),
             'img_url' : forms.TextInput(attrs={'class':'form-control'}),
+            'message' : forms.TextInput(attrs={'class': "form-control"}),
         }
 
+class ShopAddForm(RegistryItemForm):
+    item_img = forms.ImageField()
+
+    def __init__(self, *args, **kwargs):
+            super(ShopAddForm, self).__init__(*args, **kwargs)
+            self.fields.pop('price_display')
+            self.fields.pop('item_url')
+            self.fields.pop('img_url')
+
+    class Meta(RegistryItemForm.Meta):
+      fields = RegistryItemForm.Meta.fields + ['message', 'item_img']
+      # widgets = RegistryItemForm.Meta.widgets['message'] = forms.TextInput(attrs={'class': "form-control"}) }
 
 class RegistryItemBuyForm(forms.Form):
   name = forms.CharField(label=_('Your Name'), required=True, max_length=50, 
