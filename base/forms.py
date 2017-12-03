@@ -1,5 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.core.validators import MinValueValidator
+from decimal import Decimal
 
 
 class ContactForm(forms.Form):
@@ -16,10 +18,10 @@ class ContactForm(forms.Form):
 class AddToListForm(forms.Form):
   item_name = forms.CharField(label=_('Item'), required=True, max_length=50, 
                 widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_name'}))
-  item_price = forms.CharField(label=_('Price'), required=True,
-                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_price'}))
-  item_qty = forms.IntegerField(label=_('Quantity'), required=True,
-                widget=forms.TextInput(attrs={'class': "form-control", 'id': 'item_qty'}))
+  item_price = forms.DecimalField(label=_('Price'), required=True, decimal_places=2, max_digits=12,  min_value=0,
+                widget=forms.NumberInput(attrs={'class': "form-control", 'id': 'item_price'}))
+  item_qty = forms.IntegerField(label=_('Quantity'), required=True, min_value=0,
+                widget=forms.NumberInput(attrs={'class': "form-control", 'id': 'item_qty'}))
   item_notes = forms.CharField(label=_('Additional Notes'),required=False,  max_length=200, 
                 widget=forms.Textarea(attrs={'class': "form-control"}))
   item_img = forms.CharField(initial='',required=True,  max_length=200, 

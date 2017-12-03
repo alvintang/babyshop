@@ -7,6 +7,8 @@ from django.views.i18n import JavaScriptCatalog
 from . import views
 from django.views.defaults import server_error as server_error_view
 
+from django.views.static import serve
+
 urlpatterns = [
     url(r'^', include('users.urls')),
     url(r'^', include('registry.urls')),
@@ -28,10 +30,15 @@ urlpatterns = [
     url(r'^articles/$', views.ComingSoonView.as_view(), name='articles'),
     url(r'^faqs/$', views.FaqsView.as_view(), name='faqs'),
     url(r'^samples/$', views.ComingSoonView.as_view(), name='samples'),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
     ]

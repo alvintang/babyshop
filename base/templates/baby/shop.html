@@ -1,0 +1,152 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="container">
+    <!-- <div class="jumbotron">
+        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+    </div> -->
+    <div class="row row-centered home-cards">
+        <div class="panel card panel-default">
+<!--             <div class="panel-heading">
+                <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
+            </div> -->
+            <div class="panel-body">
+                <h1>{{ object.name }}<a href="#"></a></h1>  
+                <h3>{{ object.event_date }}</h3>
+                <h3>{{ object.event_venue }}</h3>
+                <p>
+                    {{ object.event_description }}
+                </p>
+
+                <h3><button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">INSTRUCTIONS</button></h3>
+
+                <div class="list-group django-list">
+                    {% if object.registryitem_set.all|length > 0%}
+                        {% for item in object.registryitem_set.all %}
+                        <div class="list-group-item row">
+                            <div class="img-separator col-md-3">
+                                <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
+                            </div>
+                            <div class="text-separator col-md-9">
+                                <h4 class="list-group-item-heading">{{ item.name }}</h4>
+                                <h5 class="list-group-item-text">Price: Php {{ item.price_from_vendor }}</h5>
+                                <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
+                                <input type=hidden class="item_qty_left" value="{{ item.quantity }}">
+                                <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
+                                <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
+                                {% if item.from_partner_store %}
+                                <h5 class="list-group-item-text"><i class="fa fa-star text-color-pink" aria-hidden="true"></i>&nbspPartner Store</h5>
+                                {% endif %}
+                                {% if item.quantity_bought < item.quantity %}
+                                    <br>
+                                    <!-- <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a> -->
+                                    <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
+                                    <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
+                                    <input class="item-img" type=hidden name="item-img" value="{{ item.img_url }}"></input>
+                                    <input class="item-notes" type=hidden name="item-notes" value="{{ item.notes }}"></input>
+                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                    <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
+                                {% endif %}
+                                <br>
+                                
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="list-group-item row">
+                            <h3>There are no items yet in this registry!</h3>
+                        </div>
+                    {% endif %}
+                </div>
+                <h3><a class="col-centered btn btn-info" type="button" name="button" href="{% url 'show-cart' %}">View Gift Basket</a></h3>
+            </div>
+
+            <!-- Modal -->
+            <div id="buyModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Buy this gift!</h3>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                          <img style='max-width:100%;max-height:100%;' id="modal-img" class="" src="" alt="" />
+                        </div>
+                        <div class="col-md-6">
+                          <h3 class="item-name"></h3>
+                          <h4 class="list-group-item-text" id="modal-price"></h4>
+                          <h4 class="list-group-item-text" id="modal-notes"></h4>
+                          <form action='/add-cart/' method='get' class='form-horizontal'>
+                            {% csrf_token %}
+                            {{ form }}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                          <!-- *Item subject to 12% delivery charge. -->
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Add to Gifts">
+                  </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+
+<!--             <div class="panel-footer row-centered">
+                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>-->
+            <!-- </div>  -->
+        </div>
+    </div>
+</div>
+
+<div id="modal-instructions" class="modal fade modal-sm" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Instructions</h3>
+        </div>
+        <div class="modal-body">
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                <strong class="fa-stack-1x text-color-white">1</strong>
+            </span>
+            Select the items you want to give by adding them to your cart.
+            
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                <strong class="fa-stack-1x text-color-white">2</strong>
+            </span>
+            Purchase the items by continuing to checkout. 
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                <strong class="fa-stack-1x text-color-white">3</strong>
+            </span>
+            Write a message for Mommy and Baby!
+
+            <br>
+            <span class="fa-stack fa-2x">
+                <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                <strong class="fa-stack-1x text-color-white">4</strong>
+            </span>
+            Sit back and relax! We will ship the gifts to Mommy and Baby for you!
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/registry_public.js' %}"></script>
+{% endblock extra_js %}
