@@ -23,7 +23,8 @@
 
 var modal = document.createElement('iframe');
 var reg_id = $('#babysetgo').attr('reg_id');
-modal.setAttribute('src', 'https://localhost:8000/external/add/?url='+window.location.href+'&reg_id='+reg_id);
+var url = encodeURIComponent(window.location.href)
+modal.setAttribute('src', 'https://babysetgo.ph/external/add/?url='+url+'&reg_id='+reg_id);
 modal.setAttribute('scrolling', 'yes'); // no scroll bars on the iframe please
 modal.className = 'modal';
 modal.id = 'babysetgo-iframe';

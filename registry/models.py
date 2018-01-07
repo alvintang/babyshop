@@ -103,15 +103,16 @@ class RegistryItem(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     bought_by = models.TextField(max_length=1000, null=True, blank=True)
     message = models.TextField(max_length=10000, null=True, blank=True)
-    bought = models.BooleanField()
+    bought = models.BooleanField(default=False)
     price_from_vendor = models.DecimalField(max_digits=12, decimal_places=2)
     price_display = models.DecimalField(max_digits=12, decimal_places=2)
     item_url = models.TextField(max_length=300)
     img_url =  models.TextField(max_length=300) 
-    item_notes = models.TextField(max_length=300)
+    item_notes = models.TextField(max_length=10000)
     quantity = models.IntegerField()
     quantity_bought = models.IntegerField()
     from_partner_store = models.BooleanField();
+    img_shop = models.ImageField(upload_to="shop/", null=True, blank=True)
 
     # Relationship Fields
     registry = models.ForeignKey('registry.Registry', default=None)
@@ -198,3 +199,4 @@ class Transaction(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.slug
+

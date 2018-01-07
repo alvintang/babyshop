@@ -38,7 +38,7 @@ from urllib.parse import urlparse
 
 from django.conf import settings
 
-SHOP_PK=3
+SHOP_PK=2
 
 def datetime_handler(x):
     if hasattr(x, 'isoformat'):
@@ -136,6 +136,30 @@ class RegistryCreateView(CreateView):
             obj = form.save(commit=False)
             obj.created_by = self.request.user
             obj.save()
+
+            email = self.request.user.email
+            try:
+                email_params = { 
+                    'username': self.request.user 
+                     }
+
+                plaintext = render_to_string('registry/create_registry_email.txt', email_params)
+                htmly     = render_to_string('registry/create_registry_email.html', email_params)
+
+                subject, from_email, to = 'Baby Set Go', 'info@babysetgo.ph', email
+
+                send_mail(
+                    subject,
+                    plaintext,
+                    from_email,
+                    [email,'info@babysetgo.ph', 'issarufinasenga@gmail.com', 'issa@babysetgo.ph'],
+                    fail_silently=False,
+                    html_message=htmly
+                )
+            except SMTPException as e:
+                print(e.__cause__)
+                error_msg = "E-mail sending error."
+
         return super(RegistryCreateView, self).form_valid(form)
 
 @method_decorator(must_be_yours, name='dispatch')
@@ -268,6 +292,32 @@ class RegistryItemUpdateView(UpdateView):
         # No need for reverse_lazy here, because it's called inside the method
         return reverse(view_name, kwargs={'pk': self.object.id})
 
+class RegistryItemSearch(detailView):
+    def post(self, request, **kwargs):
+        print(request.POST.get('item'))
+
+        query = request.POST.get('item')
+
+        result = {}
+
+        if query:
+            query_list = query.split()
+            result = Registry.objects.all().filter(
+                reduce(operator.and_,
+                       (Q(name__icontains=q) for q in query_list)) |
+                reduce(operator.and_,
+                       (Q(name_father__icontains=q) for q in query_list)) |
+                reduce(operator.and_,
+                       (Q(name_mother__icontains=q) for q in query_list)) |
+                reduce(operator.and_,
+                       (Q(name_baby__icontains=q) for q in query_list))
+            ).values()
+
+        for p in result:
+            print(p)
+
+        return HttpResponse(json.dumps(list(result),default=datetime_handler), content_type="application/json")
+
 @method_decorator(must_be_yours, name='dispatch')
 class RegistryItemDeleteView(UpdateView):
     template_name = 'registry/registry.html'
@@ -347,6 +397,23 @@ def show(request):
             #         ctr += 1
         return render(request, 'registry/show_cart.html')
 
+def compute_delivery_fee(item):
+    delivery_fee = 0
+    if(is_partner_store(item.product.item_url)):
+        delivery_fee_ref = settings.DELIVERY_FEE_REF_PARTNER_STORE
+    else:
+        delivery_fee_ref = settings.DELIVERY_FEE_REF
+
+    if(item.product.price_from_vendor <= settings.PRICE_REF[0]):
+        delivery_fee += delivery_fee_ref[0]
+    elif(item.product.price_from_vendor <= settings.PRICE_REF[1]):
+        delivery_fee += delivery_fee_ref[1]
+    elif(item.product.price_from_vendor <= settings.PRICE_REF[2]):
+        delivery_fee += delivery_fee_ref[2]
+    else:
+        delivery_fee += delivery_fee_ref[3]
+    return delivery_fee
+
 @csrf_exempt
 def checkout(request):
     if request.method == "GET":
@@ -363,10 +430,12 @@ def checkout(request):
         else:
             error_msg = ""
             for productItem in cart.items:
-                if(is_partner_store(productItem.product.item_url)):
-                    delivery_fee += 100
-                else:
-                    delivery_fee += 200
+                #if(is_partner_store(productItem.product.item_url)):
+                #    delivery_fee += settings.DELIVERY_FEE_PARTNER_STORE
+                #else:
+                #    delivery_fee += settings.DELIVERY_FEE
+                #print(compute_delivery_fee(productItem))
+                delivery_fee += compute_delivery_fee(productItem)
 
         cart_total = cart.total + delivery_fee
                 
@@ -393,10 +462,12 @@ def checkout(request):
         else:
             error_msg = ""
             for productItem in cart.items:
-                if(is_partner_store(productItem.product.item_url)):
-                    delivery_fee += 100
-                else:
-                    delivery_fee += 200
+                #if(is_partner_store(productItem.product.item_url)):
+                #    delivery_fee += settings.DELIVERY_FEE_PARTNER_STORE
+                #else:
+                #    delivery_fee += settings.DELIVERY_FEE
+                delivery_fee += compute_delivery_fee(productItem)
+
         cart_total = cart.total + delivery_fee
 
         # get POST params
@@ -471,10 +542,12 @@ def payment(request):
         else:
             error_msg = ""
             for productItem in cart.items:
-                if(is_partner_store(productItem.product.item_url)):
-                    delivery_fee += 100
-                else:
-                    delivery_fee += 200
+                #if(is_partner_store(productItem.product.item_url)):
+                #    delivery_fee += settings.DELIVERY_FEE_PARTNER_STORE
+                #else:
+                #    delivery_fee += settings.DELIVERY_FEE 
+                delivery_fee += compute_delivery_fee(productItem)
+
         cart_total = cart.total + delivery_fee
         cart_total_2 = cart.total + delivery_fee + convenience_fee
 
@@ -520,18 +593,20 @@ def payment(request):
         payment_option = request.POST.get('payment_option')
         amount = request.POST.get('amount')
 
-        convenience_fee = (cart.total * Decimal('0.044')).quantize(Decimal('0.01'))+Decimal(15.00)
         # get Cart products
         cart = Cart(request.session)
+        convenience_fee = (cart.total * Decimal('0.044')).quantize(Decimal('0.01'))+Decimal(15.00)
 
         # delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
         delivery_fee = 0
         for productItem in cart.items:
-            if(is_partner_store(productItem.product.item_url)):
-                delivery_fee += 100
-            else:
-                delivery_fee += 200
+            #if(is_partner_store(productItem.product.item_url)):
+            #    delivery_fee += settings.DELIVERY_FEE_PARTNER_STORE
+            #else:
+            #    delivery_fee += settings.DELIVERY_FEE
         
+            delivery_fee += compute_delivery_fee(productItem)
+
         if payment_option == '1':
             amount_paid = 0
             date_paid = None
@@ -539,7 +614,8 @@ def payment(request):
         elif payment_option == '2':
             amount_paid = amount
             date_paid = datetime.datetime.now()
-            cart_total = cart.total + delivery_fee + convenience_fee
+            cart_total = cart.total + delivery_fee
+            #cart_total = cart.total + delivery_fee + convenience_fee
 
 
         # create transaction object
@@ -625,7 +701,7 @@ def payment(request):
                 subject,
                 plaintext,
                 from_email,
-                [email,'info@babysetgo.ph'],
+                [email,'info@babysetgo.ph', 'issarufinasenga@gmail.com', 'issa@babysetgo.ph'],
                 fail_silently=False,
                 html_message=htmly
             )
@@ -634,7 +710,8 @@ def payment(request):
             error_msg = "E-mail sending error."
             context = { 'error_msg' : error_msg }
                 
-            return render(request, 'registry/payment.html', context)
+            #return render(request, 'registry/payment.html', context)
+            return redirect('payment-done',pk=3)
 
 
         # temporarily bank transfer only
@@ -655,7 +732,12 @@ def payment(request):
         # clear cart if transaction is complete
         cart.clear()
 
-        return render(request, 'registry/payment-done.html', context)
+        #return render(request, 'registry/payment-done.html', context)
+        return redirect('payment-done',pk=payment_option)
+
+def payment_done(request, pk):
+    context = {'payment_option' : pk }
+    return render(request, 'registry/payment-done.html', context)
 
 class ShopView(DetailView):
     template_name = 'registry/shop.html'
@@ -691,10 +773,11 @@ class ShopItemCreateView(CreateView):
         if request.FILES is None or request.POST is None:
             raise Http404
 
-        file_uploaded = request.FILES['item_img']
+        file_uploaded = request.FILES['img_shop']
         ext = file_uploaded.name.split('.')[-1]
         filename = "%s.%s" % (uuid.uuid4(), ext)
-        file_upload_path = settings.MEDIA_ROOT + os.path.join('uploads/shop', filename)
+        file_upload_path = settings.UPLOAD_ROOT + os.path.join('uploads/shop', filename)
+        media_path = "media/uploads/shop/%s" % (filename)
 
         with open(file_upload_path, 'wb+') as destination:
             for chunk in file_uploaded.chunks():
@@ -707,7 +790,8 @@ class ShopItemCreateView(CreateView):
                 price_from_vendor=request.POST.get('price_from_vendor'),
                 price_display=request.POST.get('price_from_vendor'),
                 item_url="None",
-                img_url=settings.MEDIA_URL + os.path.join('uploads/shop', filename),
+                #img_url=settings.MEDIA_URL + os.path.join('uploads/shop', filename),
+                img_url="None",
                 bought=0,
                 quantity=request.POST.get('quantity'),
                 registry_id=shop_registry.id,
@@ -715,8 +799,9 @@ class ShopItemCreateView(CreateView):
                 item_notes="None",
                 message=request.POST.get('message'),
                 from_partner_store=1,
+                img_shop=media_path,
             )
-        return redirect('shop_add')
+        return redirect('shop')
 
 @csrf_exempt
 def checkout_paynamics(request):

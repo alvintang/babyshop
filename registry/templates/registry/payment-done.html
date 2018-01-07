@@ -56,6 +56,11 @@
                         We have sent an email to you to track this transaction.
                         <br>
                         <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
+                    {% elif payment_option == "3" %}
+                        <h4>Thank you for using Baby Set Go!</h4>
+                        Your transaction has been processed but there was an error sending transaction details to your e-mail. You may contact us for support via email: issa@babysetgo.ph or Viber/text at 09178034772.
+                        <br>
+                        <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
                     {% endif %}
                 </div>
                 {% get_cart as cart %}

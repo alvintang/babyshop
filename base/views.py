@@ -20,6 +20,8 @@ from registry.models import Registry, RegistryItem
 from bs4 import BeautifulSoup
 import urllib, re
 from django.http import HttpResponse, HttpResponseServerError, Http404
+from urllib.parse import urlparse
+from urllib.error import URLError, HTTPError
 
 from registry.views import is_partner_store
 
@@ -140,13 +142,26 @@ class ExternalView(ListView):
         url = request.GET.get('url','')
         reg_id = request.GET.get('reg_id','')
 
+        parsed_uri = urlparse(url)
+        domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+        print("url:"+url)
+        print("domain:"+domain)
         # get images from url
         # source,headers = urllib.request.urlretrieve(url)
         try:
             with urllib.request.urlopen(url) as response:
                 source = response.read().decode('utf-8')
-        except HttpError:
-            raise HttpResponseServerError
+        except HTTPError as e:
+            print('The server couldn\'t fulfill the request.')
+            print('Error code: ', e.code)
+            return ErrorView(request)
+        except URLError as e:
+            print('We failed to reach a server.')
+            print('Reason: ', e.reason)
+            return ErrorView(request)
+        except:
+            print('We failed to open URL.')
+            return ErrorView(request)
 
         # list to store URLs
         img_list = []
@@ -158,7 +173,7 @@ class ExternalView(ListView):
 
         title = getTitle(soup)
 
-        price = getPrice(soup)
+        price = getPrice(soup, domain)
 
         currency = getCurrency(soup)
 
@@ -189,10 +204,14 @@ class ExternalView(ListView):
         try:
             registry = Registry.objects.get(pk=reg_id)
         except Registry.DoesNotExist:
-            raise HttpResponseServerError
+            #raise HttpResponseServerError
+            return ErrorView(request)
 
-        reg_item = RegistryItem.objects.create(name=item_name, quantity=item_qty, bought_by='', message='', price_from_vendor=item_price, price_display=item_price*1.12, item_url=item_url, registry=registry, img_url=item_img, item_notes=item_notes, bought=False, quantity_bought=0, from_partner_store=from_partner_store)
-        reg_item.save()
+        try:
+          reg_item = RegistryItem.objects.create(name=item_name, quantity=item_qty, bought_by='', message='', price_from_vendor=item_price, price_display=item_price*1.12, item_url=item_url, registry=registry, img_url=item_img, item_notes=item_notes, bought=False, quantity_bought=0, from_partner_store=from_partner_store)
+          reg_item.save()
+        except:
+            return ErrorView(request)
 
         return render(request, template, context)
 

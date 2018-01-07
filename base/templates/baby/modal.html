@@ -38,14 +38,14 @@
 <body id="page-top" class="index">
     <main class="baby">
         <h3>BabySetGo!</h3>
-
+	<div class="row">
         <form action="/external/add/" method="post" class="col-sm-6">
             {% csrf_token %}
             {{ form }}
-            <input id="babysetgo_submit" type="submit" value="Submit" />
+            <input id="babysetgo_submit" type="submit" value="Submit" class="btn btn-lg btn-info" />
         </form>
 
-        <div class="slideshow-container col-sm-4">
+        <div class="slideshow-container col-sm-6">
         {% for link in links %}
             <div class="mySlides">
                 <div class="numbertext">{{ forloop.counter }} / {{ links|length }}</div>
@@ -58,6 +58,7 @@
         <br>
 
         </div>
+	</div>
 
 <!--         <ul>
           {% for link in links %}

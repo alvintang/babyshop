@@ -45,8 +45,9 @@ class RegistryItemAdminForm(forms.ModelForm):
 
 class RegistryItemAdmin(admin.ModelAdmin):
     form = RegistryItemAdminForm
-    list_display = ['name', 'created', 'last_updated', 'get_registry', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought', 'registry', 'registry_name', 'registry_id']
-    readonly_fields = ['name', 'created', 'last_updated', 'price_display', 'item_url', 'img_url', 'item_notes', 'registry_name', 'registry_id']
+    list_display = ['name', 'created', 'last_updated', 'get_registry', 'price_from_vendor', 'item_url', 'img_url', 'item_notes', 'quantity', 'quantity_bought', 'registry', 'registry_name', 'registry_id']
+    readonly_fields = ['name', 'created', 'last_updated', 'price_display', 'item_url', 'img_url', 'registry_name', 'registry_id']
+    search_fields = ['registry__name']
 
     def get_registry(self,obj):
         link=urlresolvers.reverse("admin:registry_registry_change", args=[obj.registry.id]) #model name has to be lowercase

@@ -25,12 +25,13 @@
 
                 <div class="list-group django-list">
                     {% if object.registryitem_set.all|length > 0%}
+                      <div class="row">
                         {% for item in object.registryitem_set.all %}
-                        <div class="list-group-item row">
-                            <div class="img-separator col-md-3">
+                        <div class="list-group-item col-md-6" class="border:none;">
+                            <div class="img-separator col-md-6">
                                 <img style='max-width:100%;max-height:100%;' class="" src="{{ item.img_url }}" alt="" />
                             </div>
-                            <div class="text-separator col-md-9">
+                            <div class="text-separator col-md-6">
                                 <h4 class="list-group-item-heading">{{ item.name }}</h4>
                                 <h5 class="list-group-item-text">Price: {{ item.price_from_vendor }}</h5>
                                 <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
@@ -47,7 +48,12 @@
                                 <a href="{% url 'registry_registryitem_update' item.id %}" class="col-centered btn btn-primary edit-button" type="button">Edit</a>
                             </div>
                         </div>
+                          <!-- if last column in row -->
+                          {% if forloop.counter|divisibleby:"2" and not forloop.last %}
+                          </div><div class="row">
+                          {% endif %}
                         {% endfor %}
+                      </div>
                     {% else %}
                         <div class="list-group-item row">
                             <h3>

@@ -1,0 +1,13 @@
+Hi {{ username }}!
+
+You have recently created a Baby Set Go registry!
+
+If you have any questions, you can contact us via:
+  email: issa@babysetgo.ph
+  Viber/text: 09178034772
+
+Thank you!
+
+Best regards,
+Baby Set Go Team :)
+<This email is auto-generated>

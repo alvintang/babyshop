@@ -26,7 +26,7 @@ urlpatterns += (
     url(r'^show-cart/$', views.show, name='show-cart'),
     url(r'^checkout/$', views.checkout, name='checkout-cart'),
     url(r'^payment/$', views.payment, name='payment'),
-    url(r'^payment/done/$', views.payment, name='payment-done'),
+    url(r'^payment/done/(?P<pk>\S+)/$', views.payment_done, name='payment-done'),
     url(r'^shop/$', views.ShopView.as_view(), name='shop'),
     url(r'^shop/add/$', views.ShopItemCreateView.as_view(), name='shop_add'),
 )

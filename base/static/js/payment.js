@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
   $('.payment-info-paypal').hide();
+  $('#convenience_fee').hide();
 
   $('input[name="payment_option"]').change(function(){
     option = $(this).val();
@@ -12,14 +13,14 @@ $(document).ready(function() {
       $('#submitForm').show();
       $('#total1').show();
       $('#total2').hide();
-      $('#convenience_fee').hide();
+      //$('#convenience_fee').hide();
     }else if (option == 2){
       $('.payment-info-bank').hide();
       $('.payment-info-paypal').show();
       $('#submitForm').hide();
-      $('#total2').show();
-      $('#total1').hide();
-      $('#convenience_fee').show();
+      //$('#total2').show();
+      //$('#total1').hide();
+      //$('#convenience_fee').show();
     }
   });
 

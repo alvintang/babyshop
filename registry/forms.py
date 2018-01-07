@@ -53,7 +53,7 @@ class RegistryItemForm(forms.ModelForm):
         }
 
 class ShopAddForm(RegistryItemForm):
-    item_img = forms.ImageField()
+    #item_img = forms.ImageField()
 
     def __init__(self, *args, **kwargs):
             super(ShopAddForm, self).__init__(*args, **kwargs)
@@ -62,7 +62,8 @@ class ShopAddForm(RegistryItemForm):
             self.fields.pop('img_url')
 
     class Meta(RegistryItemForm.Meta):
-      fields = RegistryItemForm.Meta.fields + ['message', 'item_img']
+      fields = RegistryItemForm.Meta.fields + ['message', 'img_shop']
+      #fields = RegistryItemForm.Meta.fields + ['message']
       # widgets = RegistryItemForm.Meta.widgets['message'] = forms.TextInput(attrs={'class': "form-control"}) }
 
 class RegistryItemBuyForm(forms.Form):

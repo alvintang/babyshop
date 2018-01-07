@@ -1,0 +1,17 @@
+{% extends 'baby/base_error.html' %}
+{% load static %}
+{% load i18n %}
+{% block title-description %}
+<title>{% trans "Error 404" %}</title>
+<meta name="description" content="meta-description-example">
+{% endblock %}
+{% block extra_js %}
+{%  endblock %}
+{% block content %}
+  <div class="index-wrapper">
+      <div class="action-main jumbotron">
+          <h2>PAGE NOT FOUND!</h2>
+          <a type="button" href="{% url 'index' %}" class="btn btn-primary btn-lg" name="button">Return to Home</a>
+      </div>
+  </div>
+{% endblock %}

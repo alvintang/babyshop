@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    $.ajaxSetup({ cache: false }); // or iPhones don't get fresh data
+
     $('.search-loading').hide();
 
     // $("#search-text").keypress(function(e) {
@@ -63,13 +65,13 @@ function addToSearchResults(result){
     anchor.href = link;
     anchor.innerHTML = "View Registry";
 
-    text_separator.append(eventName);
-    text_separator.append(eventDateText);
-    text_separator.append(eventTimeText);
-    text_separator.append(eventVenue);
-    text_separator.append(anchor);
+    text_separator.appendChild(eventName);
+    text_separator.appendChild(eventDateText);
+    text_separator.appendChild(eventTimeText);
+    text_separator.appendChild(eventVenue);
+    text_separator.appendChild(anchor);
     // row.append(img_separator);
-    row.append(text_separator);
+    row.appendChild(text_separator);
 
     $('.search-results').append(row);
 }
