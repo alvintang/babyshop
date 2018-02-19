@@ -13,6 +13,7 @@ You have recently purchased the following item/s from Baby Set Go:
   Total: {{ cart_total }}
 
 Your transaction reference is {{ transaction_reference }}.
+We will deliver your gift to the recipient. Thank you very much for gifting through Baby Set Go!
 
 Thank you!
 
