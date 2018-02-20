@@ -19,6 +19,7 @@ from registry.models import Registry, RegistryItem
 
 from bs4 import BeautifulSoup
 import urllib, re
+from urllib.request import Request, urlopen
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from urllib.parse import urlparse
 from urllib.error import URLError, HTTPError
@@ -154,7 +155,11 @@ class ExternalView(ListView):
         except HTTPError as e:
             print('The server couldn\'t fulfill the request.')
             print('Error code: ', e.code)
-            return ErrorView(request)
+            if e.code == 403:
+              req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+              source = urlopen(req).read().decode('utf-8')
+            else:
+              return ErrorView(request)
         except URLError as e:
             print('We failed to reach a server.')
             print('Reason: ', e.reason)
@@ -188,14 +193,17 @@ class ExternalView(ListView):
         context = {}
         print(request.POST)
 
-        item_name = request.POST.get('item_name')
-        item_qty = int(request.POST.get('item_qty'))
-        item_price = float(request.POST.get('item_price').replace(',',''))
-        item_url = request.POST.get('item_url')
-        item_img = request.POST.get('item_img')
-        item_notes = request.POST.get('item_notes')
-        reg_id = request.POST.get('reg_id')
-        # registry = Registry.objects.get(pk=reg_id)
+        try:
+          item_name = request.POST.get('item_name')
+          item_qty = int(request.POST.get('item_qty'))
+          item_price = float(request.POST.get('item_price').replace(',',''))
+          item_url = request.POST.get('item_url')
+          item_img = request.POST.get('item_img')
+          item_notes = request.POST.get('item_notes')
+          reg_id = request.POST.get('reg_id')
+          # registry = Registry.objects.get(pk=reg_id)
+        except:
+          raise ErrorView(request)
         if is_partner_store(item_url):
             from_partner_store = True
         else:

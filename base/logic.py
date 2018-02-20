@@ -1,5 +1,6 @@
 import re
 import regex
+import urllib.parse
 import urllib.request, io
 from PIL import Image
 
@@ -19,22 +20,27 @@ def getImageList(soup, img_list, source):
         width = int(img.get('width',0))
         height = int(img.get('height',0))
         if(width > 150 and height > 150):
-          if img.get('src') not in img_list:
-            img_list.append(img.get('src'))
+          if img.get('src').strip('/') not in img_list:
+            #img_url = urllib.parse.quote(img.get('src').strip('/'))
+            img_url = img.get('src').strip('/')
+            print(img_url)
+            img_list.append(img_url)
 
     if(len(img_list) > 0):
+      print(img_list)
       return img_list
 
     imgs = re.findall(r'(https?:/)?(/?[\w_\-&%?./]*?)\.(jpg|png|gif)', source, re.M)
 
     for img in imgs:
+      print(img)
       remote =  img[0] + img[1] + '.' + img[2]
 
       if(remote.startswith('http')):
         #img_file = io.BytesIO(urllib.request.urlopen(remote).read())
         #im=Image.open(img_file)
         #width, height = im.size
-        if img.get('src') not in img_list:
+        if remote not in img_list:
           img_list.append(remote)
 
   return img_list
@@ -71,6 +77,14 @@ def getPrice(soup, url):
     print(price.contents)
     if price:
       return price.contents[1].replace(',','')
+  elif url == 'http://www2.hm.com/':
+    print('h&m')
+    price = soup.find('span', attrs={'class':'price-value'})
+    price_str = price.contents[0].replace(',','').strip()
+    price_str = price_str.replace('PHP ','')
+    print(price_str)
+    if price:
+      return price_str
   else:
     res = regex.findall(r'(\p{Sc}|Php|PhP|php|PHP|&#8369;)\s?((?:\d+,)?\d+\.\d+)', soup.body.get_text())
     prices = []

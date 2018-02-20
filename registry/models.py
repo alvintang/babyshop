@@ -105,10 +105,10 @@ class RegistryItem(models.Model):
     message = models.TextField(max_length=10000, null=True, blank=True)
     bought = models.BooleanField(default=False)
     price_from_vendor = models.DecimalField(max_digits=12, decimal_places=2)
-    price_display = models.DecimalField(max_digits=12, decimal_places=2)
+    price_display = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     item_url = models.TextField(max_length=300)
     img_url =  models.TextField(max_length=300) 
-    item_notes = models.TextField(max_length=10000)
+    item_notes = models.TextField(max_length=10000, blank=True)
     quantity = models.IntegerField()
     quantity_bought = models.IntegerField()
     from_partner_store = models.BooleanField();

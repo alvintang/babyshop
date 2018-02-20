@@ -58,7 +58,7 @@ def must_be_yours(func):
         except Registry.DoesNotExist:
             raise Http404
 
-        if not (registry.created_by.id == request.user.id): 
+        if not (registry.created_by.id == request.user.id or request.user.is_superuser): 
             raise Http404
         return func(request, *args, **kwargs)
     return check_and_call
@@ -291,32 +291,6 @@ class RegistryItemUpdateView(UpdateView):
         view_name = 'registry_registry_detail'
         # No need for reverse_lazy here, because it's called inside the method
         return reverse(view_name, kwargs={'pk': self.object.id})
-
-class RegistryItemSearch(detailView):
-    def post(self, request, **kwargs):
-        print(request.POST.get('item'))
-
-        query = request.POST.get('item')
-
-        result = {}
-
-        if query:
-            query_list = query.split()
-            result = Registry.objects.all().filter(
-                reduce(operator.and_,
-                       (Q(name__icontains=q) for q in query_list)) |
-                reduce(operator.and_,
-                       (Q(name_father__icontains=q) for q in query_list)) |
-                reduce(operator.and_,
-                       (Q(name_mother__icontains=q) for q in query_list)) |
-                reduce(operator.and_,
-                       (Q(name_baby__icontains=q) for q in query_list))
-            ).values()
-
-        for p in result:
-            print(p)
-
-        return HttpResponse(json.dumps(list(result),default=datetime_handler), content_type="application/json")
 
 @method_decorator(must_be_yours, name='dispatch')
 class RegistryItemDeleteView(UpdateView):
@@ -598,6 +572,7 @@ def payment(request):
         convenience_fee = (cart.total * Decimal('0.044')).quantize(Decimal('0.01'))+Decimal(15.00)
 
         # delivery_fee = (cart.total * Decimal('0.12')).quantize(Decimal('0.01'))
+        paid = False
         delivery_fee = 0
         for productItem in cart.items:
             #if(is_partner_store(productItem.product.item_url)):
@@ -615,6 +590,7 @@ def payment(request):
             amount_paid = amount
             date_paid = datetime.datetime.now()
             cart_total = cart.total + delivery_fee
+            paid = True
             #cart_total = cart.total + delivery_fee + convenience_fee
 
 
@@ -638,6 +614,8 @@ def payment(request):
                 # update quantity
                 #if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
                 productItem.product.quantity_bought += productItem.quantity
+                productItem.product.bought = True
+                productItem.product.bought_by = name
                 productItem.product.save()
                 #else:
                 #    raise ValueError("Product quantity to be bought is greater than available quantity")
@@ -649,7 +627,7 @@ def payment(request):
                     tel_no=tel_no,
                     mobile=mobile,
                     reserved=True,
-                    paid=False,
+                    paid=paid,
                     quantity=productItem.quantity,
                     registry_item=productItem.product,
                     transaction = transaction)
