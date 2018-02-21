@@ -142,6 +142,10 @@ class ExternalView(ListView):
     def get(self,request):
         url = request.GET.get('url','')
         reg_id = request.GET.get('reg_id','')
+        from_registry = request.GET.get('from_registry',0)
+
+        if from_registry != 0:
+            self.template_name = 'baby/modal_from_registry.html'
 
         parsed_uri = urlparse(url)
         domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
@@ -221,6 +225,7 @@ class ExternalView(ListView):
         except:
             return ErrorView(request)
 
+        context = { 'reg_id': reg_id }
         return render(request, template, context)
 
 @method_decorator(login_required(login_url='index'), name='dispatch')

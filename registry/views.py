@@ -59,7 +59,11 @@ def must_be_yours(func):
             raise Http404
 
         if not (registry.created_by.id == request.user.id or request.user.is_superuser): 
-            raise Http404
+            if "/registry/registry/detail/" in request.path:
+                path_split = request.path.split("/")
+                return redirect('registry_public_detail', pk=path_split[4])
+            else:
+                raise Http404
         return func(request, *args, **kwargs)
     return check_and_call
 
@@ -291,6 +295,20 @@ class RegistryItemUpdateView(UpdateView):
         view_name = 'registry_registry_detail'
         # No need for reverse_lazy here, because it's called inside the method
         return reverse(view_name, kwargs={'pk': self.object.id})
+
+class RegistryItemSearch(DetailView):
+    def post(self, request, **kwargs):
+        print(request.POST.get('item_id'))
+        query = request.POST.get('item_id')
+
+        result = 0
+
+        if query:
+            query_result = RegistryItem.objects.get(pk=query)
+            if query_result.quantity < query_result.quantity_bought:
+                result = 1
+
+        return HttpResponse(json.dumps(result,default=datetime_handler), content_type="application/json")
 
 @method_decorator(must_be_yours, name='dispatch')
 class RegistryItemDeleteView(UpdateView):

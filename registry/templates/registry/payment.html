@@ -132,7 +132,7 @@
 <script>
         paypal.Button.render({
 
-            env: 'production', // sandbox | production
+            env: 'sandbox', // sandbox | production
 
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
@@ -163,10 +163,28 @@
             onAuthorize: function(data, actions) {
 
                 // Make a call to the REST api to execute the payment
-                return actions.payment.execute().then(function() {
+                    var data = {
+                        'query': $("#search-text").val()
+                    };
+
+                    $('.search-results').empty();
+                    $('.search-loading').show();
+                    $('.search-none').hide();
+
+                    $.ajax({
+                        "type": "POST",
+                        "dataType": "json",
+                        "url": "/public/registry/item/isbought/",
+                        "async": "false",
+                        "data": data,
+                        "success": function(result) {
+                            console.log(result);
+                        },
+                    });
+                /*return actions.payment.execute().then(function() {
                     window.alert('Payment Complete!');
                     document.getElementById("payment-form").submit();
-                });
+                });*/
             },
 
             onCancel: function(data, actions) {

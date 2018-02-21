@@ -19,6 +19,7 @@ urlpatterns = (
     url(r'^public/registry/detail/(?P<pk>\S+)/$', views.RegistryDetailPublicView.as_view(), name='registry_public_detail'),
     url(r'^public/registry/search/', views.RegistrySearchView.as_view(), name='registry_search'),
     url(r'^public/registry/search/(?P<query>\S+)/$', views.RegistrySearchView.as_view(), name='registry_search'),
+    url(r'^public/registry/item/isbought/$', views.RegistryItemSearch.as_view(), name='registry_item_isbought'),
 )
 
 urlpatterns += (

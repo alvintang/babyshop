@@ -22,7 +22,7 @@ PYTHON_VERSION = sys.version_info
 
 #TESTING = sys.argv[1:2] == ['test']
 #if TESTING:
-DEBUG = False
+DEBUG = True
 #else:
 #    DEBUG = True
 
@@ -56,6 +56,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'sslserver',
     'djangosecure',
+    'carton',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -70,6 +72,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'registry.middleware.AutoClearCart',
 )
 
 ROOT_URLCONF = 'base.urls'
@@ -103,10 +106,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'babysetgo',
-        'USER': 'alvintang_bsg',
-        'PASSWORD': 'nbhuj9zz',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '8889',
      }
 
     # 'default': {
@@ -186,9 +189,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '//babysetgo.ph/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'base/static/')
-STATIC_ROOT = '/home/alvintang/webapps/static/' 
+STATIC_URL = '/static/'
+#STATIC_URL = '//babysetgo.ph/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'base/static/')
+#STATIC_ROOT = '/home/alvintang/webapps/static/' 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
@@ -226,6 +230,28 @@ ADMINS = (('Alvin', 'alvin@babysetgo.ph'), ('Issa','issa@babysetgo.ph'))
 
 EMAIL_HOST = 'smtp.webfaction.com'
 EMAIL_HOST_USER = 'babysetgo_issa'
-EMAIL_HOST_PASSWORD = 'dirklucas'
+EMAIL_HOST_PASSWORD = 'Ts0k0leyt!'
 SERVER_EMAIL = 'info@babysetgo.ph'
 EMAIL_PORT = 587
+
+# django-carton variables
+CART_PRODUCT_MODEL = 'registry.models.RegistryItem'
+CART_SESSION_KEY = 'cart_session'
+AUTO_CLEARCART_DELAY = 15 # in minutes
+
+# for middleware serializer
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+# for partner stores
+PARTNER_STORES = [
+    'https://funnest.ph/',
+    'funnest.ph',
+    'http://www.stpatrickbaby.com/',
+    'stpatrickbaby.com',
+    'http://www.mightybaby.ph/',
+    'mightybaby.ph',
+]
+
+PRICE_REF = [1500,3000,5000]
+DELIVERY_FEE_REF = [150,300,500,750]
+DELIVERY_FEE_REF_PARTNER_STOR = [150,300,500,750]
