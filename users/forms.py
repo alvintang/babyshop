@@ -77,7 +77,7 @@ class LoginForm(forms.Form):
                                widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder': _('Your password')}),
                                required=True, validators=[
                                     RegexValidator(
-                                        regex=is_password_secure,
+                                        # regex=is_password_secure,
                                         code=_('Invalid password'))],)
 
     def clean_email(self):

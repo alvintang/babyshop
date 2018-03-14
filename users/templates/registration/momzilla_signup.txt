@@ -1,0 +1,18 @@
+{% load i18n %}
+Hello there {{ user.username }}!
+
+Thank you very much for signing up with Baby Set Go! It was so nice meeting you :) 
+
+We have created an account for you. You may log in through our website: www.babysetgo.ph
+
+Username: {{ user.email }}
+Password: {{ user.password }}
+
+You may already change your password here: https://babysetgo.ph/accounts/password/change/, and begin creating a registry for free! 
+
+Should you have any questions or concerns, please do not hesitate to reach us through viber/SMS: +63917 803 4772
+
+Again, thank you very much! We look forward to helping you create your registry! :)
+
+Helping you on your parenthood journey, 
+The Baby Set Go Team :)
