@@ -1,13 +1,13 @@
 {% load i18n %}
 {% load static %}
 <img src="cid:badge-small.jpg"><br>
-Hello there {{ user.username }}!
+Hello there {{ name }}!
 <br><br>
 Thank you very much for signing up with Baby Set Go! It was so nice meeting you :) 
 <br><br>
-We have created an account for you. You may log in through our website: www.babysetgo.ph
+We have created an account for you. You may log in through our website: <a href="https://babysetgo.ph">www.babysetgo.ph</a>
 <br><br>
-Username: {{ user.email }}
+Username: {{ email }}
 Password: {{ password }}
 <br><br>
 You may already change your password here: <a href="https://babysetgo.ph/accounts/password/change/">https://babysetgo.ph/accounts/password/change/</a>, and begin creating a registry for free! 

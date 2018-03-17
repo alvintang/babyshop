@@ -14,11 +14,11 @@ msg_img = MIMEImage(fp.read())
 fp.close()
 msg_img.add_header('Content-ID', '<{}>'.format('badge-small.jpg'))
 
-with open('bsg_test.csv') as csvfile:
+with open('bsg_data_new.csv') as csvfile:
   reader = csv.DictReader(csvfile)
   for row in reader:
     p = User(
-      username=row['nickname'], 
+      username=row['NICKNAME'], 
       email=row['email address'],
       mobile=row['mobile number'],
       facebook=row['facebook account'],
@@ -26,11 +26,11 @@ with open('bsg_test.csv') as csvfile:
       uuid=uuid.uuid4(),
       # password=row['password']
       )
-    p.set_password(row['password'])
+    p.set_password(row['Password'])
     p.save()
     context = {
       'user': p,
-      'password' : row['password']
+      'password' : row['Password']
     }
     print(p.username)
     subject = render_to_string('registration/momzilla_signup_subject.txt', context)
