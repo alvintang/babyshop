@@ -1,6 +1,7 @@
 $(document).ready(function(){
     function validatePassword(password){
-        var re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$%&/()=?])[A-Za-z\d\-!·$%&/()=?]{8,32}$/;
+        // var re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$%&/()=?])[A-Za-z\d\-!·$%&/()=?]{8,32}$/;
+        var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{}\[\]\\|:;\"',<>.\/?]{8,32}$/;
         return re.test(password);
     }
 
@@ -52,12 +53,12 @@ $(document).ready(function(){
     $('#id_change').addClass('disabled');
     $('#id_change').attr('disabled', 'true');
     var flag_password = false;
-    var flag_old_password = false;
+    var flag_old_password = true;
     correct_text = "Password valid";
     wrong_text = "Please write a valid password";
 
     // Checks
-    input_password_check($('#id_old_password'), correct_text, wrong_text, true);
+    //input_password_check($('#id_old_password'), correct_text, wrong_text, true);
     input_password_check($('#id_new_password1'), correct_text, wrong_text);
 
     $('#id_new_password2').keyup(function(){
