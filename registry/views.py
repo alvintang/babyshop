@@ -9,8 +9,8 @@ import uuid
 
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, TemplateView
 from django.views.generic.edit import FormView
-from .models import Registry, Item, RegistryItem, RegistryItemPaid, Transaction
-from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm, RegistryItemPaidForm, ShopAddForm
+from .models import Registry, Item, RegistryItem, RegistryItemPaid, Transaction, Category
+from .forms import RegistryForm, ItemForm, RegistryItemForm, RegistryItemBuyForm, CheckoutForm, RegistryItemPaidForm, ShopAddForm, ShopAddItemForm, CategoryForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -182,6 +182,10 @@ class RegistryDetailView(DetailView):
             registry = Registry.objects.get(pk=pk)
         except registry.models.DoesNotExist:
             raise Http404
+
+        # redirect if shop
+        if registry.is_shop:
+            return redirect('shop_pk',pk=pk)
         
         context = { 'pk': pk,
                     'object': registry}
@@ -736,32 +740,26 @@ def payment_done(request, pk):
     return render(request, 'registry/payment-done.html', context)
 
 class ShopView(DetailView):
+    """
+    View for rendering a basic Lists templates used in the starter
+    """
     template_name = 'registry/shop.html'
     model = Registry
 
-    def get(self,request,**kwargs):
+    def get(self,request):
         context = {}
-        form = RegistryItemBuyForm()
-        # registry = Registry.objects.get(pk=pk)
         try:
-            registry = Registry.objects.get(pk=SHOP_PK)
+            registry = Registry.objects.filter(is_shop=True)
         except Registry.DoesNotExist:
-            raise Http404
-        
-        context = { 'form': form,
-                    'object': registry}
+            registry = None
+
+        context = {'object_list': registry}
 
         return render(request, self.template_name, context)
 
-
-def get_file_path(instance, filename):
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('uploads/logos', filename)
-
-@method_decorator(staff_member_required, name='dispatch')
-class ShopItemCreateView(CreateView):
-    model = RegistryItem
+@method_decorator(login_required(login_url='index'), name='dispatch')
+class ShopCreateView(CreateView):
+    model = Registry
     form_class = ShopAddForm
     template_name = 'registry/shop_add.html'
 
@@ -769,17 +767,107 @@ class ShopItemCreateView(CreateView):
         if request.FILES is None or request.POST is None:
             raise Http404
 
-        file_uploaded = request.FILES['img_shop']
-        ext = file_uploaded.name.split('.')[-1]
-        filename = "%s.%s" % (uuid.uuid4(), ext)
-        file_upload_path = settings.UPLOAD_ROOT + os.path.join('uploads/shop', filename)
-        media_path = "media/uploads/shop/%s" % (filename)
+        registry = Registry.objects.create(
+                name=request.POST.get('name'),
+                event_description='',
+                event_date='2000-01-01',
+                event_venue='',
+                name_baby='',
+                name_mother='',
+                name_father='',
+                address=request.POST.get('address'),
+                delivered_where='',
+                birth_or_due_date='2000-01-01',
+                is_shop=True,
+                img_shop=request.FILES['img_shop'],
+                created_by=self.request.user,
+            )
+        return redirect('shop')
 
-        with open(file_upload_path, 'wb+') as destination:
-            for chunk in file_uploaded.chunks():
-                destination.write(chunk)
+class ShopDetailView(DetailView):
+    template_name = 'registry/shop_detail.html'
+    model = Registry
 
-        shop_registry = Registry.objects.get(pk=SHOP_PK)
+    def get(self,request,**kwargs):
+        pk = kwargs["pk"]
+        if pk is None:
+            pk=SHOP_PK
+
+        context = {}
+        form = RegistryItemBuyForm()
+        # registry = Registry.objects.get(pk=pk)
+        
+        if(request.user.is_authenticated()):
+            my_registries = Registry.objects.filter(created_by=request.user)
+            print(str(my_registries))
+        else:
+            print("Anonymous")
+
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise Http404
+        
+        context = { 'form': form,
+                    'object': registry,
+                    'my_registries': my_registries
+                    }
+
+        return render(request, self.template_name, context)
+
+
+# def get_file_path(instance, filename):
+#     ext = filename.split('.')[-1]
+#     filename = "%s.%s" % (uuid.uuid4(), ext)
+#     return os.path.join('uploads/logos', filename)
+
+@method_decorator(staff_member_required, name='dispatch')
+class ShopItemCreateView(CreateView):
+    model = RegistryItem
+    form_class = ShopAddItemForm
+    template_name = 'registry/shop_add.html'
+
+    def get(self,request,**kwargs):
+        pk = kwargs["pk"]
+        if pk is None:
+            pk=SHOP_PK
+
+        context = {}
+        form = ShopAddItemForm()
+        # registry = Registry.objects.get(pk=pk)
+        
+        try:
+            registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise Http404
+        
+        context = { 'form': form,
+                    'shop_name': registry.name,
+                    }
+
+        return render(request, self.template_name, context)
+
+    def post(self,request,**kwargs):
+        pk = kwargs["pk"]
+        if request.FILES is None or request.POST is None:
+            raise Http404
+
+        # file_uploaded = request.FILES['img_shop']
+        # ext = file_uploaded.name.split('.')[-1]
+        # filename = "%s.%s" % (uuid.uuid4(), ext)
+        # file_upload_path = settings.UPLOAD_ROOT + os.path.join('uploads/shop', filename)
+        # media_path = "media/uploads/shop/%s" % (filename)
+
+        # with open(file_upload_path, 'wb+') as destination:
+        #     for chunk in file_uploaded.chunks():
+        #         destination.write(chunk)
+
+        try:
+            shop_registry = Registry.objects.get(pk=pk)
+        except Registry.DoesNotExist:
+            raise Http404
+
+        # shop_registry = Registry.objects.get(pk=pk)
 
         registryItem = RegistryItem.objects.create(
                 name=request.POST.get('name'),
@@ -795,9 +883,16 @@ class ShopItemCreateView(CreateView):
                 item_notes="None",
                 message=request.POST.get('message'),
                 from_partner_store=1,
-                img_shop=media_path,
+                img_shop=request.FILES['img_shop'],
             )
         return redirect('shop')
+
+@method_decorator(staff_member_required, name='dispatch')
+class CategoryCreateView(CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'registry/category_add.html'
+    success_url = '/shop/add/category'
 
 @csrf_exempt
 def checkout_paynamics(request):

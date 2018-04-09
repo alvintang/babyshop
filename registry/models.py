@@ -34,6 +34,8 @@ class Registry(models.Model):
     delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=False)
     #bool_due_date = models.CharField(choices=due_date_options,max_length=30, blank=False)
     birth_or_due_date = models.DateField(blank=False)
+    is_shop = models.BooleanField(default=False)
+    img_shop = models.ImageField(null=True, blank=True)
 
     # Relationship Fields
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, )
@@ -92,6 +94,10 @@ class Item(models.Model):
     def get_update_url(self):
         return reverse('registry_item_update', args=(self.slug,))
 
+class Category(models.Model):
+    name = models.CharField(max_length=128) # `blank` is false by default
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children') # by giving this field a nice `related_name`, we can easily access the linked categories
+    def __str__(self): return self.name
 
 class RegistryItem(models.Model):
 
@@ -112,10 +118,12 @@ class RegistryItem(models.Model):
     quantity = models.IntegerField()
     quantity_bought = models.IntegerField()
     from_partner_store = models.BooleanField();
-    img_shop = models.ImageField(upload_to="shop/", null=True, blank=True)
+    img_shop = models.ImageField(null=True, blank=True)
 
     # Relationship Fields
     registry = models.ForeignKey('registry.Registry', default=None)
+    categories = models.ManyToManyField(Category, null=True, blank=True, related_name='items') 
+
     # item = models.ForeignKey('registry.Item', )
 
     class Meta:
@@ -199,4 +207,3 @@ class Transaction(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.slug
-

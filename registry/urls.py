@@ -29,7 +29,10 @@ urlpatterns += (
     url(r'^payment/$', views.payment, name='payment'),
     url(r'^payment/done/(?P<pk>\S+)/$', views.payment_done, name='payment-done'),
     url(r'^shop/$', views.ShopView.as_view(), name='shop'),
-    url(r'^shop/add/$', views.ShopItemCreateView.as_view(), name='shop_add'),
+    url(r'^shop/add/$', views.ShopCreateView.as_view(), name='shop_add'),
+    url(r'^shop/(?P<pk>[0-9]+)/$', views.ShopDetailView.as_view(), name='shop_pk'),
+    url(r'^shop/(?P<pk>[0-9]+)/add/$', views.ShopItemCreateView.as_view(), name='shop_additem'),
+    url(r'^shop/add/category$', views.CategoryCreateView.as_view(), name='category_add'),
 )
 
 urlpatterns += (
