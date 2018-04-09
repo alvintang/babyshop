@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registry, Item, RegistryItem, RegistryItemPaid
+from .models import Registry, Item, RegistryItem, RegistryItemPaid, Category
 from django.forms import Textarea
 from django.utils.translation import ugettext as _
 import uuid
@@ -52,17 +52,32 @@ class RegistryItemForm(forms.ModelForm):
             'message' : forms.TextInput(attrs={'class': "form-control"}),
         }
 
-class ShopAddForm(RegistryItemForm):
+class ShopAddForm(RegistryForm):
+    class Meta:
+        model = Registry
+        fields = ['name', 'address','img_shop']
+        labels = {
+          'name': _('Shop Name'),
+          'address': _('Shop Address'),
+          'img_shop': _('Shop Logo'),
+        }
+        # exclude = ['created_by', 'id']
+        widgets = {
+            'name' : forms.TextInput(attrs={'class': "form-control"}),
+            'address' : forms.TextInput( attrs={'class': "form-control"}),
+        }
+
+class ShopAddItemForm(RegistryItemForm):
     #item_img = forms.ImageField()
 
     def __init__(self, *args, **kwargs):
-            super(ShopAddForm, self).__init__(*args, **kwargs)
+            super(ShopAddItemForm, self).__init__(*args, **kwargs)
             self.fields.pop('price_display')
             self.fields.pop('item_url')
             self.fields.pop('img_url')
 
     class Meta(RegistryItemForm.Meta):
-      fields = RegistryItemForm.Meta.fields + ['message', 'img_shop']
+      fields = RegistryItemForm.Meta.fields + ['message', 'img_shop','categories']
       #fields = RegistryItemForm.Meta.fields + ['message']
       # widgets = RegistryItemForm.Meta.widgets['message'] = forms.TextInput(attrs={'class': "form-control"}) }
 
@@ -76,7 +91,7 @@ class RegistryItemBuyForm(forms.Form):
   item_id = forms.CharField(initial='',required=True,  max_length=200, 
                 widget=forms.HiddenInput(attrs={'id': 'item_id'}))
   item_price = forms.CharField(initial='',required=True,  max_length=200, 
-                widget=forms.HiddenInput(attrs={'id': 'item_price'}))
+                widget=forms.HiddenInput(attrs={'id': 'item_price'}))  
 
 class RegistryItemPaidForm(forms.ModelForm):
     class Meta:
@@ -112,3 +127,12 @@ class CheckoutForm(forms.Form):
   state = forms.CharField(label=_('Province/Region'), required=True, max_length=100, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'state'}))
   country = forms.CharField(label=_('Country'), required=True, max_length=100, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'country'}))
   zipcode = forms.CharField(label=_('Zip Code'), required=True, max_length=8, widget=forms.TextInput(attrs={'class': "form-control", 'id': 'zipcode'}))
+
+class CategoryForm(forms.ModelForm):
+  class Meta:
+        model = Category
+        fields = ['name', 'parent']
+        labels = {
+          'name' : 'Category Name',
+          'parent' : 'Parent Category',
+        }

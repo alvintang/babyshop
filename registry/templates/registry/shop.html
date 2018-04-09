@@ -1,154 +1,114 @@
 {% extends 'baby/base.html' %}
 {% load static %}
 {% load i18n %}
+
 {% block content %}
-<div class="container">
-    <!-- <div class="jumbotron">
-        <h1>{% trans "Welcome " %}{{ request.user.first_name}}</h1>
+
+
+<div class="lists-wrapper">
+    <div class="jumbotron">
+        <h1>Shops</h1>
+    </div>
+    <!-- div class="container">
+        <a href="/registry/add/">
+            <button class="col-centered btn btn-info btn-lg" type="button" name="button">New Registry</button>
+        </a>
+    </div>
+    <br>
+    <<div class="container">
+        <ul class="list-group list-with-badges">
+            {% for object in object_list %}
+            <li class="list-group-item">{{ object.name }}<span class="badge">{{ object.event_date }}</span></li>
+            {% endfor %}
+
+        </ul>
     </div> -->
-    <div class="row row-centered home-cards">
-        <div class="panel card panel-default">
-<!--             <div class="panel-heading">
-                <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
-            </div> -->
-            <div class="panel-body">
-                <h1>{{ object.name }}<a href="#"></a></h1>  
-                </p>
 
-                <h3><button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">INSTRUCTIONS</button></h3>
+    <div class="container">
+        <!-- <div class="list-group django-list">
+            {% for object in object_list %}
+            <a href="/registry/registry/detail/{{ object.slug }}/" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ object.name }}</h4>
+                <span class="badge">{{ object.event_date }}</span>
+                <p class="list-group-item-text">{{ object.event_description }}</p>
+            </a>
+            {% endfor %}
+        </div> -->
 
-                <div class="list-group django-list">
-                    {% if object.registryitem_set.all|length > 0%}
-                        <div class="row">
-                        {% for item in object.registryitem_set.all %}
-                        <div class="list-group-item col-md-6" style="border:none;">
-                            <div class="img-separator col-md-6">
-                                <img style='max-width:100%;max-height:100%;' class="" src="https://babysetgo.ph/{{ item.img_shop }}" alt="" />
-                            </div>
-                            <div class="text-separator col-md-6">
-                                <h4 class="list-group-item-heading">{{ item.name }}</h4>
-                                <h5 class="list-group-item-text">Price: Php {{ item.price_from_vendor }}</h5>
-                                <!--h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5-->
-                                <input type=hidden class="item_qty_left" value="{{ item.quantity }}">
-                                <h5 class="list-group-item-text">{{ item.message }}</h5>
-                                <!-- <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5> -->
-                                {% if item.from_partner_store %}
-                                <h5 class="list-group-item-text"><i class="fa fa-star text-color-pink" aria-hidden="true"></i>&nbspPartner Store</h5>
-                                {% endif %}
-                                {% if item.quantity_bought < item.quantity %}
-                                    <br>
-                                    <!-- <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a> -->
-                                    <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
-                                    <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
-                                    <input class="item-img" type=hidden name="item-img" value="{{ item.img_url }}"></input>
-                                    <input class="item-notes" type=hidden name="item-notes" value="{{ item.notes }}"></input>
-                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
-                                    <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
-                                {% endif %}
-                                <br>
-                                
-                            </div>
-                        </div>
-                          <!-- if last column in row -->
-                          {% if forloop.counter|divisibleby:"2" and not forloop.last %}
-                          </div><div class="row">
-                          {% endif %}
-                        {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="list-group-item row">
-                            <h3>There are no items yet in the shop!</h3>
-                        </div>
-                    {% endif %}
+
+        <div class="container">
+            <div class="list-group django-list">
+                {% if object_list|length <= 0 %}
+                <div class="list-group-item row">
+                    <h3>Start creating your own registry!</h3>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                        <strong class="fa-stack-1x text-color-white">1</strong>
+                    </span>
+                    Create a registry and fill out the details of your event.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                        <strong class="fa-stack-1x text-color-white">2</strong>
+                    </span>
+                    Add items from any store online by using the quick link we will provide.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                        <strong class="fa-stack-1x text-color-white">3</strong>
+                    </span>
+                    Publish and share your registry to your family and friends.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                        <strong class="fa-stack-1x text-color-white">4</strong>
+                    </span>
+                    Manage your registries in this page.
+                    
                 </div>
-                <h3><a class="col-centered btn btn-info" type="button" name="button" href="{% url 'show-cart' %}">View Gift Basket</a></h3>
-            </div>
-
-            <!-- Modal -->
-            <div id="buyModal" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Buy this gift!</h3>
-                  </div>
-                  <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                          <img style='max-width:100%;max-height:100%;' id="modal-img" class="" src="" alt="" />
-                        </div>
-                        <div class="col-md-6">
-                          <h3 class="item-name"></h3>
-                          <h4 class="list-group-item-text" id="modal-price"></h4>
-                          <h4 class="list-group-item-text" id="modal-notes"></h4>
-                          <form action='/add-cart/' method='get' class='form-horizontal'>
-                            {% csrf_token %}
-                            {{ form }}
-                            <input type="hidden" name="next" value="{{ request.path }}">
-                          <!-- *Item subject to 12% delivery charge. -->
-                        </div>
+                {% endif %}
+                {% for object in object_list %}
+                <div class="list-group-item row">
+                    <div class="img-separator col-md-2">
+                        <img width="100%" class="img-circle" src="/media/{{ object.img_shop }}" alt="" />
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Add to Gifts">
-                  </div>
-                  </form>
+                    <div class="text-separator col-md-8">
+                        <h4 class="list-group-item-heading">{{ object.name }} - {{ object.event_date }}</h4>
+                        <!-- <h5 class="list-group-item-text">{{ object.event_date }}</h5> -->
+                        <p class="list-group-item-text">{{ object.event_description }}</p>
+                        <a href="/shop/{{ object.id }}/" class="col-centered btn btn-info">View</a>
+                    </div>
+                    <div class="col-md-11">                        
+                        <!-- <a href="{% url 'registry_registry_delete' object.id %}" class="col-centered btn btn-danger delete-button" type="button">Delete</a> -->
+                        <!-- <a href="{% url 'registry_registry_update' object.id %}" class="col-centered btn btn-primary edit-button" type="button">Edit</a> -->
+                    </div>
                 </div>
-
-              </div>
+                {% endfor %}
             </div>
-
-<!--             <div class="panel-footer row-centered">
-                <button class="col-centered btn btn-danger btn-lg" type="button" name="button">Cancel</button>-->
-            <!-- </div>  -->
         </div>
     </div>
 </div>
 
-<div id="modal-instructions" class="modal fade modal-sm" role="dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Instructions</h3>
+    <div class="ui modal syncProfile">
+        <i class="close icon"></i>
+        <div class="header">
+            Confirm Action <span class="header-sub">- No Local Patient Profile Record</span>
         </div>
-        <div class="modal-body">
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-green"></i>
-                <strong class="fa-stack-1x text-color-white">1</strong>
-            </span>
-            Select the items you want to give by adding them to your cart.
-            
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-pink"></i>
-                <strong class="fa-stack-1x text-color-white">2</strong>
-            </span>
-            Purchase the items by continuing to checkout. 
-
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-blue"></i>
-                <strong class="fa-stack-1x text-color-white">3</strong>
-            </span>
-            Write a message for Mommy and Baby!
-
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-orange"></i>
-                <strong class="fa-stack-1x text-color-white">4</strong>
-            </span>
-            Sit back and relax! We will ship the gifts to Mommy and Baby for you!
-
+        <div class="image content">
+            <div class="syncProfile description">
+                A description can appear on the right
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <div class="actions">
+            <div class="ui button" id="cancel">Cancel</div>
+            <a class="ui button sync-profile">Request Access and Sync</a>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock content %}
 
 {% block extra_js %}
-    <script src="{% static 'js/registry_public.js' %}"></script>
+    <script src="{% static 'js/registry_list.js' %}"></script>
 {% endblock extra_js %}
