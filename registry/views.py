@@ -234,7 +234,7 @@ class RegistrySearchView(DetailView):
         if query:
             query_list = query.split()
             result = Registry.objects.all().filter(
-                reduce(operator.and_,
+                (reduce(operator.and_,
                        (Q(name__icontains=q) for q in query_list)) |
                 reduce(operator.and_,
                        (Q(name_father__icontains=q) for q in query_list)) |
@@ -242,7 +242,8 @@ class RegistrySearchView(DetailView):
                        (Q(name_mother__icontains=q) for q in query_list)) |
                 reduce(operator.and_,
                        (Q(name_baby__icontains=q) for q in query_list))
-            ).values()
+                ) & (Q(is_shop=False))
+                ).values()
 
         for p in result:
             print(p)
