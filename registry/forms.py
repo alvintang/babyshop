@@ -42,13 +42,14 @@ class RegistryItemForm(forms.ModelForm):
           "price_from_vendor" : "Price",
           "message" : "Description"
           }
-        fields = ['name', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'quantity']
+        fields = ['name', 'price_from_vendor', 'price_display', 'item_url', 'img_url', 'quantity', 'item_notes']
         widgets = {
             'name' : forms.TextInput(attrs={'class': "form-control"}),
             'price_display' : forms.NumberInput(attrs={'class': "form-control"}),
             'price_from_vendor' : forms.NumberInput(attrs={'class': "form-control"}),
             'item_url' : forms.TextInput( attrs={'class': "form-control"}),
             'img_url' : forms.TextInput(attrs={'class':'form-control'}),
+            'item_notes' : forms.TextInput(attrs={'class':'form-control'}),
             'message' : forms.TextInput(attrs={'class': "form-control"}),
         }
 

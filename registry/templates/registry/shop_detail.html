@@ -23,14 +23,14 @@
                         {% for item in object.registryitem_set.all %}
                         <div class="list-group-item col-md-6" style="border:none;">
                             <div class="img-separator col-md-6">
-                                <img style='max-width:100%;max-height:100%;' class="" src="https://localhost:8000/media/{{ item.img_shop }}" alt="" />
+                                <img style='max-width:100%;max-height:100%;' class="" src="https://babysetgo.ph/media/media/{{ item.img_shop }}" alt="" />
                             </div>
                             <div class="text-separator col-md-6">
                                 <h4 class="list-group-item-heading">{{ item.name }}</h4>
                                 <h5 class="list-group-item-text">Price: Php {{ item.price_from_vendor }}</h5>
                                 <!--h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5-->
                                 <input type=hidden class="item_qty_left" value="{{ item.quantity }}">
-                                <h5 class="list-group-item-text">{{ item.message }}</h5>
+                                <h5 class="list-group-item-text">{{ item.message|linebreaksbr }}</h5>
                                 <!-- <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5> -->
                                 {% if item.from_partner_store %}
                                 <h5 class="list-group-item-text"><i class="fa fa-star text-color-pink" aria-hidden="true"></i>&nbspPartner Store</h5>
@@ -40,9 +40,9 @@
                                     <!-- <a href="{{ item.item_url }}" class="col-centered btn btn-info">See Item</a> -->
                                     <input class="item-id" type=hidden name="item-id" value="{{ item.id }}"></input>
                                     <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
-                                    <input class="item-img" type=hidden name="item-img" value="https://localhost:8000/media/{{ item.img_shop }}"></input>
-                                    <input class="item-notes" type=hidden name="item-notes" value="{{ item.notes }}"></input>
-                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                    <input class="item-img" type=hidden name="item-img" value="https://babysetgo.ph/media/media/{{ item.img_shop }}"></input>
+                                    <input class="item-notes" type=hidden name="item-notes" value="{{ item.message|linebreaksbr }}"></input>
+                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Add to Cart</button>
                                     <button class="col-centered btn btn-info add-button" type="button" name="button" data-toggle="modal" data-target="#addModal">Add to my Registry!</button>
                                     <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
                                 {% endif %}
@@ -83,7 +83,7 @@
                         <div class="col-md-6">
                           <h3 class="item-name"></h3>
                           <h4 class="list-group-item-text" id="modal-price"></h4>
-                          <h4 class="list-group-item-text" id="modal-notes"></h4>
+                          <h5 class="list-group-item-text" id="modal-notes"></h5>
                           <form action='/add-cart/' method='get' class='form-horizontal'>
                             {% csrf_token %}
                             {{ form }}
@@ -94,7 +94,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Add to Gifts">
+                    <input type="submit" class="btn btn-primary" value="Add to Cart">
                   </div>
                   </form>
                 </div>
@@ -120,7 +120,7 @@
                         <div class="col-md-6">
                           <h3 class="item-name-add"></h3>
                           <h4 class="list-group-item-text" id="modal-price-add"></h4>
-                          <h4 class="list-group-item-text" id="modal-notes-add"></h4>
+                          <h5 class="list-group-item-text" id="modal-notes-add"></h5>
                           <form action='/add-cart/' method='get' class='form-horizontal'>
                             {% csrf_token %}
                             <label for="registry">Registry</label>

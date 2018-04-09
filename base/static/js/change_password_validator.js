@@ -1,6 +1,6 @@
 $(document).ready(function(){
     function validatePassword(password){
-        // var re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$%&/()=?])[A-Za-z\d\-!·$%&/()=?]{8,32}$/;
+        //var re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$%&/()=?])[A-Za-z\d\-!·$%&/()=?]{8,32}$/;
         var re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{}\[\]\\|:;\"',<>.\/?]{8,32}$/;
         return re.test(password);
     }

@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  //alert("In observance of Holy Week, buying of items is disabled for now. We will resume normal operations on Sunday, April 1. Thank you!");
+
   $('.buy-button').click(function(){
     item_id = $(this).prev().prev().prev().prev().val();
     console.log(item_id);
@@ -17,7 +19,7 @@ $(document).ready(function() {
     $('.item-name').html(item_name);
     $('#item_id').val(item_id);
     $('#modal-price').html("Price: Php "+item_price);
-    $('#modal-notes').html("Notes: "+item_notes);
+    $('#modal-notes').html("Notes: <br>"+item_notes);
     $('#modal-img').attr('src',item_img);
 
     $('#item_qty').attr('max',item_qty_left);
@@ -40,7 +42,7 @@ $(document).ready(function() {
     $('.item-name-add').html(item_name);
     $('#item_id-add').val(item_id);
     $('#modal-price-add').html("Price: Php "+item_price);
-    $('#modal-notes-add').html("Notes: "+item_notes);
+    $('#modal-notes-add').html("Notes: <br>"+item_notes);
     $('#modal-img-add').attr('src',item_img);
 
     $('#item_qty').attr('max',item_qty_left);

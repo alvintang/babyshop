@@ -7,3 +7,4 @@ registry/migrations/__pycache__/*
 registry/migrations/*
 base/settings.py
 **/.DS_Store
+media/

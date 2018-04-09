@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 
-# is_password_secure = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$@@%&\/()=?])[A-Za-z\d\-!·$@%&\/()=?]{8,32}$'
+#is_password_secure = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[-!·$@@%&\/()=?])[A-Za-z\d\-!·$@%&\/()=?]{8,32}$'
 is_password_secure = '^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{}\[\]\\|:;"\',<>./?]{8,32}$'
 
 
@@ -16,13 +16,13 @@ class CustomPasswordValidator(object):
         pattern = re.compile(is_password_secure)
         if not pattern.match(password):
             raise ValidationError(
-                # _("Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."),
+                #_("Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."),
                 _("Password must be at least 8 characters and contain letters and numbers"),
                 code='Invalid password',
             )
 
     def get_help_text(self):
         return _(
-            # "Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."
+            #"Password must be at least 8 characters and contain lowercase and uppercase letters, numbers and special characters ( !·$@%&/()=? )."
             "Password must be at least 8 characters and contain letters and numbers"
         )

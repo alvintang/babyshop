@@ -298,7 +298,7 @@ class RegistryItemUpdateView(UpdateView):
     def get_success_url(self):
         view_name = 'registry_registry_detail'
         # No need for reverse_lazy here, because it's called inside the method
-        return reverse(view_name, kwargs={'pk': self.object.id})
+        return reverse(view_name, kwargs={'pk': self.object.registry.id})
 
 class RegistryItemSearch(DetailView):
     def post(self, request, **kwargs):
