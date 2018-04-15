@@ -385,6 +385,10 @@ header img {
   float: none;
 }
 
+.partner-stores-img {
+  max-height: 200px;
+}
+
 .partner-stores-container{
   display: table;
 }
