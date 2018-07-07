@@ -46,7 +46,8 @@
                                     <input class="item-price" type=hidden name="item-price" value="{{ item.price_from_vendor }}"></input>
                                     <input class="item-img" type=hidden name="item-img" value="{{ item.img_url }}"></input>
                                     <input class="item-notes" type=hidden name="item-notes" value="{{ item.notes }}"></input>
-                                    <button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+                                    <!--button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal">Buy this gift!</button>
+-->
                                     <!--button class="col-centered btn btn-primary buy-button" type="button" name="button" data-toggle="modal" data-target="#buyModal" disabled=true>Buy this gift!</button-->
                                     <input class="item-qty-bought" type=hidden name="item--qty-bought" value="{{ item.quantity_bought }}"></input>
                                 {% endif %}
@@ -118,8 +119,8 @@
         <div class="modal-header">
             <h3>Instructions</h3>
         </div>
-        <div class="modal-body">
-            <span class="fa-stack fa-2x">
+        <div class="modal-body" style="height: auto;">
+            <!--span class="fa-stack fa-2x">
                 <i class="fa fa-star fa-stack-2x text-color-green"></i>
                 <strong class="fa-stack-1x text-color-white">1</strong>
             </span>
@@ -145,7 +146,8 @@
                 <strong class="fa-stack-1x text-color-white">4</strong>
             </span>
             Sit back and relax! We will ship the gifts to Mommy and Baby for you!
-
+            -->
+          Purchasing is disabled for now as we are currently undergoing maintenance and transition. thank you very much for your understanding!:) 
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

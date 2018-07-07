@@ -47,7 +47,7 @@
                                 <h5 class="list-group-item-text">Quantity: {{ item.quantity }}</h5>
                                 <h5 class="list-group-item-text">Notes: <br>{{ item.item_notes }}</h5>
                                 {# if item.bought == 1 #}
-                                {% if item.quantity_bought >= item.quantity %}
+                                {% if item.quantity_bought <= item.quantity %}
                                     <h5 class="list-group-item-text"><br>{{ item.quantity_bought }} / {{ item.quantity }}&nbsp has been purchased.</h5>
                                     <h5 class="list-group-item-text"><br>Purchased by: &nbsp {{ item.bought_by }}</h5>
                                 {% else %}

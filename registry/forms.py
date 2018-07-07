@@ -50,7 +50,7 @@ class RegistryItemForm(forms.ModelForm):
             'item_url' : forms.TextInput( attrs={'class': "form-control"}),
             'img_url' : forms.TextInput(attrs={'class':'form-control'}),
             'item_notes' : forms.TextInput(attrs={'class':'form-control'}),
-            'message' : forms.TextInput(attrs={'class': "form-control"}),
+            'message' : forms.Textarea(attrs={'class': "form-control"}),
         }
 
 class ShopAddForm(RegistryForm):
@@ -80,7 +80,7 @@ class ShopAddItemForm(RegistryItemForm):
     class Meta(RegistryItemForm.Meta):
       fields = RegistryItemForm.Meta.fields + ['message', 'img_shop','categories']
       #fields = RegistryItemForm.Meta.fields + ['message']
-      # widgets = RegistryItemForm.Meta.widgets['message'] = forms.TextInput(attrs={'class': "form-control"}) }
+      #widgets = RegistryItemForm.Meta.widgets['message'] = forms.Textarea(attrs={'class': "form-control"})
 
 class RegistryItemBuyForm(forms.Form):
   name = forms.CharField(label=_('Your Name'), required=True, max_length=50, 
