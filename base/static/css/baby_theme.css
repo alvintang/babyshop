@@ -233,7 +233,7 @@ header img {
   text-align: center;
 }
 
-#modal-instructions {
+#modal-instructions, #modal-bought {
   width: 50%;
   /*overflow: visible !important;*/
   margin: auto;
@@ -405,4 +405,47 @@ header img {
 
 .bg-color-white {
   padding-top: 40px;
+}
+
+.baby-form-label{
+  font-family: 'Bubbler One', sans-serif;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.baby-form-input{
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  border-radius: 4px;
+  margin: 6px 0px;
+  border: 1px solid #aaa;
+}
+
+.baby-form-file{
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  border-radius: 4px;
+  margin: 12px 0px;
+  border: 0px solid #aaa;
+}
+
+.baby-form-input-addon-group{
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  border-radius: 4px 0px 0px 4px;
+  border: 1.3px solid #aaa;
+  border-right: none;
+}
+
+.form-row{
+  margin-top: 10px;
+}
+
+.buy-instructions{
+  font-size: 18px;
+}
+
+.event-text{
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px !important;
 }

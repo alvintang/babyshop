@@ -13,11 +13,13 @@
                             {% if user.is_authenticated %}
                                 <a class="btn btn-lg btn-primary btn-group" href="{% url 'registry_create' %}">Create my registry</a>
                                 <a class="btn btn-lg btn-warning btn-group" href="{% url 'home' %}">Manage my registry</a>
-                                <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a>
+                                <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a><br><br>
+                                <a class="btn btn-lg btn-danger btn-group" href="/shop/">Shop from our store</a>
                             {% else %}
                                 <a class="btn btn-lg btn-primary btn-group" href="{% url 'registration_register' %}">Create my registry</a>
                                 <a class="btn btn-lg btn-warning btn-group" href="{% url 'login' %}">Manage my registry</a>
-                                <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a>
+                                <a class="btn btn-lg btn-info btn-group" href="{% url 'registry_search' %}">Search for a registry</a><br><br>
+                                <a class="btn btn-lg btn-danger btn-group" href="/shop/">Shop from our store</a>
                             {% endif %}
                         </span>
                     </div>

@@ -1,0 +1,22 @@
+Hi {{ username }}!
+
+You have recently reserved the following item from Baby Set Go:
+
+  {{ item.registry_item.name }} x {{ item.quantity }}
+
+Your item will be reserved for 48 hours.
+
+If you have already bought the item, please click the link below to mark it as bought in the registry:
+{{ host }}/transaction/confirm/{{ transaction_reference }}.
+
+To cancel this transaction, please click the link below:<br>
+{{ host }}/transaction/cancel/{{ transaction_reference }}
+
+Please do not hesitate to contact us at +639178034772 for any concerns.:)
+
+Thank you!
+
+Best regards,<br>
+Baby Set Go Team :)
+
+-- This email is auto-generated --

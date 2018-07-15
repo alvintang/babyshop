@@ -1,0 +1,49 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load carton_tags %}
+
+{% block content %}
+
+<div class="container">
+    <div class="cart-container">
+        <div class="panel card panel-default">
+            <div class="panel-heading background-color-green">
+                <h1>Reservation Done!</h1>
+            </div>
+            <div class="panel-body">
+                <br>
+                {% if error_msg %}
+                <p class="text-color-pink">{{ error_msg }}</p>
+                <br>
+                {% endif %}
+                <div class="col-md-12">
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                        <strong class="fa-stack-1x text-color-white">1</strong>
+                    </span>
+                    We have reserved this item in <strong class="text-color-blue">{{ event_name }}</strong> registry for you for 48 hours!
+                    
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                        <strong class="fa-stack-1x text-color-white">2</strong>
+                    </span>
+                    Buy the item from this <a href="{{ item_url }}" target="_blank">link</a>. You can set the delivery address to registry owner's provided address: <strong class="text-color-blue">{{ address }}</strong>.
+
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                        <strong class="fa-stack-1x text-color-white">3</strong>
+                    </span>
+                    After buying, please confirm the transaction by following the instructions sent via email.
+
+                    <h4>Thank you for using Baby Set Go!</h4>
+                    <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

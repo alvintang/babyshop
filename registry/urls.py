@@ -23,6 +23,9 @@ urlpatterns = (
 )
 
 urlpatterns += (
+    url(r'^reserve-item/$', views.reserve_item, name='reserve-item'),
+    url(r'^transaction/confirm/(?P<transaction_reference>\S+)/$', views.confirm_transaction, name='confirm-transaction'),
+    url(r'^transaction/cancel/(?P<transaction_reference>\S+)/$', views.cancel_transaction, name='cancel-transaction'),
     url(r'^add-cart/$', views.add, name='add-cart'),
     url(r'^show-cart/$', views.show, name='show-cart'),
     url(r'^checkout/$', views.checkout, name='checkout-cart'),

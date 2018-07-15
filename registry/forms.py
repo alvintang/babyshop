@@ -5,27 +5,36 @@ from django.utils.translation import ugettext as _
 import uuid
 import os
 
+from crispy_forms import bootstrap, layout
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Div
+
 class RegistryForm(forms.ModelForm):
     class Meta:
         model = Registry
-        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address', 'delivered_where', 'birth_or_due_date']
+        fields = ['name', 'event_date', 'event_description', 'event_venue', 'name_baby', 'name_mother', 'name_father', 'address','img_shop']
         labels = {
+          'name' : _('Registry Name'),
           'name_baby': _('Name of Baby'),
           'name_mother': _('Name of Mother'),
           'name_father': _('Name of Father'),
-          'birth_or_due_date': _('Due Date/Baby Birthdate'),
+          'img_shop': _('Event Image'),
+          'event_description': _('You may also write a short note to family and friends :)'),
+          'address': _('Address: Gifts will be shipped to this address'),
+          # 'birth_or_due_date': _('Due Date/Baby Birthdate'),
         }
         # exclude = ['created_by', 'id']
         widgets = {
-            'name' : forms.TextInput(attrs={'class': "form-control"}),
-            'event_date' : forms.DateTimeInput(attrs={'class':'form-control'}),
-            'event_description' :  Textarea(attrs={'cols': 80, 'rows': 10, 'class':"form-control"}),
-            'event_venue' : forms.TextInput(attrs={'class': "form-control"}),
-            'name_baby' : forms.TextInput(attrs={'class': "form-control"}),
-            'name_mother' : forms.TextInput(attrs={'class': "form-control"}),
-            'name_father' : forms.TextInput(attrs={'class': "form-control"}),
-            'address' : forms.TextInput( attrs={'class': "form-control"}),
-            'birth_or_due_date' : forms.DateInput(attrs={'class':'datepicker form-control', 'id': 'birth_or_due_date'}),
+            'name' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'event_date' : forms.DateTimeInput(attrs={'class':'baby-form-input-addon-group col-sm-12'}),
+            'event_description' :  Textarea(attrs={'cols': 80, 'rows': 10, 'class':"baby-form-input col-sm-8"}),
+            'event_venue' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'name_baby' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'name_mother' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'name_father' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'address' : forms.TextInput( attrs={'class': "baby-form-input col-sm-8"}),
+            'img_shop' : forms.FileInput( attrs={'class': "baby-form-file col-sm-8"}),
+            # 'birth_or_due_date' : forms.DateInput(attrs={'class':'datepicker form-control', 'id': 'birth_or_due_date'}),
         }
 
 
@@ -97,7 +106,7 @@ class RegistryItemBuyForm(forms.Form):
 class RegistryItemPaidForm(forms.ModelForm):
     class Meta:
         model = RegistryItemPaid
-        fields = ['name', 'message', 'email', 'tel_no', 'mobile']
+        fields = ['name', 'message', 'email', 'mobile','quantity']
         labels = {
           'name' : 'Your Name',
           'message' : 'Message to Baby or Mommy',
@@ -106,8 +115,8 @@ class RegistryItemPaidForm(forms.ModelForm):
             'name' : forms.TextInput(attrs={'class': "form-control"}),
             'message' : forms.Textarea(attrs={'class': "form-control"}),
             'email' : forms.EmailInput(attrs={'class': "form-control"}),
-            'tel_no' : forms.TextInput(attrs={'class': "form-control"}),
             'mobile' : forms.TextInput(attrs={'class': "form-control"}),
+            'quantity': forms.NumberInput(attrs={'class': "form-control", 'id': 'item_qty'}),
         }
 
 class CheckoutForm(forms.Form):

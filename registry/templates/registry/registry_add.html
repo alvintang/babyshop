@@ -47,7 +47,7 @@
             {% csrf_token %}
             {% if form %}
                 {% for field in form %}
-                <div class="form-group">
+                <div class="form-row">
                     {% if field.errors %}
                         <div class="form-error">
                             <ul class="errorlist">
@@ -57,12 +57,19 @@
                             </ul>
                         </div>
                     {% endif %}
-                    {% if field.label != "Event date" %}
-                    {{ field.label }}
-                    {{ field }}
+                    {% if field.name == "img_shop" %}
+                    <div class="form-group">
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% elif field.label != "Event date" %}
+                    <div class="form-group">
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
+                        {{ field }}
+                    </div>
                     {% else %}
                     <div class="form-group">
-                        {{ field.label }}
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
                         <div class='input-group date' id='datetimepicker'>
                             {{ field }}
                             <span class="input-group-addon">

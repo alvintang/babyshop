@@ -31,9 +31,9 @@ class Registry(models.Model):
     name_mother = models.CharField(max_length=255, blank=False)
     name_father = models.CharField(max_length=255, blank=False)
     address = models.CharField(max_length=255, blank=False)
-    delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=False)
+    delivered_where = models.CharField(choices=delivery_options,max_length=30, blank=True, null=True)
     #bool_due_date = models.CharField(choices=due_date_options,max_length=30, blank=False)
-    birth_or_due_date = models.DateField(blank=False)
+    birth_or_due_date = models.DateField(blank=True, null=True)
     is_shop = models.BooleanField(default=False)
     img_shop = models.ImageField(null=True, blank=True)
 

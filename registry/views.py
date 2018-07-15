@@ -1,5 +1,6 @@
 import json
 import datetime
+from datetime import timezone
 import operator
 import xml.etree.ElementTree as ET
 import hashlib
@@ -192,6 +193,24 @@ class RegistryDetailView(DetailView):
 
         return render(request, self.template_name, context)
 
+def check_valid_reservations(registry_id):
+    if registry_id is None:
+        return False
+
+    registry_items = RegistryItem.objects.filter(registry=registry_id)
+    for item in registry_items:
+        # check if more than 24 hours
+        registryItemPaid = RegistryItemPaid.objects.filter(registry_item=item, last_updated__lte=datetime.datetime.now(timezone.utc)-datetime.timedelta(days=2), paid=False)
+        for item_paid in registryItemPaid:
+            item_paid.reserved = False
+            item_paid.save()
+            registryItem = item_paid.registry_item
+            if registryItem.quantity_bought-item_paid.quantity >= 0:
+                registryItem.quantity_bought -= item_paid.quantity
+                registryItem.save()
+
+    return True
+
 class RegistryDetailPublicView(DetailView):
     template_name = 'registry/registry_public.html'
     model = Registry
@@ -204,13 +223,17 @@ class RegistryDetailPublicView(DetailView):
             raise Http404
 
         form = RegistryItemBuyForm()
+        buy_form = RegistryItemPaidForm()
         # registry = Registry.objects.get(pk=pk)
         try:
             registry = Registry.objects.get(pk=pk)
         except Registry.DoesNotExist:
             raise Http404
         
+        check_valid_reservations(registry.id)
+
         context = { 'form': form,
+                    'buy_form': buy_form,
                     'object': registry}
 
         return render(request, self.template_name, context)
@@ -896,170 +919,238 @@ class CategoryCreateView(CreateView):
     success_url = '/shop/add/category'
 
 @csrf_exempt
-def checkout_paynamics(request):
+def reserve_item(request):
     if request.method == "GET":
-        form = CheckoutForm()
-        context = { 'form' : form }
-        return render(request, 'registry/checkout.html', context)
+        form = RegistryItemPaidForm()
+
+        # get POST params
+        name = request.GET.get('name')
+        message = request.GET.get('message')
+        email = request.GET.get('email')
+        qty = request.GET.get('quantity')
+        mobile = request.GET.get('mobile')
+        item_id = request.GET.get('item_id')
+
+        giver_info = {
+            'name' : name,
+            'message' : message,
+            'email' : email,
+            'mobile' : mobile,
+            'qty': qty,
+        }
+
+        context = {'giver_info': giver_info}
+
+        registry_item = RegistryItem.objects.get(pk=item_id);
+
+        if registry_item is None:
+        # duplicate entry
+            error_msg = "Item does not exist"
+                    
+            context = { 'giver_info' : giver_info,
+                        'error_msg' : error_msg
+                        }
+            return render(request, 'registry/after_buy.html', context)
+
+        registryItemPaid = RegistryItemPaid.objects.filter(
+                    email=email,
+                    registry_item=registry_item,
+                    reserved=1,
+                ).first()
+
+        if(registryItemPaid is not None):
+        # duplicate entry
+            error_msg = "It seems you have already reserved " + registry_item.name + " using the e-mail you have provided. You should have received an e-mail notification of the said transaction. If not, please contact us for assistance."
+                
+            context = { 'giver_info': giver_info,
+                        'error_msg' : error_msg,
+                        'item_url': registryItemPaid.registry_item.item_url,
+                        'address': registryItemPaid.registry_item.registry.address,
+                        'event_name': registryItemPaid.registry_item.registry.name,
+                        }
+
+            return render(request, 'registry/after_buy.html', context)
+
+        try:
+        # update quantity
+        #if (productItem.product.quantity_bought + productItem.quantity) < productItem.product.quantity:
+            registry_item.quantity_bought += int(qty)
+            registry_item.bought = True
+            registry_item.bought_by = name
+            #else:
+        #    raise ValueError("Product quantity to be bought is greater than available quantity")
+
+            transaction = Transaction.objects.create(
+                name=name,
+                message=message,
+                email=email,
+                # tel_no=tel_no,
+                mobile=mobile,
+                total_amount = 0,
+                total_amount_paid = 0,
+                date_paid = None,
+            )
+
+            registryItemPaid = RegistryItemPaid.objects.create(
+                name=name,
+                message=message,
+                email=email,
+                mobile=mobile,
+                reserved=True,
+                paid=False,
+                quantity=qty,
+                registry_item=registry_item,
+                transaction=transaction,
+                )
+
+        except IntegrityError as e:
+            print(e.__cause__)
+                
+            if e.args[0] == 1062:
+                    # duplicate entry
+                error_msg = "It seems you have already reserved " + registry_item.name + " using the e-mail you have provided. You should have received an e-mail notification of the said transaction. If not, please contact us for assistance."
+                registryItemPaid = RegistryItemPaid.objects.get(email=email,registry_item=registry_item)
+                if registryItemPaid.reserved == False:
+                    registryItemPaid.reserved = True
+                    registryItemPaid.transaction = transaction
+                    registryItemPaid.save()
+            else:
+                error_msg = "There was an error processing your transaction. Please contact us for assistance."
+                context = { 'error_msg' : error_msg }
+                return render(request, 'registry/after_buy.html', context)
+
+        except ValueError as e:
+            print(e.__cause__)
+            error_msg = "ValueError"
+            context = { 'error_msg' : error_msg }
+                
+            return render(request, 'registry/after_buy.html', context)
+
+        # assume transaction is complete if code is here
+        registry_item.save()
+        # send email
+        try:
+            email_params = { 
+                'username': name, 
+                'transaction_reference': str(transaction.id),
+                'item': registryItemPaid,
+                'host': request.get_host(),
+                }
+
+            plaintext = render_to_string('registry/transaction_email_2.txt', email_params)
+            htmly     = render_to_string('registry/transaction_email_2.html', email_params)
+
+            subject, from_email, to = 'Baby Set Go Purchase', 'info@babysetgo.ph', email
+
+            send_mail(
+                subject,
+                plaintext,
+                from_email,
+                [email,'info@babysetgo.ph', 'issarufinasenga@gmail.com', 'issa@babysetgo.ph'],
+                fail_silently=False,
+                html_message=htmly
+            )
+        except SMTPException as e:
+            print(e.__cause__)
+            error_msg = "E-mail sending error."
+            context = { 'error_msg' : error_msg }
+            transaction.delete()
+            registryItemPaid.delete()
+                
+            #return render(request, 'registry/payment.html', context)
+            # return redirect('payment-done',pk=3)
+
+        context = { 'giver_info': giver_info,
+                    'item_url': registryItemPaid.registry_item.item_url,
+                    'address': registryItemPaid.registry_item.registry.address,
+                    'event_name': registryItemPaid.registry_item.registry.name,
+                     }
+        return render(request, 'registry/after_buy.html', context)
+
+def confirm_transaction(request, transaction_reference=None):
+    context = { 'transaction_reference' : transaction_reference}
+    registryItemPaid = RegistryItemPaid.objects.filter(
+                    transaction=transaction_reference,
+                ).first()
+    print(registryItemPaid.name)
+
+    if registryItemPaid is None:
+        error_msg = "Transaction does not exist"
+        context = { 'error_msg' : error_msg }
+        return render(request, 'registry/after_confirmation.html', context)
+
+    if registryItemPaid.reserved is False:
+        error_msg = "Your reservation has expired. Please reserve again."
+        context = { 'error_msg' : error_msg }
+        return render(request, 'registry/after_confirmation.html', context)
+
+    if registryItemPaid.paid:
+        error_msg = "Transaction already confirmed"
+        context = { 'error_msg' : error_msg }
+        return render(request, 'registry/after_confirmation.html', context)
+
+    transaction = Transaction.objects.get(pk=transaction_reference)
+    transaction.date_paid = datetime.datetime.now()
+    transaction.save()
+    registryItemPaid.paid = True
+    registryItemPaid.save()
+
+
+    return render(request, 'registry/after_confirmation.html', context)
+
+def cancel_transaction(request, transaction_reference=None):
+    if request.method == "GET":
+        context = { 'transaction_reference' : transaction_reference}
+        registryItemPaid = RegistryItemPaid.objects.filter(
+                        transaction=transaction_reference,
+                    ).first()
+        print(registryItemPaid.name)
+
+        if registryItemPaid is None:
+            error_msg = "Transaction does not exist"
+            context = { 'error_msg' : error_msg }
+            return render(request, 'registry/after_cancellation.html', context)
+
+        if registryItemPaid.reserved == False:
+            error_msg = "Transaction already cancelled"
+            context = { 'error_msg' : error_msg }
+            return render(request, 'registry/after_cancellation.html', context)
+
+        registryItemPaid.paid = False
+        registryItemPaid.reserved = False
+        registryItemPaid.save()
+
+        registryItem = registryItemPaid.registry_item
+        if registryItem.quantity_bought-registryItemPaid.quantity >= 0:
+            registryItem.quantity_bought -= registryItemPaid.quantity
+            registryItem.save()
+
+        return render(request, 'registry/after_cancellation.html', context)
     elif request.method == "POST":
-        # Paynamics integration
-        # get XML parameters
-        _mid = "000000020817E0B9C58E"
-        _request_id = get_random_string(length=14)
-        _ipaddress = "192.168.10.1"
-        _noturl = request.get_host() + reverse('payment-done')
-        _resurl = request.get_host() + reverse('payment-done')
-        _cancelurl = request.get_host() + reverse('payment-done')
-        _fname = str(request.POST.get('first_name'))
-        _mname = str(request.POST.get('middle_name'))
-        _lname = str(request.POST.get('last_name'))
-        _addr1 = str(request.POST.get('address1'))
-        _addr2 = str(request.POST.get('address2'))
-        _city = str(request.POST.get('city'))
-        _state = str(request.POST.get('state'))
-        _country = str(request.POST.get('country'))
-        _zip = str(request.POST.get('zipcode'))
-        _sec3d = "try3d"
-        _email = str(request.POST.get('email_add'))
-        _phone = str(request.POST.get('phone'))
-        _mobile = str(request.POST.get('mobile'))
-        _clientip = str(get_client_ip(request))
-        _amount = '2.00'
-        _currency = 'PHP'
-        forSignature = _mid + _request_id + _ipaddress + _noturl + _resurl + _fname + _lname + _mname + _addr1 + _addr2 + _city + _state + _country + _zip + _email + _phone + _clientip + _amount + _currency + _sec3d
-        cert = "E3F103CDDF8B76E1645461950C288BE5"
-        forSignature = forSignature+cert
-        _signature = hashlib.sha512(forSignature.encode('utf-8')).hexdigest()
+        context = { 'transaction_reference' : transaction_reference, }
+        registryItemPaid = RegistryItemPaid.objects.filter(
+                        transaction=transaction_reference,
+                    ).first()
+        print(registryItemPaid.name)
 
-        post_params = OrderedDict()
-        post_params['First Name'] = str(request.POST.get('first_name'))
-        post_params['Middle Name'] = str(request.POST.get('middle_name'))
-        post_params['Last Name'] = str(request.POST.get('last_name'))
-        post_params['Address 1'] = str(request.POST.get('address1'))
-        post_params['Address 2'] = str(request.POST.get('address2'))
-        post_params['City'] = str(request.POST.get('city'))
-        post_params['Province/Region'] = str(request.POST.get('state'))
-        post_params['Country'] = str(request.POST.get('country'))
-        post_params['Zip Code'] = str(request.POST.get('zipcode'))
-        post_params['E-mail'] = str(request.POST.get('email_add'))
-        post_params['Phone'] = str(request.POST.get('phone'))
-        post_params['Mobile'] = str(request.POST.get('mobile'))
+        if registryItemPaid is None:
+            error_msg = "Transaction does not exist"
+            context = { 'transaction_reference' : transaction_reference,
+                        'status' : 'failed',
+                        'message' : error_msg }
+            return HttpResponse(json.dumps(list(context),default=datetime_handler), content_type="application/json")
 
-        # build a tree structure
-        rootRequest = ET.Element("Request")
+        registryItemPaid.paid = False
+        registryItemPaid.reserved = False
+        registryItemPaid.save()
 
-        orders = ET.SubElement(rootRequest, "orders")
+        registryItem = registryItemPaid.registry_item
+        registryItem.quantity_bought -= registryItemPaid.quantity
+        registryItem.save()
 
-        items = ET.SubElement(orders, "items") #item list header
-        
-        item = ET.SubElement(items, "Items") #specific item list
-        itemname = ET.SubElement(item, "itemname")
-        itemname.text = "Item 1"
-        itemqty = ET.SubElement(item, "quantity")
-        itemqty.text = "1"
-        itemamount = ET.SubElement(item, "amount")
-        itemamount.text = "1.00"
+        context = { 'transaction_reference' : transaction_reference,
+                        'status' : 'success',
+                        'message' : 'cancellation success' }
 
-        item = ET.SubElement(items, "Items") #specific item list
-        itemname = ET.SubElement(item, "itemname")
-        itemname.text = "Shipping Fee"
-        itemqty = ET.SubElement(item, "quantity")
-        itemqty.text = "1"
-        itemamount = ET.SubElement(item, "amount")
-        itemamount.text = "1.00"
+        return HttpResponse(json.dumps(list(context),default=datetime_handler), content_type="application/json")
 
-        mid = ET.SubElement(rootRequest, "mid")
-        mid.text = _mid
-
-        request_id = ET.SubElement(rootRequest, "request_id")
-        request_id.text = _request_id
-
-        ip_address = ET.SubElement(rootRequest, "ip_address")
-        ip_address.text = _ipaddress
-
-        notification_url = ET.SubElement(rootRequest, "notification_url")
-        notification_url.text = _noturl
-
-        response_url = ET.SubElement(rootRequest, "response_url")
-        response_url.text = _resurl
-
-        cancel_url = ET.SubElement(rootRequest, "cancel_url")
-        cancel_url.text = _cancelurl
-
-        mtac_url = ET.SubElement(rootRequest, "mtac_url")
-        mtac_url.text = ''
-
-        descriptor_note = ET.SubElement(rootRequest, "descriptor_note")
-        descriptor_note.text = ''
-
-        fname = ET.SubElement(rootRequest, "fname")
-        fname.text = _fname
-
-        lname = ET.SubElement(rootRequest, "lname")
-        lname.text = _lname
-
-        mname = ET.SubElement(rootRequest, "mname")
-        mname.text = _mname
-
-        address1 = ET.SubElement(rootRequest, "address1")
-        address1.text = _addr1
-
-        address2 = ET.SubElement(rootRequest, "address2")
-        address2.text = _addr2
-
-        city = ET.SubElement(rootRequest, "city")
-        city.text = _city
-
-        state = ET.SubElement(rootRequest, "state")
-        state.text = _state
-
-        country = ET.SubElement(rootRequest, "country")
-        country.text = _country
-
-        zipcode = ET.SubElement(rootRequest, "zip")
-        zipcode.text = _zip
-
-        secure3d = ET.SubElement(rootRequest, "secure3d")
-        secure3d.text = "try3d"
-
-        trxtype = ET.SubElement(rootRequest, "trxtype")
-        trxtype.text = "sale"
-
-        email = ET.SubElement(rootRequest, "email")
-        email.text = _email
-
-        phone = ET.SubElement(rootRequest, "phone")
-        phone.text = _phone
-
-        mobile = ET.SubElement(rootRequest, "mobile")
-        mobile.text = _mobile
-
-        client_ip = ET.SubElement(rootRequest, "client_ip")
-        client_ip.text = _clientip
-
-        amount = ET.SubElement(rootRequest, "amount")
-        amount.text = _amount
-
-        currency = ET.SubElement(rootRequest, "currency")
-        currency.text = _currency
-
-        mlogo_url = ET.SubElement(rootRequest, "mlogo_url")
-        mlogo_url.text = ''
-
-        pmethod = ET.SubElement(rootRequest, "pmethod")
-        pmethod.text = ''
-
-        signature = ET.SubElement(rootRequest, "signature")
-        signature.text = _signature
-
-        # wrap it in an ElementTree instance, and save as XML
-        # tree = ET.ElementTree(root)
-        # tree.write("page.xhtml")
-        xml_str = ET.tostring(rootRequest)
-        b64_str = base64.b64encode(xml_str)
-        print(b64_str)
-
-        # return HttpResponse(ET.tostring(rootRequest), content_type='text/xml');
-        context = { 'b64_str' : b64_str,
-                    'post_params' : post_params}
-        return render(request, 'registry/confirm-payment.html', context)

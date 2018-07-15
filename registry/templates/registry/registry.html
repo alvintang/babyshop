@@ -12,11 +12,21 @@
                 <img class="img-responsive center-block" src="{% static 'images/header_bg.jpg' %}" alt="" />
             </div> -->
             <div class="panel-body">
-                <h1>{{ object.name }}<a href="#"></a></h1>  
-                <h3>Event Date: {{ object.event_date }}</h3>
-                <p>
-                    {{ object.event_description }}
-                </p>
+                <h1 class="text-center">{{ object.name }}<a href="#"></a></h1>  
+                <h2>Event Date: {{ object.event_date }}<br>
+                Event Venue: {{ object.event_venue }}<br>
+                Delivery Address: {{ object.address }}
+                </h2>
+                <div class="row">
+                    <!-- <div class="col-md-4">
+                        <img style='max-width:100%;max-height:100%;' class="" src="{{ object.img_shop }}" alt="" />
+                    </div> -->
+                    <div class="col-md-12">
+                    <p class="event-text">
+                        {{ object.event_description }}
+                    </p>
+                    </div>
+                </div>
                 <!--h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://localhost:8000/static/js/babysetgo-add-items.js?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='https://localhost:8000/static/css/modal.css';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary">Add to Bookmark</a></h3-->
                 <h3><a href="javascript:(function(d){var js = document.createElement('script');js.src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js';document.head.appendChild(js);var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='//{% static 'js/babysetgo-add-items.js' %}?v='+parseInt(Math.random()*99999999);s.id='babysetgo';s.setAttribute('reg_id',{{object.id}});d.body.appendChild(s);var c=d.createElement('link');c.type='text/css';c.rel='stylesheet';c.href='//{% static 'css/modal.css' %}';d.body.appendChild(c);}(document));" class="col-centered btn btn-primary bookmarklet">Add to BSG</a>
                 <button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">Instructions</button>
@@ -68,7 +78,19 @@
                     {% else %}
                         <div class="list-group-item row">
                             <h3>
-                            Start with items from our trusted brands and stores!
+                            Start adding items from our Baby Set Go Shop!
+                            </h3>
+                            <div class="partner-stores-row">
+                                    <div class="col-md-3 partner-stores">
+                                    <a href="https://babysetgo.ph/shop/" target="_blank"><img src="{% static 'images/badge.jpg' %}" class="img-responsive"></a>
+                                    </div>
+                                    <div class="col-md-3 partner-stores"></div>
+                                    <div class="col-md-3 partner-stores"></div>
+                                    <div class="col-md-3 partner-stores"></div>
+                                </div>
+                            </div>
+                            <h3>
+                            You can also add items from our trusted brands and stores!
                             </h3>
                             <div class="partner-stores-container">
                                 <div class="partner-stores-row">
@@ -142,7 +164,7 @@
                 <i class="fa fa-star fa-stack-2x text-color-blue"></i>
                 <strong class="fa-stack-1x text-color-white">3</strong>
             </span>
-            Press the "Add to BSG" you added to your toolbar to include item to your registry.
+            Press the "Add to BSG" you added to your toolbar to include item to your registry or you can copy and paste the link of the item in the textbox.
 
             <br>
             <span class="fa-stack fa-2x">

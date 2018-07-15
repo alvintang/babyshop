@@ -1,0 +1,31 @@
+{% extends 'baby/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load carton_tags %}
+
+{% block content %}
+
+<div class="container">
+    <div class="cart-container">
+        <div class="panel card panel-default">
+            <div class="panel-heading background-color-green">
+                <h1>Transaction Cancelled!</h1>
+            </div>
+            <div class="panel-body">
+                <br>
+                {% if error_msg %}
+                <p class="text-color-pink">{{ error_msg }}</p>
+                <br>
+                {% endif %}
+                <div class="col-md-8">
+                        <h4>Thank you for using Baby Set Go!</h4>
+                        We have marked your transaction {{ transaction_reference }} as cancelled.
+                        <br>
+                        <a href="{% url 'home' %}" class="col-centered btn btn-primary edit-button" type="button">Return to Home</a>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
