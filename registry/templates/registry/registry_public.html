@@ -15,7 +15,8 @@
                 <h1 class="text-center">{{ object.name }}<a href="#"></a></h1>  
                 <h2>Event Date: {{ object.event_date }}<br>
                 Event Venue: {{ object.event_venue }}<br>
-                Delivery Address: {{ object.address }}
+                Mommy's Name: {{ object.name_mother }}<br>
+                Delivery Address: {{ object.address }}<br>
                 </h2>
                 <div class="row">
                     <!-- <div class="col-md-4">
@@ -26,7 +27,7 @@
                         {{ object.event_description }}
                     </p>
                     </div>
-                </div>
+                </div>  
 
                 <h3><button class="col-centered btn btn-warning" data-toggle="modal" data-target="#modal-instructions">INSTRUCTIONS</button></h3>
 
@@ -151,34 +152,31 @@
             <h3>Instructions</h3>
         </div>
         <div class="modal-body" style="height: auto;">
-            <!--span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-green"></i>
-                <strong class="fa-stack-1x text-color-white">1</strong>
-            </span>
-            Select the items you want to give by adding them to your cart.
-            
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-pink"></i>
-                <strong class="fa-stack-1x text-color-white">2</strong>
-            </span>
-            Purchase the items by continuing to checkout. 
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-green"></i>
+                        <strong class="fa-stack-1x text-color-white">1</strong>
+                    </span>
+                    Reserve/Buy an item in the registry by clicking "Buy this Gift!"!
+                    
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-pink"></i>
+                        <strong class="fa-stack-1x text-color-white">2</strong>
+                    </span>
+                    Click the link that we will provide to go to the online store and complete the purchase from there. <br>
 
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-blue"></i>
-                <strong class="fa-stack-1x text-color-white">3</strong>
-            </span>
-            Write a message for Mommy and Baby!
-
-            <br>
-            <span class="fa-stack fa-2x">
-                <i class="fa fa-star fa-stack-2x text-color-orange"></i>
-                <strong class="fa-stack-1x text-color-white">4</strong>
-            </span>
-            Sit back and relax! We will ship the gifts to Mommy and Baby for you!
-            -->
-          Purchasing is disabled for now as we are currently undergoing maintenance and transition. thank you very much for your understanding!:) 
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-blue"></i>
+                        <strong class="fa-stack-1x text-color-white">3</strong>
+                    </span>
+                    Don't forget to put Mommy's Name and Address under the shipping details so that the store can deliver them to your recipient.
+                    <br>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-star fa-stack-2x text-color-orange"></i>
+                        <strong class="fa-stack-1x text-color-white">4</strong>
+                    </span>
+                    After buying, please confirm the transaction by following the instructions sent via email.
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
