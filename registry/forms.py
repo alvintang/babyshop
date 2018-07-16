@@ -16,11 +16,11 @@ class RegistryForm(forms.ModelForm):
         labels = {
           'name' : _('Registry Name'),
           'name_baby': _('Name of Baby'),
-          'name_mother': _('Name of Mother (This name will be used for the delivery details)'),
+          'name_mother': _('Name of Mother'),
           'name_father': _('Name of Father'),
           'img_shop': _('Event Image'),
           'event_description': _('You may also write a short note to family and friends :)'),
-          'address': _('Address: Gifts will be shipped to this address'),
+          'address': _('Address'),
           # 'birth_or_due_date': _('Due Date/Baby Birthdate'),
         }
         # exclude = ['created_by', 'id']
@@ -30,9 +30,9 @@ class RegistryForm(forms.ModelForm):
             'event_description' :  Textarea(attrs={'cols': 80, 'rows': 10, 'class':"baby-form-input col-sm-8"}),
             'event_venue' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
             'name_baby' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
-            'name_mother' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
+            'name_mother' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8", 'placeholder': "This name will be used for the delivery details"}),
             'name_father' : forms.TextInput(attrs={'class': "baby-form-input col-sm-8"}),
-            'address' : forms.TextInput( attrs={'class': "baby-form-input col-sm-8"}),
+            'address' : forms.TextInput( attrs={'class': "baby-form-input col-sm-8", 'placeholder': "Gifts will be shipped to this address"}),
             'img_shop' : forms.FileInput( attrs={'class': "baby-form-file col-sm-8"}),
             # 'birth_or_due_date' : forms.DateInput(attrs={'class':'datepicker form-control', 'id': 'birth_or_due_date'}),
         }
