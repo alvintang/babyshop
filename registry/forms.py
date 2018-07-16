@@ -16,7 +16,7 @@ class RegistryForm(forms.ModelForm):
         labels = {
           'name' : _('Registry Name'),
           'name_baby': _('Name of Baby'),
-          'name_mother': _('Name of Mother'),
+          'name_mother': _('Name of Mother (This name will be used for the delivery details)'),
           'name_father': _('Name of Father'),
           'img_shop': _('Event Image'),
           'event_description': _('You may also write a short note to family and friends :)'),

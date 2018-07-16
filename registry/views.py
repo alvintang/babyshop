@@ -967,6 +967,7 @@ def reserve_item(request):
                         'item_url': registryItemPaid.registry_item.item_url,
                         'address': registryItemPaid.registry_item.registry.address,
                         'event_name': registryItemPaid.registry_item.registry.name,
+                        'owner': registryItemPaid.registry_item.registry.name_mother,
                         }
 
             return render(request, 'registry/after_buy.html', context)
@@ -1064,6 +1065,7 @@ def reserve_item(request):
                     'item_url': registryItemPaid.registry_item.item_url,
                     'address': registryItemPaid.registry_item.registry.address,
                     'event_name': registryItemPaid.registry_item.registry.name,
+                    'owner': registryItemPaid.registry_item.registry.name_mother,
                      }
         return render(request, 'registry/after_buy.html', context)
 
