@@ -57,7 +57,7 @@
         <h1>Edit Registry Details</h1>
     </div>
     <div class="container inner-section">
-        <form action="" method="post" class="">
+        <form action="" enctype="multipart/form-data" method="post" class="">
             {% csrf_token %}
             {% if form %}
                 {% for field in form %}
@@ -71,17 +71,21 @@
                             </ul>
                         </div>
                     {% endif %}
-                    {% if field.label != "Event date" and field.label != "Due Date/Baby Birthdate" %}
-                    {{ field.label }}
-                    {{ field }}
+                    {% if field.name == "img_shop" %}
+                    <div class="form-group">
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
+                        {{ field.value }}
+			{{ field }}
+                    </div>
+                    {% elif field.label != "Event date" %}
+                    <div class="form-group">
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
+                        {{ field }}
+                    </div>
                     {% else %}
                     <div class="form-group">
-                        {{ field.label }}
-                        {% if field.label == "Event date" %}
+                        <label class="baby-form-label col-sm-4" for={{field.name}}>{{ field.label }}</label>
                         <div class='input-group date' id='datetimepicker'>
-                        {% else %}
-                        <div class='input-group date' id='datepicker'>
-                        {% endif %}
                             {{ field }}
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
